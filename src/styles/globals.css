@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --black-100: rgba(19, 28, 22, 0.2);
+  --black-200: rgba(19, 28, 22, 0.5);
+  --black-300: #d3d3d8;
+  --black-400: #e9e9ec;
+  --black-500: #131c16;
+
+  --yellow-50: #f1eee8;
+  --yellow-100: #f1c30c;
+  --yellow-200: #fdf6e2;
+  --yellow-300: #fffefa;
+  --yellow-500: #ffeba0;
+
+  --green-100: #cae0ab;
+
+  --red-100: #ffb5a6;
+
+  --grey-50: #eeefef;
+
+  --white-100: #ffffff;
+
+  --100vh: 100vh;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #a7a7a7;
+  border-radius: 8px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #858585;
+}
+
+.ant-btn-primary {
+  background-color: var(--black-500) !important;
+}
+
+@media print {
+  div {
+    height: 100% !important;
+    overflow: visible;
+  }
+}
+
+@layer utilities {
+  @media (max-width: 960px) {
+    ::-webkit-scrollbar {
+      display: none;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+  }
+}
