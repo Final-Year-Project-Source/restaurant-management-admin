@@ -1,0 +1,36 @@
+.ant-input-outlined {
+  &:hover {
+    border-color: rgba(19, 28, 22, 1) !important;
+  }
+  &:focus {
+    border-color: rgba(19, 28, 22, 1) !important;
+  }
+}
+
+.search-input-container {
+  height: 40px;
+  input {
+    border-color: rgba(19, 28, 22, 0.2) !important;
+    padding-left: 0px !important;
+  }
+  &.--focus {
+    &:hover {
+      border-color: rgba(19, 28, 22, 1) !important;
+    }
+    border-color: rgba(19, 28, 22, 1) !important;
+  }
+}
+.input-password {
+  &.--focus {
+    &:hover {
+      border-color: rgba(19, 28, 22, 1) !important;
+    }
+    border-color: rgba(19, 28, 22, 1) !important;
+  }
+}
+
+.search-customized {
+  &.ant-input-affix-wrapper {
+    padding: 10px 16px !important;
+  }
+}

@@ -1,0 +1,30 @@
+.tag {
+  font-size: 11px;
+  padding: 3px 6px;
+  border: 1px solid;
+  border-radius: 6px;
+  line-height: normal;
+  height: 23px;
+  text-align: center;
+  flex-shrink: 0;
+
+  &.active {
+    border-color: #131c16;
+    color: #131c16;
+    width: 59px;
+  }
+
+  &.disable {
+    border-color: #131c16;
+    color: #131c16;
+    opacity: 0.5;
+    width: 59px;
+  }
+
+  &.warning {
+    border-color: #ff3912;
+    color: #ff3912;
+
+    width: 65px !important;
+  }
+}

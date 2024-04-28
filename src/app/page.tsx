@@ -1,5 +1,18 @@
-import Image from 'next/image';
+import React from 'react';
+import '@/styles/globals.css';
+import { getServerSession } from 'next-auth';
+// import { options } from '@/app/api/auth/[...nextauth]/option';
+import { redirect } from 'next/navigation';
+export default async function AdminOrdersPage() {
+  // const session = await getServerSession(options);
+  const session = await getServerSession();
 
-export default function Home() {
-  return <main className="flex min-h-screen flex-col items-center justify-between p-24">admin</main>;
+  if (!session?.user) {
+    redirect('/login');
+  }
+  if (session?.user?.role !== 'Administrator') {
+    redirect('/bills');
+  } else {
+    redirect('/employees');
+  }
 }

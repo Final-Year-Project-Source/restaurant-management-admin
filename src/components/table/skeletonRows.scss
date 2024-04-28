@@ -1,0 +1,24 @@
+.skeleton-rows-table {
+  // .ant-skeleton-title,
+  // .ant-skeleton-paragraph>li:last-child {
+  //   width: 100% !important;
+  // }
+
+  // .ant-skeleton-paragraph {
+  //   margin-block-start: 16px !important;
+  // }
+
+  .ant-skeleton-input {
+    width: 100% !important;
+    margin: 3.75px 0px !important;
+  }
+}
+
+.skeleton-pagination {
+  .ant-skeleton.ant-skeleton-element {
+    display: inline-block;
+    padding-left: 20px !important;
+    padding-right: 10px !important;
+    width: 100%;
+  }
+}

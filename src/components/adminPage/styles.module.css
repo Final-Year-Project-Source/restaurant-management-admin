@@ -1,0 +1,100 @@
+/* button */
+.btn {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+  padding: 16px 43px;
+}
+
+.secondaryBtn {
+  background-color: var(--black-500);
+  color: white;
+}
+
+.disabledBtn {
+  opacity: 0.2;
+  color: white;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.dangerBtn {
+  background-color: red;
+  color: white;
+}
+
+.primaryBtn {
+  background-color: white;
+  border: 1px solid var(--black-500);
+  color: var(--black-500);
+}
+
+/* category btn*/
+
+.categoryButton {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px !important;
+}
+
+.inActive {
+  background: transparent !important;
+  color: var(--black-200) !important;
+}
+
+.active {
+  background-color: var(--black-500) !important;
+  color: var(--white-100) !important;
+}
+
+/* count btn */
+
+.countBtn {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.smallBtn {
+  font-size: 14px;
+  font-weight: 400;
+  padding: 15px 16px;
+}
+
+.secondarySmallBtn {
+  background-color: var(--black-500);
+  color: white;
+  max-width: 38px;
+}
+
+.inactiveSmallBtn {
+  opacity: 1;
+  color: black;
+  cursor: pointer;
+  max-width: 38px;
+}
+
+.inactiveSmallBtn:hover {
+  color: white;
+  background-color: var(--black-200);
+}
+
+.activeSmallBtn {
+  opacity: 1;
+  color: white;
+  background-color: var(--black-500);
+  max-width: 38px;
+}
+
+.spaceSmallBtn {
+  padding: 4px 4px;
+  max-width: 38px;
+}
+
+.navigationSmallBtn {
+  background-color: white;
+  width: 50 px;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  color: var(--black-500);
+}
