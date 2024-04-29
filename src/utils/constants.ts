@@ -14,7 +14,7 @@ export const ITEMS = [
   { value: 'modifiers', label: 'Lựa chọn' },
   { value: 'menu-categories', label: 'Danh mục' },
   { value: 'groups', label: 'Nhóm' },
-  { value: 'discounts', label: 'Giảm giá' },
+  { value: 'discounts', label: 'Loại giảm giá' },
   { value: 'tables', label: 'Bàn ăn' },
   { value: 'employees', label: 'nhân viên' },
 ];

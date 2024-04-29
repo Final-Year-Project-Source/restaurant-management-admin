@@ -8,7 +8,7 @@ const NoResult: React.FC<EmptyProps> = ({ ...restProps }) => {
       {...restProps}
       className="empty-customized"
       image={<NoResultIcon />}
-      description={<span className="font-open-sans text-[13px] text-black-500">No results</span>}
+      description={<span className="font-open-sans text-[13px] text-black-500">Không tìm thấy dữ liệu</span>}
     />
   );
 };
