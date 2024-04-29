@@ -266,31 +266,36 @@ const EditEmployee = () => {
             </div>
           </div>
         </div>
-        <CustomizedModal
-          open={isModalDeleteOpen && !isMobile}
-          title="Confirm deletion"
-          onOk={handleDeleteOk}
-          okText="Delete"
-          onCancel={() => setIsModalDeleteOpen(false)}
-        >
-          <p>
-            Bạn có chắc muốn xoá <strong>{user?.name}</strong>?
-          </p>
-        </CustomizedModal>
-        <CustomizedDrawer
-          className="bill-drawer"
-          type="confirm"
-          open={isModalDeleteOpen && isMobile}
-          onClose={() => setIsModalDeleteOpen(false)}
-          title="Confirm deletion"
-          okText="Delete"
-          onOk={handleDeleteOk}
-          width={screenWidth}
-        >
-          <div className="text-center">
-            Bạn có chắc muốn xoá <strong>{user?.name}</strong>?
-          </div>
-        </CustomizedDrawer>
+        {isModalDeleteOpen && (
+          <>
+            <CustomizedModal
+              className="customized-width"
+              open={isModalDeleteOpen && !isMobile}
+              title="Xác nhận"
+              onOk={handleDeleteOk}
+              okText="Xoá"
+              onCancel={() => setIsModalDeleteOpen(false)}
+            >
+              <div className="text-center text-black-400 flex flex-col mb-[30px]">
+                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
+              </div>
+            </CustomizedModal>
+            <CustomizedDrawer
+              className="bill-drawer"
+              type="confirm"
+              open={isModalDeleteOpen && isMobile}
+              onClose={() => setIsModalDeleteOpen(false)}
+              title="Xác nhận"
+              okText="Xoá"
+              onOk={handleDeleteOk}
+              width={screenWidth}
+            >
+              <div className="text-center text-black-400 flex flex-col">
+                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
+              </div>
+            </CustomizedDrawer>
+          </>
+        )}
       </form>
     </div>
   );
