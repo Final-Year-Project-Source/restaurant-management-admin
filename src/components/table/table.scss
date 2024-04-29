@@ -1,0 +1,287 @@
+.scroll-bar {
+  .ant-table-thead > tr > th {
+    background-color: white !important;
+    white-space: nowrap;
+    border-bottom: 0.5px solid #000 !important;
+    border-right: none !important;
+
+    .ant-table-column-sorters {
+      svg {
+        width: 10px;
+        height: 6px;
+      }
+    }
+  }
+
+  .ant-table-cell::before {
+    background-color: white !important;
+  }
+
+  .ant-table-cell:nth-child(1) {
+    padding: 20px 4px 20px 25px !important;
+
+    @media (max-width: 768px) {
+      padding-left: 20px !important;
+    }
+  }
+
+  .ant-table-cell:nth-child(2) {
+    padding: 20px 15px 20px 15px !important;
+
+    @media (max-width: 768px) {
+      padding: 20px 10px 20px 10px !important;
+    }
+  }
+
+  .ant-table-cell:last-child {
+    padding: 20px 25px 20px 4px !important;
+
+    @media (max-width: 768px) {
+      padding-right: 20px !important;
+    }
+  }
+
+  .ant-table-row {
+    font-size: 13px;
+    font-family: var(--font-open-sans) !important;
+    vertical-align: top;
+    line-height: 17px;
+
+    .ant-table-cell-row-hover {
+      background-color: rgba(19, 28, 22, 0.1) !important;
+    }
+  }
+
+  .ant-table-cell {
+    color: #131c16 !important;
+    padding: 20px 4px 20px 4px !important;
+  }
+
+  .ant-table-cell > p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-width: 50px;
+  }
+
+  .ant-table-thead > tr > td {
+    background-color: var(--yellow-50) !important;
+  }
+
+  .ant-table-body {
+    overflow-y: none !important;
+  }
+
+  .ant-pagination-item-active {
+    border-color: var(--black-100) !important;
+
+    & > a {
+      color: var(--black-500) !important;
+      font-size: 16px;
+    }
+
+    & > a {
+      .ant-table-column-sorter {
+        color: #fff !important;
+      }
+    }
+  }
+
+  .ant-table-wrapper {
+    .ant-table-filter-trigger.active,
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: var(--black-500) !important;
+    }
+  }
+
+  &.border-bottom {
+    .ant-table {
+      border-radius: 16px !important;
+    }
+
+    .ant-table-tbody > tr:last-child > .ant-table-cell {
+      border-bottom: 0 !important;
+
+      &:first-child {
+        border-bottom-left-radius: 16px !important;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: 16px !important;
+      }
+    }
+  }
+}
+
+.customized-table {
+  .ant-table-column-sort {
+    background-color: white !important;
+  }
+
+  .add-btn {
+    height: 40px;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .add-btn:hover {
+    background-color: rgba(19, 28, 22, 0.9) !important;
+  }
+
+  // responsive header page (above table)
+  .filters-section {
+    .filters-status-date-range {
+      .statuses-filter {
+        margin-right: 20px;
+      }
+    }
+
+    .search-add {
+      width: 100%;
+      margin: -5px;
+      margin-left: 20px;
+
+      & > button,
+      & > .search-container {
+        margin: 5px;
+        min-width: 100px;
+      }
+    }
+
+    // @media (min-width: 1200px) and (max-width: 1275px) {
+    //   .statuses-filter {
+    //     width: 185px !important;
+    //   }
+
+    //   .date-range-filter {
+    //     width: 310px !important;
+    //   }
+    // }
+
+    // @media (min-width: 1000px) and (max-width: 1200px) {
+    //   .filters-status-date-range {
+    //     margin-top: 6px;
+    //     display: flex;
+    //     flex-direction: column;
+    //     // width: fit-content;
+
+    //     .date-range-filter,
+    //     .statuses-filter {
+    //       width: 327px;
+    //     }
+
+    //     .statuses-filter {
+    //       margin-bottom: 20px;
+    //     }
+    //   }
+    // }
+
+    // @media (min-width: 768px) and (max-width: 999px) {
+    //   .filters-status-date-range {
+    //     margin-top: 6px;
+    //     display: flex;
+    //     flex-direction: column;
+    //     width: fit-content;
+
+    //     .date-range-filter,
+    //     .statuses-filter {
+    //       width: 270px;
+    //     }
+
+    //     .statuses-filter {
+    //       margin-bottom: 20px;
+    //     }
+    //   }
+    // }
+
+    @media (max-width: 1280px) {
+      // .date-range-filter,
+      // .statuses-filter {
+      //   width: 100%;
+      // }
+
+      .statuses-filter {
+        // margin-right: 0 !important;
+        margin-bottom: 20px;
+      }
+
+      .filters-status-date-range {
+        justify-content: space-between;
+        flex-direction: row;
+        margin-inline: 20px;
+
+        // flex-wrap: wrap;
+      }
+
+      .search-add {
+        width: 100%;
+        margin: 0px;
+        margin-bottom: 20px;
+
+        & > .search-container,
+        button {
+          margin: 0;
+        }
+
+        button {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .filters-status-date-range {
+        // justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .statuses-filter {
+        margin-right: 0 !important;
+      }
+
+      .statuses-filter {
+        margin-right: 20px !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .date-range-filter,
+      .statuses-filter {
+        width: 100%;
+      }
+
+      .statuses-filter {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .footer-bills-page {
+    padding-bottom: 10px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+
+    .pagination-container {
+      margin: 10px;
+
+      & > div {
+        justify-content: center;
+      }
+    }
+
+    .rows-per-page-container {
+      margin: 10px;
+    }
+  }
+}
+
+.fixed-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  background: white;
+}

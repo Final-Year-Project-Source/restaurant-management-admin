@@ -1,0 +1,18 @@
+//drawer
+.customized-drawer-mobile {
+  .ant-drawer-header {
+    display: none !important;
+  }
+
+  .ant-drawer-body {
+    max-width: 1000px;
+  }
+
+  &.bill-drawer .ant-drawer-body {
+    padding: 20px !important;
+  }
+}
+
+.app-body {
+  transition: max-width 350ms ease-out;
+}

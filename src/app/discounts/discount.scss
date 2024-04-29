@@ -1,0 +1,20 @@
+.discount-customized {
+  .discount-cell {
+    font-family: var(--font-open-sans);
+    font-size: 13px;
+  }
+  .ant-table-cell {
+    height: 58px !important;
+    @media (max-width: 768px) {
+      height: 76px !important;
+    }
+  }
+}
+
+.modifier-modal-customized {
+  height: 246px !important;
+  width: 388px !important;
+  .ant-modal-content {
+    border-radius: 16px !important;
+  }
+}

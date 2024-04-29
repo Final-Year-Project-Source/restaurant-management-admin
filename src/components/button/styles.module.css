@@ -1,0 +1,60 @@
+/* button */
+.btn {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+}
+.secondaryBtn {
+  background-color: var(--red-100);
+  color: white;
+  padding: 19px 84px;
+}
+
+.disabledBtn {
+  opacity: 0.2;
+  color: white;
+  padding: 19px 84px;
+}
+
+.dangerBtn {
+  background-color: red;
+  color: white;
+}
+
+.primaryBtn {
+  background-color: white;
+  border: 1px solid var(--red-100);
+  padding: 18px 84px;
+  color: var(--red-100);
+}
+
+/* category btn*/
+
+.categoryButton {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  /* min-height: 38px !important; */
+}
+
+.inActive {
+  background: transparent !important;
+  color: var(--black-500) !important;
+  /* border-color: var(--black-100) !important; */
+}
+
+.active {
+  /* background-color: var(--black-500) !important; */
+  /* color: var(--white-100) !important; */
+  /* border-color: var(--black-50) !important; */
+  color: var(--red-100) !important;
+  border-bottom: 2px solid #fa4a0c;
+}
+
+/* count btn */
+
+.countBtn {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
