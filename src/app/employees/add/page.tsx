@@ -23,9 +23,9 @@ export interface UserType {
 }
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Missing name'),
-  email: Yup.string().required('Missing email'),
-  role: Yup.string().required('Missing role'),
+  name: Yup.string().required('Tên bắt buộc'),
+  email: Yup.string().required('Email bắt buộc'),
+  role: Yup.string().required('Chức vụ bắt buộc'),
 });
 
 const EditEmployee = () => {
@@ -82,7 +82,7 @@ const EditEmployee = () => {
           type="button"
           onClick={() => router.push('/employees')}
         >
-          Back
+          Trở lại
         </Button>
         <div
           className={`${
@@ -95,7 +95,7 @@ const EditEmployee = () => {
             variant="secondary"
             disabled={isCreating || isDisabled}
           >
-            Save
+            Lưu
           </Button>
         </div>
         <div className="pt-[30px] md:px-[25px] max-md:px-5 max-md:pb-[10px] flex space-x-2 items-center justify-center">
@@ -104,11 +104,11 @@ const EditEmployee = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Employee name</label>
+            <label className="font-medium md:pt-[12px]">Tên nhân viên</label>
             <div className="col-span-3">
               <InputText
                 id="name"
-                placeholder="Employee name"
+                placeholder="Tên nhân viên"
                 disabled={isCreating}
                 value={values.name}
                 onChange={handleChange}
@@ -129,13 +129,13 @@ const EditEmployee = () => {
               />
               {errors.email && touched.email && <span className="text-[12px] text-red-500">{errors.email}</span>}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Role</label>
+            <label className="font-medium max-md:pt-[10px]">Chức vụ</label>
             <div className="col-span-3">
               <Dropdown
                 mode="tags"
                 id="role"
                 disabled={isCreating}
-                placeholder="Select role"
+                placeholder="Chọn chức vụ"
                 includeEmptyValue={false}
                 options={ROLE_EMPLOYEE}
                 value={values.role}

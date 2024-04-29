@@ -188,7 +188,7 @@ const Layout: FC<Props> = ({ children }) => {
         getItem('Lựa chọn', 'modifiers'),
         getItem('Danh mục', 'menu-categories'),
         getItem('Nhóm', 'groups'),
-        getItem('Giảm giá', 'discounts'),
+        getItem('Loại giảm giá', 'discounts'),
         getDivider('divider3'),
       ],
     ),

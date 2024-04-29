@@ -1,10 +1,10 @@
 'use client';
 import Button from '@/components/adminPage/Button';
 import InputText from '@/components/adminPage/Input';
-import CustomizedDrawer from '@/components/drawer/Drawer';
+import CustomizedDrawer from '@/components/drawer';
 import Dropdown from '@/components/dropdown/Dropdown';
 import { ArrowLeftIcon1 } from '@/components/Icons';
-import CustomizedModal from '@/components/modal/CustomizedModal';
+import CustomizedModal from '@/components/modal';
 import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import {
@@ -141,7 +141,7 @@ const EditEmployee = () => {
             type="button"
             onClick={() => router.push('/employees')}
           >
-            Back
+            Trở lại
           </Button>
           <Button
             type="button"
@@ -149,7 +149,7 @@ const EditEmployee = () => {
             variant="primary"
             disabled={isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword}
           >
-            Delete
+            Xoá
           </Button>
           <div
             className={`${
@@ -164,7 +164,7 @@ const EditEmployee = () => {
                 isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword || isDisabled
               }
             >
-              Save
+              Lưu
             </Button>
           </div>
         </div>
@@ -174,7 +174,7 @@ const EditEmployee = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Employee name</label>
+            <label className="font-medium md:pt-[12px]">Tên nhân viên</label>
             <div className="col-span-3">
               {isFetching ? (
                 <Skeleton.Input active block />
@@ -182,7 +182,7 @@ const EditEmployee = () => {
                 <div>
                   <InputText
                     id="name"
-                    placeholder="Name"
+                    placeholder="Tên nhân viên"
                     disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
                     value={values.name}
                     onChange={handleChange}
@@ -211,7 +211,7 @@ const EditEmployee = () => {
                 </div>
               )}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Role</label>
+            <label className="font-medium max-md:pt-[10px]">Chức vụ</label>
             <div className="col-span-3">
               {isFetching ? (
                 <Skeleton.Input active block />
@@ -220,7 +220,7 @@ const EditEmployee = () => {
                   mode="tags"
                   id="role"
                   disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
-                  placeholder="Select role"
+                  placeholder="Chọn chức vụ"
                   includeEmptyValue={false}
                   options={ROLE_EMPLOYEE}
                   value={values.role}
@@ -229,7 +229,7 @@ const EditEmployee = () => {
               )}
             </div>
 
-            <label className="font-medium place-self-start mt-2 max-md:pt-[10px]">Options</label>
+            <label className="font-medium place-self-start mt-2 max-md:pt-[10px]">Lựa chọn</label>
             <div className="col-span-3 w-[235px]">
               <Button
                 className="w-full"
@@ -242,7 +242,7 @@ const EditEmployee = () => {
                   isResetting2FA ||
                   isUpdating ||
                   isResettingPassword ||
-                  !user.otp_enabled
+                  !user?.otp_enabled
                 }
               >
                 Reset 2FA
@@ -258,10 +258,10 @@ const EditEmployee = () => {
                   isResetting2FA ||
                   isUpdating ||
                   isResettingPassword ||
-                  !user.is_change_default_password
+                  !user?.is_change_default_password
                 }
               >
-                Reset password
+                Đặt lại mật khẩu
               </Button>
             </div>
           </div>
@@ -274,7 +274,7 @@ const EditEmployee = () => {
           onCancel={() => setIsModalDeleteOpen(false)}
         >
           <p>
-            Are you sure you want to delete <strong>{user?.name}</strong>?
+            Bạn có chắc muốn xoá <strong>{user?.name}</strong>?
           </p>
         </CustomizedModal>
         <CustomizedDrawer
@@ -288,7 +288,7 @@ const EditEmployee = () => {
           width={screenWidth}
         >
           <div className="text-center">
-            Are you sure you want to delete <strong>{user?.name}</strong>?
+            Bạn có chắc muốn xoá <strong>{user?.name}</strong>?
           </div>
         </CustomizedDrawer>
       </form>

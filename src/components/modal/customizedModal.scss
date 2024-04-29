@@ -1,0 +1,31 @@
+.customized-modal {
+  & > .ant-modal-content {
+    box-shadow: none !important;
+
+    & > .ant-modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+
+      & > button {
+        border-radius: 6px !important;
+        max-height: 35px;
+        width: fit-content;
+        padding: 15px;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+}
+
+.ant-modal-content {
+  padding: 30px !important;
+}
+
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+}
