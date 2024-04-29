@@ -1,0 +1,43 @@
+.customized-input:hover {
+  border-color: rgba(19, 28, 22, 1) !important;
+}
+
+.customized-input:focus {
+  box-shadow: none !important;
+
+  border-color: rgba(19, 28, 22, 1) !important;
+}
+
+.wrapper-form-modifier-options-list {
+  display: flex;
+  margin-top: 8px;
+  .ant-space-item {
+    &:first-child {
+      width: 100%;
+    }
+    .ant-form-item {
+      margin-bottom: 0.25rem;
+    }
+    input {
+      margin-top: 0;
+    }
+  }
+}
+
+.hide-footer {
+  .ant-modal-footer {
+    display: none !important;
+  }
+}
+
+.ant-input-number-handler-wrap {
+  visibility: hidden;
+}
+
+.customized-width {
+  height: 246px !important;
+  width: 388px !important;
+  .ant-modal-content {
+    border-radius: 16px !important;
+  }
+}
