@@ -10,7 +10,7 @@ export const ITEMS = [
   { value: 'kitchen-display', label: 'Nhà bếp' },
   { value: 'sales-summary', label: 'Doanh thu' },
   { value: 'sales-by-item', label: 'Món ăn' },
-  { value: 'products', label: 'Sản phẩm' },
+  { value: 'products', label: 'Món ăn' },
   { value: 'modifiers', label: 'Lựa chọn' },
   { value: 'menu-categories', label: 'Danh mục' },
   { value: 'groups', label: 'Nhóm' },
@@ -64,18 +64,18 @@ export const STATUS = [
 ];
 
 export const STOCK_STATUSES = {
-  IN_STOCK: 'In stock',
-  LOW_STOCK: 'Low stock',
-  OUT_OF_STOCK: 'Out of stock',
+  IN_STOCK: 'Còn hàng',
+  LOW_STOCK: 'Thiếu hàng',
+  OUT_OF_STOCK: 'Hết hàng',
 };
 
 export const convertStocksToOptions = (stocks: { [key: string]: number }): { label: string; value: string }[] => {
   if (!stocks) return [];
 
   return [
-    { label: `In stock`, value: 'in stock' },
-    { label: `Low stock (${stocks?.[STOCK_STATUSES.LOW_STOCK]})`, value: 'low stock' },
-    { label: `Out of stock (${stocks?.[STOCK_STATUSES.OUT_OF_STOCK]})`, value: 'out of stock' },
+    { label: `Còn hàng`, value: 'in stock' },
+    { label: `Thiếu hàng (${stocks?.[STOCK_STATUSES.LOW_STOCK]})`, value: 'low stock' },
+    { label: `Hết hàng (${stocks?.[STOCK_STATUSES.OUT_OF_STOCK]})`, value: 'out of stock' },
   ];
 };
 
