@@ -1,0 +1,27 @@
+.switch-customized {
+  background-color: rgba(19, 28, 22, 0.2) !important;
+  border-radius: 19px !important;
+
+  &.ant-switch-checked {
+    background-color: #131c16 !important;
+
+    .ant-switch-handle {
+      inset-inline-start: calc(100% - 24px) !important;
+    }
+  }
+  .ant-switch-handle::before {
+    top: 1px !important;
+    inset-inline-start: 2px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .ant-switch-inner-unchecked {
+    color: #131c16 !important;
+  }
+
+  .ant-switch-inner-unchecked,
+  .ant-switch-inner-checked {
+    font-size: 11px !important;
+  }
+}
