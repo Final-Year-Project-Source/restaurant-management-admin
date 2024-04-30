@@ -1,0 +1,80 @@
+.sales-summary-container {
+  .summary-filter-bar {
+    display: flex !important;
+    flex-direction: row !important;
+
+    @media (max-width: 840px) {
+      flex-direction: column-reverse !important;
+      align-items: flex-start;
+    }
+
+    .filter-summary-container {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center;
+
+      @media (max-width: 1140px) {
+        flex-direction: column !important;
+        align-items: flex-start;
+      }
+
+      @media (max-width: 840px) {
+        margin-top: 20px;
+        width: 100% !important;
+      }
+
+      @media (max-width: 768px) {
+        margin-top: 0px;
+        width: 100% !important;
+      }
+
+      .date-range-filter {
+        width: 327px !important;
+
+        @media (max-width: 840px) {
+          width: 100% !important;
+        }
+      }
+
+      .time-filter {
+        width: 220px !important;
+        margin-left: 20px;
+
+        @media (max-width: 1140px) {
+          margin-top: 20px;
+          margin-left: 0px;
+        }
+
+        @media (max-width: 840px) {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+
+  .sales-summary-buttons {
+    display: flex !important;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-wrap: nowrap !important;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+    }
+  }
+}
+
+.customized-option {
+  .hour-picker {
+    max-width: 150px !important;
+  }
+
+  .ant-radio-wrapper {
+    align-items: center !important;
+  }
+
+  .ant-wave-target {
+    height: 100%;
+    margin-bottom: auto;
+  }
+}
