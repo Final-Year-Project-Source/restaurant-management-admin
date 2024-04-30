@@ -31,15 +31,15 @@ export const DIETARY_RESTRICTIONS = [
 ];
 
 export const PROTEINS = [
-  { label: 'Chicken', value: 'chicken' },
-  { label: 'Pork', value: 'pork' },
-  { label: 'Beef', value: 'beef' },
-  { label: 'SeaFood', value: 'seafood' },
-  { label: 'Other', value: 'other' },
+  { label: 'Gà', value: 'chicken' },
+  { label: 'Lợn', value: 'pork' },
+  { label: 'Bò', value: 'beef' },
+  { label: 'Hải sản', value: 'seafood' },
+  { label: 'Khác', value: 'other' },
 ];
 
 export const DIETARY_RESTRICTIONS_GROUP = {
-  groupName: 'Dietary restrictions',
+  groupName: 'Chế độ ăn kiêng',
   options: [
     { icon: 'Vegan', label: 'Vegan' },
     { icon: 'Vegetarian', label: 'Vegetarian' },
@@ -47,20 +47,21 @@ export const DIETARY_RESTRICTIONS_GROUP = {
     { icon: 'Gluten-free', label: 'Gluten-free' },
   ],
 };
+
 export const PROTEINS_GROUP = {
   groupName: 'Protein',
-  options: [{ label: 'Chicken' }, { label: 'Pork' }, { label: 'Beef' }, { label: 'SeaFood' }, { label: 'Other' }],
+  options: [{ label: 'Gà' }, { label: 'Lơn' }, { label: 'Bò' }, { label: 'Hải sản' }, { label: 'Khác' }],
 };
 
 export const TYPES = [
-  { label: 'Fixed amount', value: 'FIXED_AMOUNT' },
-  { label: 'Fixed percent', value: 'FIXED_PERCENT' },
+  { label: 'Số lượng cố định', value: 'FIXED_AMOUNT' },
+  { label: 'Phần trắm cố định', value: 'FIXED_PERCENT' },
 ];
 
 export const STATUS = [
-  { label: 'Ordering', value: 'Ordering' },
-  { label: 'Preparing', value: 'Preparing' },
-  { label: 'Done', value: 'Done' },
+  { label: 'Đang đặt món', value: 'Ordering' },
+  { label: 'Đang chuẩn bị', value: 'Preparing' },
+  { label: 'Đã hoàn thành', value: 'Done' },
 ];
 
 export const STOCK_STATUSES = {
@@ -160,27 +161,27 @@ export const BILL_STATUSES = [
     id: 1,
     title: 'Order status',
     statuses: [
-      { label: 'Ordering', value: 'ordering' },
-      { label: 'Preparing', value: 'preparing' },
-      { label: 'Partially completed', value: 'partially completed' },
-      { label: 'Completed', value: 'completed' },
-      { label: 'Cancelled', value: 'cancelled' },
+      { label: 'Đang đặt món', value: 'ordering' },
+      { label: 'Đang chuẩn bị', value: 'preparing' },
+      { label: 'Hoàn thành một phần', value: 'partially completed' },
+      { label: 'Đã hoàn thành', value: 'completed' },
+      { label: 'Đã huỷ', value: 'cancelled' },
     ],
   },
   {
     id: 2,
     title: 'Payment status',
     statuses: [
-      { label: 'Unpaid', value: 'unpaid' },
-      { label: 'Paid', value: 'paid' },
-      { label: 'Refunded', value: 'refunded' },
+      { label: 'Chưa thanh toán', value: 'unpaid' },
+      { label: 'Đã thanh toán', value: 'paid' },
+      { label: 'Đã hoàn lại', value: 'refunded' },
     ],
   },
 ];
 
 export const KDS_STATUSES = [
-  { label: 'Preparing', value: 'preparing' },
-  { label: 'Completed', value: 'completed' },
+  { label: 'Chuẩn bị', value: 'preparing' },
+  { label: 'Hoàn thành', value: 'completed' },
 ];
 
 export const ROLE_FILTER = [
