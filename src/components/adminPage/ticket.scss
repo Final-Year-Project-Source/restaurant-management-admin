@@ -1,0 +1,145 @@
+$bg-color: #fff;
+$triangle-width: 17.4px;
+
+:root {
+  --color-box-bg: #{$bg-color};
+  --color-zigzag-bg: var(--color-box-bg);
+  --angle: 45deg;
+  --angle-rev: 315deg;
+  --angle-top: var(--angle);
+  --angle-rev-top: var(--angle-rev);
+}
+
+.ticket-KDS {
+  .ticket-body {
+    border-inline: 0.5px solid rgba(19, 28, 22, 0.2);
+    background-color: #fff;
+    // height: fit-content !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .ticket-body-with-jagged-border-bottom {
+    border-inline: 0.5px solid rgba(19, 28, 22, 0.2);
+    background-color: #fff;
+    width: 280px;
+    position: relative;
+
+    background: var(--color-box-bg);
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      right: 0;
+      height: 10px;
+      background-size: $triangle-width 8px;
+      background-repeat: repeat-x;
+      background-position: top left;
+      background-origin: border-box;
+      // background-size: 20px 100%;
+
+      background-image: linear-gradient(
+          var(--angle),
+          transparent 65%,
+          var(--color-zigzag-bg) 65%,
+          var(--color-zigzag-bg) 100%,
+          transparent 100%
+        ),
+        linear-gradient(
+          var(--angle-rev),
+          transparent 65%,
+          var(--color-zigzag-bg) 65%,
+          var(--color-zigzag-bg) 100%,
+          transparent 100%
+        );
+    }
+
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .ticket-body-with-jagged-border-top {
+    border-inline: 0.5px solid rgba(19, 28, 22, 0.2);
+    background-color: #fff;
+    width: 280px;
+    position: relative;
+
+    background: var(--color-box-bg);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -60px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-size: $triangle-width 8px;
+      background-repeat: repeat-x;
+      background-position: top left;
+      background-origin: border-box;
+      rotate: 180deg;
+      background-image: linear-gradient(
+          var(--angle),
+          transparent 65%,
+          var(--color-zigzag-bg) 65%,
+          var(--color-zigzag-bg) 100%,
+          transparent 100%
+        ),
+        linear-gradient(
+          var(--angle-rev),
+          transparent 65%,
+          var(--color-zigzag-bg) 65%,
+          var(--color-zigzag-bg) 100%,
+          transparent 100%
+        );
+    }
+
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  // .ticket-body,
+  .ticket-header {
+    // box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .ticket-header {
+    border-bottom: 0.5px solid rgba(19, 28, 22, 0.2);
+
+    .bg-header-left {
+      border-start-start-radius: 16px;
+    }
+
+    .bg-header-right {
+      border-start-end-radius: 16px;
+    }
+  }
+
+  .jagged-border-bottom {
+    width: calc(100% + 8px);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 30px;
+    background-image: url('/assets/images/jaggedBg.svg');
+    position: absolute;
+    bottom: 0;
+    left: -2px;
+    background-origin: content-box;
+    z-index: 1;
+  }
+
+  .jagged-border-top {
+    width: calc(100% + 8px);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 36px;
+    background-image: url('/assets/images/jaggedBg.svg');
+    position: absolute;
+    top: -4px;
+    left: -5.5px;
+    background-origin: content-box;
+    transform: rotate(180deg);
+  }
+}
