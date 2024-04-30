@@ -175,7 +175,7 @@ const Layout: FC<Props> = ({ children }) => {
       <div className="min-w-[17px]">
         <ReportsIcon />
       </div>,
-      [getItem('Doanh thu', 'sales-summary'), getItem('Món ăn', 'sales-by-item'), getDivider('divider2')],
+      [getItem('Doanh thu', 'sales-summary'), getItem('Mặt hàng', 'sales-by-item'), getDivider('divider2')],
     ),
     getItem(
       'Mặt hàng',
@@ -184,7 +184,7 @@ const Layout: FC<Props> = ({ children }) => {
         <ItemsIcon />
       </div>,
       [
-        getItem('Sản phẩm', 'products'),
+        getItem('Món ăn', 'products'),
         getItem('Lựa chọn', 'modifiers'),
         getItem('Danh mục', 'menu-categories'),
         getItem('Nhóm', 'groups'),
