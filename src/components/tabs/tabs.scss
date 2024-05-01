@@ -1,0 +1,28 @@
+.customized-segmented {
+  .ant-segmented-group {
+    .ant-segmented-item {
+      padding: 6px 20px 6px 18px !important;
+      border-radius: 16px 0 0 16px !important;
+      max-height: 38px !important;
+      border: 1px solid rgba(19, 28, 22, 0.2) !important;
+
+      &.ant-segmented-item-selected {
+        border-radius: 16px 0 0 16px !important;
+        font-weight: 500 !important;
+      }
+
+      .ant-segmented-item-label {
+        line-height: 26px !important;
+        padding: 0px !important;
+      }
+    }
+
+    .ant-segmented-item:last-child {
+      border-radius: 0 16px 16px 0 !important;
+
+      &.ant-segmented-item-selected {
+        border-radius: 0 16px 16px 0 !important;
+      }
+    }
+  }
+}

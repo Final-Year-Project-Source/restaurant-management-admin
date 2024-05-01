@@ -1,0 +1,16 @@
+.menu-layout,
+.category-btn,
+.product-layout,
+.other-layout {
+  &::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.search-input {
+  &.ant-input-affix-wrapper {
+    padding: 11px 16px !important;
+  }
+}

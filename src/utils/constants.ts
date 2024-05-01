@@ -41,16 +41,16 @@ export const PROTEINS = [
 export const DIETARY_RESTRICTIONS_GROUP = {
   groupName: 'Chế độ ăn kiêng',
   options: [
-    { icon: 'Vegan', label: 'Vegan' },
-    { icon: 'Vegetarian', label: 'Vegetarian' },
-    { icon: 'Diary-free', label: 'Diary-free' },
-    { icon: 'Gluten-free', label: 'Gluten-free' },
+    { icon: 'Vegan', label: 'Thực vật' },
+    { icon: 'Vegetarian', label: 'Ăn chay' },
+    { icon: 'Diary-free', label: 'Không chứa sữa' },
+    { icon: 'Gluten-free', label: 'Không chứa gluten' },
   ],
 };
 
 export const PROTEINS_GROUP = {
   groupName: 'Protein',
-  options: [{ label: 'Gà' }, { label: 'Lơn' }, { label: 'Bò' }, { label: 'Hải sản' }, { label: 'Khác' }],
+  options: [{ label: 'Gà' }, { label: 'Lợn' }, { label: 'Bò' }, { label: 'Hải sản' }, { label: 'Khác' }],
 };
 
 export const TYPES = [

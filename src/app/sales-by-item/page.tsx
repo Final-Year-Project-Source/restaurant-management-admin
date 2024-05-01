@@ -1,5 +1,8 @@
 'use client';
+import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
+import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
+import ProductImage from '@/components/productImage';
 import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
@@ -8,7 +11,6 @@ import { useGetCategoriesQuery } from '@/redux/services/categoryApi';
 import { useGetSalesByItemQuery } from '@/redux/services/summary';
 import { RootState } from '@/redux/store';
 import { CategoryType } from '@/types/categories.types';
-import { ProductType } from '@/types/products.types';
 import { getFormatDate, getSelectedItems, handleDownloadCSV, serializeFilters } from '@/utils/commonUtils';
 import { convertCategoriesToOptions, PAGINATIONLIMIT } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table/interface';
@@ -17,9 +19,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './sales-by-item.scss';
-import ProductImage from '@/components/productImage';
-import DateRangePicker from '@/components/dateRangePicker';
-import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
 
 const startDateDefault = (() => {
   const thisWeekStartDate = new Date();

@@ -1,0 +1,9 @@
+.basket-drawer {
+  .ant-drawer-header {
+    display: none !important;
+  }
+  .ant-drawer-content-wrapper {
+    box-shadow: none !important;
+    width: 100% !important;
+  }
+}
