@@ -1,0 +1,8 @@
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover .ant-checkbox-inner,
+.ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner {
+  border-color: rgba(19, 28, 22, 0.2) !important;
+}
+/* .ant-checkbox-wrapper {
+  justify-content: flex-start !important;
+  align-items: center !important;
+} */
