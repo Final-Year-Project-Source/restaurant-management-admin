@@ -30,18 +30,18 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
         <span
           className={`text-center leading-normal max-w-[260px] text-black-500 text-[10px] mt-[20.78px] mb-[30px] font-normal ${open_sans.className}`}
         >
-          Bella OnoJie. 174 Nguyễn Lương Bằng, phường Hoà Khánh bắc, quận Liên Chiểu, Đà Nẵng, Việt Nam. Mã số thuế :
-          0235563109861. Tel: 092 123 8378
+          Bella OnoJie. 174 Nguyen Luong Bang, Hoa Khanh bac, Lien Chieu, Da Nang, Viet Nam. Tax ID : 0235563109861.
+          Tel: 092 123 8378
         </span>
 
-        <div className="h-[28px] font-medium leading-normal mb-[12px] text-[24px] text-black-500">Biên lai</div>
+        <div className="h-[28px] font-medium leading-normal mb-[12px] text-[24px] text-black-500">Receipt</div>
 
         <div className="h-[17px] leading-normal">
           {moment(bill?.receipt_data?.created_at).format('DD MMMM YYYY, HH:mm')}
         </div>
       </div>
 
-      <div className="flex font-medium text-black-400 mt-[30px]"> Tóm tắt đơn </div>
+      <div className="flex font-medium text-black-400 mt-[30px]"> Order summary </div>
       {Items?.map((item: any, index: number) => {
         return (
           <div key={index} className="mt-[20px]">
@@ -64,16 +64,16 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
         <div className={`text-[10px] text-black-500 space-y-[3px] ${open_sans.className}`}>
           {totalDiscount > 0 && (
             <div className="flex items-center justify-between ">
-              <span>{discount_text} Giảm giá </span>
+              <span>{discount_text} Discount </span>
               <span>-{totalDiscount}</span>
             </div>
           )}
           <div className="flex items-center justify-between">
-            <div> Tổng cộng (`${Items?.length} món`) </div>
+            <div> Subtotal </div>
             <div> {subTotal} </div>
           </div>
           <div className="flex items-center justify-between">
-            <div> 10% Phí dịch vụ </div>
+            <div> 10% Service Charge </div>
             <div> {serviceCharge10} </div>
           </div>
           <div className="flex items-center justify-between">
@@ -82,7 +82,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
           </div>
         </div>
         <div className="text-[14px] flex items-center mt-[7px] justify-between ">
-          <div> Thành tiền </div>
+          <div> Total </div>
           <div> {bill?.total} </div>
         </div>
       </div>

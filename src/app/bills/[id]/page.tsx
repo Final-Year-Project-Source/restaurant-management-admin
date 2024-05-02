@@ -93,7 +93,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
     ? discount_info.type === 'FIXED_PERCENT'
       ? `${discount_info.name} (${discount_info.value}%)`
       : `${discount_info.name} (฿${discount_info.value})`
-    : 'Không giảm giá';
+    : 'No discount';
   const [customerValue, setCustomerValue] = useState('');
   const [qrBeamPayment, setQrBeamPayment] = useState('');
   const [isModalConfirmReopenBillOpen, setIsModalConfirmReopenBillOpen] = useState(false);
@@ -414,7 +414,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   );
   const tabs = [
     {
-      label: 'Hoá đơn',
+      label: 'Bill',
       component: (
         <BillTab
           paymentStatus={payment_status}
@@ -466,7 +466,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       ),
     },
     {
-      label: 'Lịch sử',
+      label: 'History',
       component: (
         <History
           bill={singleBill?.data}
@@ -487,20 +487,20 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       <div className={`space-y-[30px] ${isMobile && 'pt-[20px] pb-[25px] pl-[20px] pr-[23px]'} `}>
         <div className="flex justify-between">
           <Button icon={<ArrowLeftIcon1 />} onClick={() => router.push(`${(urlPage as any)['bills']}`)}>
-            Trở lại
+            Back
           </Button>
           <Button
             variant="secondary"
             disabled={payment_status !== 'Unpaid' || status === 'Cancelled'}
             onClick={() => router.push(`/bills/${id}/create-order`)}
           >
-            + Đặt món ăn
+            + Create order
           </Button>
         </div>
         {downloadingReceipt && <LoadingIndicator />}
         <div className="flex lg:space-x-[107px] max-w-[900px] max-[1024px]:w-full space-y-[10px] lg:space-y-[0px] mt-[5px] md:mr-[133px] max-lg:flex-col">
           <div className="grid grid-cols-3 grid-flow-row gap-y-[10px] gap-x-[16px] justify-center items-center">
-            <label className="font-medium">Ngày</label>
+            <label className="font-medium">Date</label>
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -509,7 +509,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
               )}
             </div>
 
-            <label className="font-medium">Tên bàn</label>
+            <label className="font-medium">Table name</label>
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -533,7 +533,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                 />
               )}
             </div>
-            <label className="font-medium">Tên khách hàng</label>
+            <label className="font-medium">Customer name</label>
+
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -554,7 +555,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
           </div>
 
           <div className="grid grid-cols-3 grid-flow-row gap-x-[10px] gap-y-[10px] justify-center items-center">
-            <label className="font-medium">Loại giảm giá</label>
+            <label className="font-medium">Discount</label>
+
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -581,7 +583,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                 />
               )}
             </div>
-            <label className="font-medium">Trạng thái đặt hàng</label>
+            <label className="font-medium">Order status</label>
+
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -589,7 +592,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                 <span className="font-open-sans text-[13px]">{status}</span>
               )}
             </div>
-            <label className="font-medium">Trạng thái thanh toán</label>
+            <label className="font-medium">Payment status</label>
+
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -597,7 +601,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                 <span className="font-open-sans text-[13px]">{payment_status}</span>
               )}
             </div>
-            <label className="font-medium">Đánh giá</label>
+            <label className="font-medium">Review</label>
             <div className="col-span-2">
               {isLoadingBill || isFetchingDiningTable || isFetchingDiscount ? (
                 <Skeleton.Input active block />
@@ -616,16 +620,17 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       <ReceiptDownLoadedImage className="hidden" bill={data} />
 
       {/* Modal QR Beam Link */}
+      {/* Modal QR Beam Link */}
       <CustomizedModal
         width={500}
         open={isModalQRBeamLinkOpen && !isMobile}
-        title="Thanh toán bằng mã QR"
+        title="Payment QR"
         onOk={handleRefetchBillDataAfterPayment}
         onCancel={() => {
           setQrBeamPayment('');
           setIsModalQRBeamLinkOpen(false);
         }}
-        okText="Tải lại để cập nhật trạng thái thanh toán"
+        okText="Reload for Updating Payment Status"
       >
         <div className="min-h-[32px] mb-7 flex justify-center">
           {isCreatingPayment ? (
@@ -643,8 +648,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
           setQrBeamPayment('');
           setIsModalQRBeamLinkOpen(false);
         }}
-        title="Thanh toán bằng mã QR"
-        okText="Tải lại để cập nhật trạng thái thanh toán"
+        title="Payment QR"
+        okText="Reload for Updating Payment Status"
         onOk={handleRefetchBillDataAfterPayment}
         width={width}
       >
@@ -660,80 +665,72 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       {/* Modal Confirm Beam Refund  */}
       <CustomizedModal
         open={isModalBeamRefundOpen && !isMobile}
-        title="Xác nhận"
+        title="Confirm"
         onOk={handleCreateRefund}
         onCancel={() => {
           setIsModalBeamRefundOpen(false);
         }}
       >
-        <p className="mb-7 text-center">
-          Bạn có chắc chắn muốn xử lý khoản tiền hoàn lại qua BEAM cho hóa đơn này không?
-        </p>
+        <p className="mb-7 text-center">Are you sure you want to process a refund via BEAM for this bill?</p>
       </CustomizedModal>
       <CustomizedDrawer
         className="bill-drawer"
         type="confirm"
         open={isModalBeamRefundOpen && isMobile}
         onClose={() => setIsModalBeamRefundOpen(false)}
-        title="Xác nhận hoàn tiền qua BEAM"
-        okText="Xác nhận"
+        title="Confirm BEAM refund"
+        okText="Confirm"
         onOk={handleCreateRefund}
         width={width}
       >
-        <div className="text-center">
-          Bạn có chắc chắn muốn xử lý khoản tiền hoàn lại qua BEAM cho hóa đơn này không?
-        </div>
+        <div className="text-center">Are you sure you want to process a refund via BEAM for this bill?</div>
       </CustomizedDrawer>
 
       {/* Modal Confirm EDC Refund  */}
       <CustomizedModal
         open={isModalEDCRefundOpen && !isMobile}
-        title="Xác nhận"
+        title="Confirm"
         onOk={handleCreateRefund}
         onCancel={() => {
           setIsModalEDCRefundOpen(false);
         }}
       >
-        <p className="mb-7 text-center">
-          Bạn có chắc chắn muốn xử lý khoản tiền hoàn lại qua EDC cho hóa đơn này không?
-        </p>
+        <p className="mb-7 text-center">Are you sure you want to process a refund via EDC for this bill?</p>
       </CustomizedModal>
       <CustomizedDrawer
         className="bill-drawer"
         type="confirm"
         open={isModalEDCRefundOpen && isMobile}
         onClose={() => setIsModalEDCRefundOpen(false)}
-        title="Xác nhận hoàn tiền EDC"
-        okText="Xác nhận"
+        title="Confirm EDC refund"
+        okText="Confirm"
         onOk={handleCreateRefund}
         width={width}
       >
-        <div className="text-center">
-          Bạn có chắc chắn muốn xử lý khoản tiền hoàn lại qua EDC cho hóa đơn này không?
-        </div>
+        <div className="text-center">Are you sure you want to process a refund via EDC for this bill?</div>
       </CustomizedDrawer>
 
       {/* Modal Drawer Confirm Reopen Bill  */}
       <CustomizedModal
         open={isModalConfirmReopenBillOpen && !isMobile}
-        title="Xác nhận"
+        title="Confirm"
         onOk={handleReopenBill}
         onCancel={() => setIsModalConfirmReopenBillOpen(false)}
       >
-        <p>Bạn có chắc chắn muốn mở lại hóa đơn này không?</p>
+        <p>Are you sure you want to reopen this bill?</p>
       </CustomizedModal>
       <CustomizedDrawer
         className="bill-drawer"
         type="confirm"
         open={isModalConfirmReopenBillOpen && isMobile}
         onClose={() => setIsModalConfirmReopenBillOpen(false)}
-        title="Xác nhận mở lại hóa đơn"
-        okText="Xác nhận"
+        title="Confirm reopen bill"
+        okText="Confirm"
         onOk={handleReopenBill}
         width={width}
       >
         <div className="text-center">
-          <p>Bạn có chắc chắn muốn mở lại hóa đơn này không?</p>
+          <p>Are you sure you want to reopen this bill?</p>
         </div>
       </CustomizedDrawer>
 
@@ -744,7 +741,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
         title=""
         onOk={handlePrint}
         onCancel={() => setIsModalPrintTaxInvoiceOpen(false)}
-        okText="In"
+        okText="Print"
       >
         <div ref={refTaxInvoice} className="min-h-[32px]">
           {data && <TaxInvoice taxInvoiceData={data} buyerInfo={tax_invoice_info} />}
@@ -755,7 +752,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
         type="confirm"
         open={isModalPrintTaxInvoiceOpen && !isCreatingTaxInvoice && !isLoadingBill && isMobile}
         onClose={() => setIsModalPrintTaxInvoiceOpen(false)}
-        okText="In"
+        okText="Print"
         onOk={handlePrint}
         width={width}
       >
@@ -769,8 +766,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
         width={400}
         open={isModalCreateTaxInvoiceOpen && !isMobile}
         onCancel={() => setIsModalCreateTaxInvoiceOpen(false)}
-        title="Xuất hóa đơn thuế"
-        okText="Xuất"
+        title="Issue tax invoice"
+        okText="Create tax invoice"
         disableOkButton={!isValidFormTaxInvoice}
         onOk={handleSubmitRequestTaxInvoiceButton}
       >
@@ -780,8 +777,8 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
         className="bill-drawer"
         open={isModalCreateTaxInvoiceOpen && isMobile}
         onClose={() => setIsModalCreateTaxInvoiceOpen(false)}
-        title="Xuất hóa đơn thuế"
-        okText="Xuất"
+        title="Issue tax invoice"
+        okText="Create tax invoice"
         onOk={handleSubmitRequestTaxInvoiceButton}
         width={width}
       >

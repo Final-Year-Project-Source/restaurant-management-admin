@@ -118,18 +118,18 @@ const FeedbackPage = () => {
 
   const SalesSummaryButton = [
     {
-      title: 'Tích cực',
+      title: 'Positive',
       options: [
-        { label: 'Chất lượng dịch vụ tốt', value: 100 },
-        { label: 'Chất lượng đồ ăn ngon', value: 500 },
+        { label: 'Good quality service', value: 100 },
+        { label: 'Delicious food', value: 500 },
         { label: 'Môi trường và không gian', value: 1000 },
-        { label: 'Giá cả', value: 2 },
-        { label: 'Lợi nhuận', value: 5 },
+        { label: 'Good price', value: 2 },
+        { label: 'Convenient Payment Methods', value: 5 },
       ],
     },
 
     {
-      title: 'Tiêu cực',
+      title: 'Negative',
       options: [
         { label: 'Chất lượng dịch vụ tốt', value: 100 },
         { label: 'Chất lượng đồ ăn ngon', value: 500 },
@@ -139,7 +139,7 @@ const FeedbackPage = () => {
       ],
     },
     {
-      title: 'Số sao',
+      title: 'Review',
       options: [
         { label: 5, value: 100 },
         { label: 4, value: 500 },
@@ -152,12 +152,12 @@ const FeedbackPage = () => {
 
   const columns: ColumnsType<SaleSummaryType> = [
     {
-      title: 'Thời gian',
+      title: 'Date',
       dataIndex: 'created_at',
       render: (time) => <p>{getFormatDateTime(time)}</p>,
     },
     {
-      title: 'Tên hoá đơn',
+      title: 'Bill name',
       dataIndex: 'bill_name',
     },
     {
@@ -165,16 +165,16 @@ const FeedbackPage = () => {
       dataIndex: 'contact_email',
     },
     {
-      title: 'Điện thoại',
+      title: 'Phone',
       dataIndex: 'contact_phone',
     },
     {
-      title: 'Số sao',
+      title: 'Review',
       dataIndex: 'stars',
     },
     {
-      title: 'Đánh giá',
-      dataIndex: 'Comment',
+      title: 'Comment',
+      dataIndex: 'comment',
     },
   ];
 

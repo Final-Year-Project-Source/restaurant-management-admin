@@ -79,7 +79,7 @@ const EditModifier = () => {
 
   const modifierColumns: ColumnsType<ModifierOption> = [
     {
-      title: 'Lựa chọn',
+      title: 'Options',
       dataIndex: 'option',
       render: (text, record) => (
         <TextGroup
@@ -185,14 +185,14 @@ const EditModifier = () => {
           onClick={() => router.back()}
           disabled={isDeleteLoading || isUpdateLoading || isLoading}
         >
-          Trở lại
+          Back
         </Button>
         <Button
           className="w-[136px]"
           onClick={() => setIsModalDeleteOpen(true)}
           disabled={isDeleteLoading || isUpdateLoading || isLoading}
         >
-          Xoá
+          Delete
         </Button>
       </div>
       <div
@@ -215,7 +215,7 @@ const EditModifier = () => {
             isEmptyName
           }
         >
-          Lưu
+          Save
         </Button>
       </div>
 
@@ -224,7 +224,7 @@ const EditModifier = () => {
           <InputText
             isLoading={isLoading}
             className="md:max-w-[253px]"
-            label="Tên"
+            label="Modifier name"
             placeholder="name"
             required
             disabled={isDeleteLoading || isUpdateLoading || isLoading}
@@ -251,7 +251,7 @@ const EditModifier = () => {
             onClick={handleAddOption}
             disabled={isDeleteLoading || isUpdateLoading || isLoading}
           >
-            + Thêm lựa chọn
+            + Add option
           </Button>
         </div>
       </div>
@@ -261,13 +261,13 @@ const EditModifier = () => {
           <CustomizedModal
             className="customized-width"
             open={isModalDeleteOpen && !isMobile}
-            title="Xác nhận"
+            title="Confirm deletion"
             onOk={handleOkDelete}
-            okText="Xoá"
+            okText="Delete"
             onCancel={() => setIsModalDeleteOpen(false)}
           >
             <div className="text-center text-black-400 flex flex-col mb-[30px]">
-              <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
+              <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
             </div>
           </CustomizedModal>
           <CustomizedDrawer
@@ -275,13 +275,13 @@ const EditModifier = () => {
             type="confirm"
             open={isModalDeleteOpen && isMobile}
             onClose={() => setIsModalDeleteOpen(false)}
-            title="Xác nhận"
-            okText="Xoá"
+            title="Confirm deletion"
+            okText="Delete"
             onOk={handleOkDelete}
             width={screenWidth}
           >
             <div className="text-center text-black-400 flex flex-col">
-              <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
+              <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
             </div>
           </CustomizedDrawer>
         </>

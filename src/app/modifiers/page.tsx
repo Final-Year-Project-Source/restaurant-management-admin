@@ -83,7 +83,7 @@ export default function Modifier() {
 
   const columns: ColumnsType<ModifierType> = [
     {
-      title: 'Tên',
+      title: 'Modifiers',
       dataIndex: 'name',
       render: (text, record) => (
         <div className="flex flex-col h-[38px] justify-center font-open-sans">
@@ -148,7 +148,7 @@ export default function Modifier() {
           disabled={isFetching}
           onClick={() => router.push(`modifiers/add`)}
         >
-          + Tạo lựa chọn
+          + New modifier
         </Button>
       </div>
       <DraggableTable

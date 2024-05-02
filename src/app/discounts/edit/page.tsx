@@ -5,7 +5,7 @@ import DatePickerElement from '@/components/datePicker';
 import CustomizedDrawer from '@/components/drawer';
 import { ArrowLeftIcon1 } from '@/components/Icons';
 import CustomizedModal from '@/components/modal';
-import { RadioGroup } from '@/components/radio';
+import RadioGroup from '@/components/radio/RadioGroup';
 import { DISCOUNT_TYPE } from '@/enums';
 import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
@@ -25,7 +25,7 @@ import * as Yup from 'yup';
 import '../discount.scss';
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Loại giảm giá bắt buộc'),
+  name: Yup.string().required('Missing Name'),
 });
 
 const EditDiscount = () => {
@@ -141,12 +141,12 @@ const EditDiscount = () => {
   const handleRadioGroupTypeChange = (selectedValue: string) => {
     formik.setFieldValue(
       'type',
-      selectedValue === 'Phần trăm' ? DISCOUNT_TYPE.FIXED_PERCENT : DISCOUNT_TYPE.FIXED_AMOUNT,
+      selectedValue === 'Percentage' ? DISCOUNT_TYPE.FIXED_PERCENT : DISCOUNT_TYPE.FIXED_AMOUNT,
     );
   };
 
   const handleRadioGroupUseChange = (selectedValue: string) => {
-    formik.setFieldValue('is_limited', selectedValue === 'Giới hạn' ? true : false);
+    formik.setFieldValue('is_limited', selectedValue === 'Limited' ? true : false);
   };
 
   const handleOkDelete = () => {
@@ -189,7 +189,7 @@ const EditDiscount = () => {
             onClick={() => router.push('/discounts')}
             disabled={isDeleteLoading || isUpdateLoading || isLoading}
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="button"
@@ -197,7 +197,7 @@ const EditDiscount = () => {
             onClick={() => setIsModalDeleteOpen(true)}
             disabled={isDeleteLoading || isUpdateLoading || isLoading}
           >
-            Xoá
+            Delete
           </Button>
         </div>
         <div
@@ -211,12 +211,12 @@ const EditDiscount = () => {
             type="submit"
             disabled={isDeleteLoading || isUpdateLoading || isLoading || isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
 
-        <div className="pt-[30px] px-[25px] max-md:pb-[10px] max-md:px-5 grid md:grid-cols-5 grid-cols">
-          <label className="col-span-2 md:mt-[10px] font-medium max-md:pb-[10px]">Loại giảm giá</label>
+        <div className="pt-[30px] md:pl-[25px] max-md:pb-[10px] max-md:px-5 grid md:grid-cols-5 grid-cols md:w-[82%] lg:w-[70%]">
+          <label className="col-span-2 md:mt-[10px] font-medium max-md:pb-[10px]">Discount name</label>
 
           <div className="col-span-3">
             {isLoading ? (
@@ -224,7 +224,7 @@ const EditDiscount = () => {
             ) : (
               <InputText
                 name="name"
-                placeholder="Loại giảm giá"
+                placeholder="Name"
                 required
                 disabled={isDeleteLoading || isUpdateLoading || isLoading}
                 value={values?.name}
@@ -235,7 +235,7 @@ const EditDiscount = () => {
               <span className="text-[12px] text-red-500">{errors.name}</span>
             )}
           </div>
-          <label className="col-span-2 font-medium pt-[20px]">Kiểu</label>
+          <label className="col-span-2 font-medium pt-[20px]">Type</label>
           <div className="col-span-3 flex flex-col md:space-y-5 space-y-[10px] md:pt-[7px]">
             {isLoading ? (
               <Skeleton.Input active />
@@ -243,9 +243,9 @@ const EditDiscount = () => {
               <RadioGroup
                 disabled={isDeleteLoading || isUpdateLoading || isLoading}
                 className="space-x-[25px]"
-                options={[{ label: 'Phần trăm' }, { label: 'Số lượng' }]}
+                options={[{ label: 'Percentage' }, { label: 'Amount' }]}
                 groupName=""
-                value={values?.type === DISCOUNT_TYPE.FIXED_PERCENT ? 'Phần trăm' : 'Số lượng'}
+                value={values?.type === DISCOUNT_TYPE.FIXED_PERCENT ? 'Percentage' : 'Amount'}
                 onChange={handleRadioGroupTypeChange}
               />
             )}
@@ -266,9 +266,7 @@ const EditDiscount = () => {
                   )}
                 </div>
                 {discountPercentError && (
-                  <span className="text-[12px] text-red-500">
-                    Kiểu giảm giá theo phần trăm phải nằm trong khoảng từ 0 đến 100
-                  </span>
+                  <span className="text-[12px] text-red-500">Percentage must be between 0 and 100</span>
                 )}
               </>
             ) : (
@@ -285,11 +283,11 @@ const EditDiscount = () => {
                     />
                   )}
                 </div>
-                {discountAmountError && <span className="text-[12px] text-red-500">Phải là kiểu số</span>}
+                {discountAmountError && <span className="text-[12px] text-red-500">Amount limit must be a number</span>}
               </>
             )}
           </div>
-          <label className="col-span-2 font-medium pt-[20px]">Số lượng người dùng</label>
+          <label className="col-span-2 font-medium pt-[20px]">No. of uses</label>
           <div className="col-span-3 flex flex-col md:space-y-5 space-y-[10px] md:pt-[7px]">
             {isLoading ? (
               <Skeleton.Input active />
@@ -297,9 +295,9 @@ const EditDiscount = () => {
               <RadioGroup
                 className="space-x-[35px]"
                 disabled={isDeleteLoading || isUpdateLoading || isLoading}
-                options={[{ label: 'Không giới hạn' }, { label: 'Giới hạn' }]}
+                options={[{ label: 'Unlimited' }, { label: 'Limited' }]}
                 groupName=""
-                value={values?.is_limited ? 'Giới hạn' : 'Không giới hạn'}
+                value={values?.is_limited ? 'Limited' : 'Unlimited'}
                 onChange={handleRadioGroupUseChange}
               />
             )}
@@ -313,19 +311,19 @@ const EditDiscount = () => {
                       <InputText
                         disabled={isDeleteLoading || isUpdateLoading || isLoading}
                         name="max_usage_limit"
-                        placeholder="Số lượng"
+                        placeholder="Qty"
                         value={values.max_usage_limit || ''}
                         onChange={handleChangeInput}
                       />
                     )}
                   </div>
 
-                  {quantityError && <span className="text-[12px] text-red-500">Phải là kiểu số</span>}
+                  {quantityError && <span className="text-[12px] text-red-500">Max usage limit must be a number</span>}
                 </>
               )}
             </div>
           </div>
-          <label className="col-span-2 font-medium pt-[20px]">Hết hạn</label>
+          <label className="col-span-2 font-medium pt-[20px]">Expiry</label>
           <div className="col-span-3 flex flex-col md:space-y-5 space-y-[10px] md:pt-[7px]">
             {isLoading ? (
               <Skeleton.Input active />
@@ -333,10 +331,10 @@ const EditDiscount = () => {
               <RadioGroup
                 className="space-x-[60px]"
                 disabled={isDeleteLoading || isUpdateLoading || isLoading}
-                options={[{ label: 'Không giới hạn' }, { label: 'Ngày hết hạn' }]}
+                options={[{ label: 'Never' }, { label: 'By date' }]}
                 groupName=""
-                value={values?.has_expiration ? 'Ngày hết hạn' : 'Không giới hạn'}
-                onChange={(value) => formik.setFieldValue('has_expiration', value === 'Không giới hạn' ? false : true)}
+                value={values?.has_expiration ? 'By date' : 'Never'}
+                onChange={(value) => formik.setFieldValue('has_expiration', value === 'Never' ? false : true)}
               />
             )}
             {values.has_expiration &&
@@ -356,7 +354,7 @@ const EditDiscount = () => {
         {isModalDeleteOpen && (
           <>
             <CustomizedModal
-              className="modifier-modal-customized"
+              className="customized-width"
               open={isModalDeleteOpen && !isMobile}
               title="Confirm deletion"
               onOk={handleOkDelete}
@@ -364,7 +362,7 @@ const EditDiscount = () => {
               onCancel={() => setIsModalDeleteOpen(false)}
             >
               <div className="text-center text-black-400 flex flex-col mb-[30px]">
-                <span>Bạn có chắc muốn xoá?</span> <span>Điều này không thể được hoàn tác.</span>
+                <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
               </div>
             </CustomizedModal>
             <CustomizedDrawer
@@ -378,7 +376,7 @@ const EditDiscount = () => {
               width={screenWidth}
             >
               <div className="text-center text-black-400 flex flex-col">
-                <span>Bạn có chắc muốn xoá?</span> <span>Điều này không thể được hoàn tác.</span>
+                <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
               </div>
             </CustomizedDrawer>
           </>

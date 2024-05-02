@@ -24,10 +24,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import '../table.scss';
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Tên bàn ăn bắt buộc'),
-  location: Yup.string().required('Vị trí bắt buộc'),
+  name: Yup.string().required('Missing Table'),
+  location: Yup.string().required('Missing Location'),
 });
 
 const EditTable = () => {
@@ -165,7 +166,7 @@ const EditTable = () => {
             type="button"
             onClick={() => router.push('/tables')}
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="button"
@@ -173,7 +174,7 @@ const EditTable = () => {
             variant="primary"
             disabled={isLoading || isUpdateLoading || isFetchingDiscount || isDeleteLoading}
           >
-            Xoá
+            Delete
           </Button>
         </div>
 
@@ -188,7 +189,7 @@ const EditTable = () => {
             type="submit"
             disabled={isLoading || isUpdateLoading || isFetchingDiscount || isDeleteLoading || isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
         <div className="pt-[30px] md:pb-[30px] pb-[10px] md:px-[25px] max-md:px-5 flex flex-col space-y-4 items-center justify-center">
@@ -197,7 +198,7 @@ const EditTable = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Tên bàn</label>
+            <label className="font-medium md:pt-[12px]">Table name</label>
             <div className="col-span-3">
               {isFetchingDiscount || isLoading ? (
                 <Skeleton.Input active block />
@@ -205,7 +206,7 @@ const EditTable = () => {
                 <div>
                   <InputText
                     id="name"
-                    placeholder="Tên bàn"
+                    placeholder="Name"
                     value={values.name}
                     onChange={handleChange}
                     allowClear
@@ -216,7 +217,7 @@ const EditTable = () => {
               )}
             </div>
 
-            <label className="font-medium max-md:pt-[10px]">Vị trí</label>
+            <label className="font-medium max-md:pt-[10px]">Location</label>
             <div className="col-span-3">
               {isFetchingDiscount || isLoading ? (
                 <Skeleton.Input active block />
@@ -225,7 +226,7 @@ const EditTable = () => {
                   <InputText
                     type="text"
                     id="location"
-                    placeholder="Vị trí"
+                    placeholder="Location"
                     value={values.location}
                     onChange={handleChange}
                     allowClear
@@ -238,7 +239,7 @@ const EditTable = () => {
               )}
             </div>
 
-            <label className="font-medium max-md:pt-[10px]">Loại giảm giá</label>
+            <label className="font-medium max-md:pt-[10px]">Discount</label>
             <div className="col-span-3">
               {isFetchingDiscount || isLoading ? (
                 <Skeleton.Input active block />
@@ -249,7 +250,7 @@ const EditTable = () => {
                   customFilterOptionsForSearch
                   mode="tags"
                   id="discount"
-                  placeholder="Chọn loại giảm giá"
+                  placeholder="Select discount"
                   options={discountsList?.map((item: any) => ({
                     label: renderDiscount(item),
                     value: item._id,
@@ -261,7 +262,7 @@ const EditTable = () => {
               )}
             </div>
 
-            <label className="font-medium place-self-start mt-2">Mã QR</label>
+            <label className="font-medium place-self-start mt-2">QR code</label>
             <div id="qrCode" className="col-span-3 w-fit">
               <div className="w-[235px] h-[235px] p-[10px]">
                 {isFetchingDiscount || isLoading ? (
@@ -289,36 +290,32 @@ const EditTable = () => {
             </div>
           </div>
         </div>
-        {isModalDeleteOpen && (
-          <>
-            <CustomizedModal
-              className="customized-width"
-              open={isModalDeleteOpen && !isMobile}
-              title="Xác nhận"
-              onOk={handleOkDelete}
-              okText="Xoá"
-              onCancel={() => setIsModalDeleteOpen(false)}
-            >
-              <div className="text-center text-black-400 flex flex-col mb-[30px]">
-                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
-              </div>
-            </CustomizedModal>
-            <CustomizedDrawer
-              className="bill-drawer"
-              type="confirm"
-              open={isModalDeleteOpen && isMobile}
-              onClose={() => setIsModalDeleteOpen(false)}
-              title="Xác nhận"
-              okText="Xoá"
-              onOk={handleOkDelete}
-              width={screenWidth}
-            >
-              <div className="text-center text-black-400 flex flex-col">
-                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
-              </div>
-            </CustomizedDrawer>
-          </>
-        )}
+        <CustomizedModal
+          className="customized-width"
+          open={isModalDeleteOpen && !isMobile}
+          title="Confirm deletion"
+          onOk={handleOkDelete}
+          okText="Delete"
+          onCancel={() => setIsModalDeleteOpen(false)}
+        >
+          <div className="text-center text-black-400 flex flex-col mb-[30px]">
+            <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
+          </div>
+        </CustomizedModal>
+        <CustomizedDrawer
+          className="bill-drawer"
+          type="confirm"
+          open={isModalDeleteOpen && isMobile}
+          onClose={() => setIsModalDeleteOpen(false)}
+          title="Confirm deletion"
+          okText="Delete"
+          onOk={handleOkDelete}
+          width={screenWidth}
+        >
+          <div className="text-center text-black-400 flex flex-col">
+            <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
+          </div>
+        </CustomizedDrawer>
       </form>
     </div>
   );

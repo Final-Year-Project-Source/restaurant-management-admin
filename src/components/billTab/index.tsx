@@ -105,7 +105,7 @@ const BillTab: React.FC<Props> = ({
         className={`flex space-x-[60px] max-[1024px]:space-x-[0px] max-[1024px]:space-y-[20px] pt-[25px] justify-between max-lg:flex-col`}
       >
         <div className={`w-full flex flex-col space-y-[20px] ${isMobile && `px-[20px]`}`}>
-          <label className="font-medium">Tóm tắt đơn</label>
+          <label className="font-medium">Summary</label>
           {isLoading ? (
             <div className={`flex w-full`}>
               <Skeleton.Input active block />
@@ -153,7 +153,7 @@ const BillTab: React.FC<Props> = ({
               discount={discount}
             />
           ) : (
-            !isLoading && <Empty description={'Không có món ăn được đặt'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            !isLoading && <Empty description={'No order'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
           )}
         </div>
         {isLoading ? (
@@ -164,7 +164,7 @@ const BillTab: React.FC<Props> = ({
           <>
             {paymentStatus === 'Unpaid' && (
               <div className={`w-full flex flex-col space-y-[20px]  ${isMobile && `px-[20px] !mb-[25px]`}`}>
-                <label className="font-medium">Tuỳ chọn thanh toán</label>
+                <label className="font-medium">Options</label>
                 <div className="h-full flex flex-col space-y-5 justify-between">
                   <div className="flex flex-col space-y-[15px]">
                     <SettlementButton
@@ -188,7 +188,7 @@ const BillTab: React.FC<Props> = ({
                       className="min-h-[61px]"
                       onClick={onClickCancelBillButton}
                     >
-                      Huỷ hoá đơn
+                      Cancel
                     </Button>
                     <Button
                       className="min-h-[61px]"
@@ -196,7 +196,7 @@ const BillTab: React.FC<Props> = ({
                       onClick={onClickRecordPaymentButton}
                       disabled={!isEDCPaymentButtonActive && !isBeamPaymentButtonActive}
                     >
-                      Ghi lại thanh toán ・ {total}
+                      Record payment ・ {total}
                     </Button>
                   </div>
                 </div>

@@ -20,12 +20,12 @@ const CreateOrder = ({ params }: { params: { id: string } }) => {
     <main className="flex bg-white rounded-2xl p-[25px] space-x-[6px] h-full overflow-hidden">
       <div className="flex flex-col space-y-[24px] w-1/2">
         <Button className={`w-[198px] ${isMobile && 'hidden'}`} icon={<ArrowLeftIcon1 />} onClick={() => router.back()}>
-          Huỷ đặt món
+          Cancel
         </Button>
         <div
           className={`rounded-2xl md:border-[0.5px] border-black-500 flex flex-col h-full pt-[13px] md:pt-[30px] md:pb-3`}
         >
-          {!isMobile && <div className="font-medium text-xl text-center">Giỏ hàng</div>}
+          {!isMobile && <div className="font-medium text-xl text-center">Basket</div>}
           <Basket
             bill_id={id}
             isMobile={isMobile}

@@ -1,7 +1,7 @@
 'use client';
-import TextAreaInput from '@/components/adminPage/TextArea';
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup';
 import Icon from '@/components/DietaryIcons';
+import TextAreaInput from '@/components/input/TextArea';
 import { OPERATOR } from '@/enums';
 import { updateBasket } from '@/redux/features/basketSlice';
 import { ProductType } from '@/types/products.types';
@@ -105,13 +105,13 @@ const Product: React.FC<ProductProps> = ({
 
   const btnText = (
     <div>
-      <span>Thêm vào giỏ hàng</span> <span className="font-normal">・ {totalAmount}</span>
+      <span>Add to basket</span> <span className="font-normal">・ {totalAmount}</span>
     </div>
   );
 
   const body = (
     <div className="relative h-full">
-      <div className="h-[228px]">
+      <div className="h-[228px] max-md:bg-black-500">
         {image_url && (
           <Image
             className="absolute top-[40px] right-1/2 transform translate-x-1/2"
@@ -157,10 +157,10 @@ const Product: React.FC<ProductProps> = ({
           ))}
         {getDietaryRequests((item as ProductType)?.dietary_restrictions || [])?.length > 0 && (
           <CheckboxGroup
-            groupName="Yêu cầu ăn kiêng"
+            groupName="Dietary requests"
             options={
               getDietaryRequests((item as ProductType)?.dietary_restrictions || [])?.map((label: any) => ({
-                label: 'Làm ' + label,
+                label: 'Make it ' + label,
               })) ?? []
             }
             onChange={(value) => {
@@ -169,7 +169,7 @@ const Product: React.FC<ProductProps> = ({
           />
         )}
         <div className="flex flex-col space-y-2.5">
-          <span className="font-medium text-sm text-black-400">Ghi chú</span>
+          <span className="font-medium text-sm text-black-400">Notes</span>
           <TextAreaInput placeholder="Notes for the kitchen" onChange={handleTextAreaChange} />
         </div>
       </div>
