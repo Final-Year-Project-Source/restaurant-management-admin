@@ -261,7 +261,7 @@ const EditEmployee = () => {
                   !user?.is_change_default_password
                 }
               >
-                Đặt lại mật khẩu
+                Đặt lạiPassword
               </Button>
             </div>
           </div>

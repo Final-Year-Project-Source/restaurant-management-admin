@@ -2,7 +2,7 @@
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { useVerifyRefreshTokenMutation } from '@/redux/services/employeeApi';
 import { RootState } from '@/redux/store';
-import { ITEMS, MENU_ITEMS } from '@/utils/constants';
+import { MENU_ITEMS } from '@/utils/constants';
 import { Avatar, Breadcrumb, Button, ConfigProvider, Drawer, Layout as CustomLayout, MenuProps } from 'antd';
 import { capitalize } from 'lodash';
 import { signOut, useSession } from 'next-auth/react';
@@ -162,43 +162,45 @@ const Layout: FC<Props> = ({ children }) => {
   // if (session.user.role === 'Administrator') {
   items.push(
     getItem(
-      'Đơn hàng',
+      'Orders',
       'orders',
       <div className="min-w-[15px]">
         <OrdersIcon />
       </div>,
-      [getItem('Hoá đơn', 'bills'), getItem('Nhà bếp', 'kitchen-display'), getDivider('divider1')],
+      [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
     ),
     getItem(
-      'Thống kê',
+      'Reports',
       'reports',
       <div className="min-w-[17px]">
         <ReportsIcon />
       </div>,
-      [getItem('Doanh thu', 'sales-summary'), getItem('Mặt hàng', 'sales-by-item'), getDivider('divider2')],
+      [getItem('Sales summary', 'sales-summary'), getItem('Sales by item', 'sales-by-item'), getDivider('divider2')],
     ),
     getItem(
-      'Mặt hàng',
+      'Items',
       'items',
       <div className="min-w-[19px]">
         <ItemsIcon />
       </div>,
       [
-        getItem('Món ăn', 'products'),
-        getItem('Lựa chọn', 'modifiers'),
-        getItem('Danh mục', 'menu-categories'),
-        getItem('Nhóm', 'groups'),
-        getItem('Loại giảm giá', 'discounts'),
+        getItem('Products', 'products'),
+        getItem('Modifiers', 'modifiers'),
+        getItem('Menu categories', 'menu-categories'),
+        getItem('Groups', 'groups'),
+        getItem('Discounts', 'discounts'),
+        getItem('Feedbacks', 'feedbacks'),
+
         getDivider('divider3'),
       ],
     ),
     getItem(
-      'Cài đặt',
+      'Settings',
       'settings',
       <div className="min-w-[19px]">
         <SettingIcon />
       </div>,
-      [getItem('Bàn ăn', 'tables'), getItem('Nhân viên', 'employees')],
+      [getItem('Tables', 'tables'), getItem('Employees', 'employees'), getItem('Account', 'account')],
     ),
   );
   // } else if (session.user.role === 'Manager') {
@@ -324,7 +326,7 @@ const Layout: FC<Props> = ({ children }) => {
                 } !min-w-[225px] !text-2xl`}
                 items={[
                   {
-                    title: capitalize(ITEMS.find((item) => item.value === currentPath)?.label) || '',
+                    title: managementName,
                   },
                 ]}
               />

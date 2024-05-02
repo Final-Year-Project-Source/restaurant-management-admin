@@ -1,0 +1,15 @@
+.feedback-buttons {
+  display: flex;
+  flex-direction: row;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.feedback-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.feedback-buttons {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -5,19 +5,20 @@ import { CategoryType } from '@/types/categories.types';
 import { ModifierType } from '@/types/modifiers.types';
 import { DiningTableType } from '@/types/tables.types';
 
-export const ITEMS = [
-  { value: 'bills', label: 'Hoá đơn' },
-  { value: 'kitchen-display', label: 'Nhà bếp' },
-  { value: 'sales-summary', label: 'Doanh thu' },
-  { value: 'sales-by-item', label: 'Món ăn' },
-  { value: 'products', label: 'Món ăn' },
-  { value: 'modifiers', label: 'Lựa chọn' },
-  { value: 'menu-categories', label: 'Danh mục' },
-  { value: 'groups', label: 'Nhóm' },
-  { value: 'discounts', label: 'Loại giảm giá' },
-  { value: 'tables', label: 'Bàn ăn' },
-  { value: 'employees', label: 'nhân viên' },
-];
+// export const ITEMS = [
+//   { value: 'bills', label: 'Bills' },
+//   { value: 'kitchen-display', label: 'Kitchen-display' },
+//   { value: 'sales-summary', label: '' },
+//   { value: 'sales-by-item', label: 'Món ăn' },
+//   { value: 'products', label: 'Món ăn' },
+//   { value: 'modifiers', label: 'Lựa chọn' },
+//   { value: 'menu-categories', label: 'Danh mục' },
+//   { value: 'groups', label: 'Nhóm' },
+//   { value: 'discounts', label: 'Loại giảm giá' },
+//   { value: 'tables', label: 'Bàn ăn' },
+//   { value: 'employees', label: 'nhân viên' },
+//   { value: 'feedbacks', label: 'Đánh giá' },
+// ];
 
 export const DIETARY_RESTRICTIONS = [
   { value: 'vegan', label: 'Vegan' },
@@ -31,52 +32,51 @@ export const DIETARY_RESTRICTIONS = [
 ];
 
 export const PROTEINS = [
-  { label: 'Gà', value: 'chicken' },
-  { label: 'Lợn', value: 'pork' },
-  { label: 'Bò', value: 'beef' },
-  { label: 'Hải sản', value: 'seafood' },
-  { label: 'Khác', value: 'other' },
+  { label: 'Chicken', value: 'chicken' },
+  { label: 'Pork', value: 'pork' },
+  { label: 'Beef', value: 'beef' },
+  { label: 'SeaFood', value: 'seafood' },
+  { label: 'Other', value: 'other' },
 ];
 
 export const DIETARY_RESTRICTIONS_GROUP = {
-  groupName: 'Chế độ ăn kiêng',
+  groupName: 'Dietary restrictions',
   options: [
-    { icon: 'Vegan', label: 'Thực vật' },
-    { icon: 'Vegetarian', label: 'Ăn chay' },
-    { icon: 'Diary-free', label: 'Không chứa sữa' },
-    { icon: 'Gluten-free', label: 'Không chứa gluten' },
+    { icon: 'Vegan', label: 'Vegan' },
+    { icon: 'Vegetarian', label: 'Vegetarian' },
+    { icon: 'Diary-free', label: 'Diary-free' },
+    { icon: 'Gluten-free', label: 'Gluten-free' },
   ],
 };
-
 export const PROTEINS_GROUP = {
   groupName: 'Protein',
-  options: [{ label: 'Gà' }, { label: 'Lợn' }, { label: 'Bò' }, { label: 'Hải sản' }, { label: 'Khác' }],
+  options: [{ label: 'Chicken' }, { label: 'Pork' }, { label: 'Beef' }, { label: 'SeaFood' }, { label: 'Other' }],
 };
 
 export const TYPES = [
-  { label: 'Số lượng cố định', value: 'FIXED_AMOUNT' },
-  { label: 'Phần trắm cố định', value: 'FIXED_PERCENT' },
+  { label: 'Fixed amount', value: 'FIXED_AMOUNT' },
+  { label: 'Fixed percent', value: 'FIXED_PERCENT' },
 ];
 
 export const STATUS = [
-  { label: 'Đang đặt món', value: 'Ordering' },
-  { label: 'Đang chuẩn bị', value: 'Preparing' },
-  { label: 'Đã hoàn thành', value: 'Done' },
+  { label: 'Ordering', value: 'Ordering' },
+  { label: 'Preparing', value: 'Preparing' },
+  { label: 'Done', value: 'Done' },
 ];
 
 export const STOCK_STATUSES = {
-  IN_STOCK: 'Còn hàng',
-  LOW_STOCK: 'Thiếu hàng',
-  OUT_OF_STOCK: 'Hết hàng',
+  IN_STOCK: 'In stock',
+  LOW_STOCK: 'Low stock',
+  OUT_OF_STOCK: 'Out of stock',
 };
 
 export const convertStocksToOptions = (stocks: { [key: string]: number }): { label: string; value: string }[] => {
   if (!stocks) return [];
 
   return [
-    { label: `Còn hàng`, value: 'in stock' },
-    { label: `Thiếu hàng (${stocks?.[STOCK_STATUSES.LOW_STOCK]})`, value: 'low stock' },
-    { label: `Hết hàng (${stocks?.[STOCK_STATUSES.OUT_OF_STOCK]})`, value: 'out of stock' },
+    { label: `In stock`, value: 'in stock' },
+    { label: `Low stock (${stocks?.[STOCK_STATUSES.LOW_STOCK]})`, value: 'low stock' },
+    { label: `Out of stock (${stocks?.[STOCK_STATUSES.OUT_OF_STOCK]})`, value: 'out of stock' },
   ];
 };
 
@@ -161,50 +161,50 @@ export const BILL_STATUSES = [
     id: 1,
     title: 'Order status',
     statuses: [
-      { label: 'Đang đặt món', value: 'ordering' },
-      { label: 'Đang chuẩn bị', value: 'preparing' },
-      { label: 'Hoàn thành một phần', value: 'partially completed' },
-      { label: 'Đã hoàn thành', value: 'completed' },
-      { label: 'Đã huỷ', value: 'cancelled' },
+      { label: 'Ordering', value: 'ordering' },
+      { label: 'Preparing', value: 'preparing' },
+      { label: 'Partially completed', value: 'partially completed' },
+      { label: 'Completed', value: 'completed' },
+      { label: 'Cancelled', value: 'cancelled' },
     ],
   },
   {
     id: 2,
     title: 'Payment status',
     statuses: [
-      { label: 'Chưa thanh toán', value: 'unpaid' },
-      { label: 'Đã thanh toán', value: 'paid' },
-      { label: 'Đã hoàn lại', value: 'refunded' },
+      { label: 'Unpaid', value: 'unpaid' },
+      { label: 'Paid', value: 'paid' },
+      { label: 'Refunded', value: 'refunded' },
     ],
   },
 ];
 
 export const KDS_STATUSES = [
-  { label: 'Chuẩn bị', value: 'preparing' },
-  { label: 'Hoàn thành', value: 'completed' },
+  { label: 'Preparing', value: 'preparing' },
+  { label: 'Completed', value: 'completed' },
 ];
 
 export const ROLE_FILTER = [
   {
     id: 1,
-    title: 'Chức vụ',
+    title: 'Roles',
     statuses: [
-      { label: 'Nhân viên', value: 'standard' },
-      { label: 'Quản lý', value: 'manager' },
-      { label: 'Admin', value: 'administrator' },
+      { label: 'Standard', value: 'standard' },
+      { label: 'Manager', value: 'manager' },
+      { label: 'Administrator', value: 'administrator' },
     ],
   },
 ];
 export const ROLE_EMPLOYEE = [
-  { label: 'Nhân viên', value: 'Standard' },
-  { label: 'Quản lý', value: 'Manager' },
-  { label: 'Admin', value: 'Administrator' },
+  { label: 'Standard', value: 'Standard' },
+  { label: 'Manager', value: 'Manager' },
+  { label: 'Administrator', value: 'Administrator' },
 ];
 export const ROWSPERPAGE = [
-  { label: '10 hàng', value: 10 },
-  { label: '25 hàng', value: 25 },
-  { label: '50 hàng', value: 50 },
-  { label: '100 hàng', value: 100 },
+  { label: '10 per page', value: 10 },
+  { label: '25 per page', value: 25 },
+  { label: '50 per page', value: 50 },
+  { label: '100 per page', value: 100 },
 ];
 export const PAGINATIONLIMIT = [10, 25, 50, 100];
 

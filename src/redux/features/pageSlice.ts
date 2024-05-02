@@ -14,6 +14,7 @@ export type PageState = {
   tables?: string;
   employees?: string;
   accounts?: string;
+  feedbacks?: string;
 };
 
 const initialState: PageState = getURLPages() || {
@@ -29,6 +30,7 @@ const initialState: PageState = getURLPages() || {
   tables: '/tables',
   employees: '/employees',
   account: '/account',
+  feedbacks: '/feedbacks',
 };
 
 export const URLPages = createSlice({

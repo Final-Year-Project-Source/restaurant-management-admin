@@ -154,11 +154,16 @@ const SalesSummary = () => {
   const tableData = salesSummaryData?.data;
 
   const SalesSummaryButton = [
-    { label: 'Tổng doanh thu', value: saleData?.grossSales },
-    { label: 'Hoàn tiền', value: saleData?.refunds },
-    { label: 'Giảm giá', value: saleData?.totalDiscounts },
-    { label: 'Doanh thu thực', value: saleData?.netSales },
-    { label: 'Lợi nhuận', value: saleData?.estimatedProfit },
+    {
+      title: '',
+      options: [
+        { label: 'Tổng doanh thu', value: saleData?.grossSales },
+        { label: 'Hoàn tiền', value: saleData?.refunds },
+        { label: 'Giảm giá', value: saleData?.totalDiscounts },
+        { label: 'Doanh thu thực', value: saleData?.netSales },
+        { label: 'Lợi nhuận', value: saleData?.estimatedProfit },
+      ],
+    },
   ];
   const chartData = generateChartData(salesSummaryData, typeChart);
 
@@ -293,14 +298,13 @@ const SalesSummary = () => {
           Xuất thống kê
         </Button>
       </div>
-      <div className="flex flex-row w-full ">
-        <CardsReport
-          data={SalesSummaryButton}
-          handleChange={(label: string) => {
-            setTypeChart(label.toLowerCase());
-          }}
-        />
-      </div>
+      <CardsReport
+        className="sales-summary-buttons"
+        data={SalesSummaryButton}
+        handleChange={(label: string) => {
+          setTypeChart(label.toLowerCase());
+        }}
+      />
       <div>
         <AreaChart data={chartData} />
       </div>

@@ -42,6 +42,12 @@ export type QueryParamsState = {
   groups: { search: string; page: number; limit: number };
   tables: { page: number; limit: number };
   employees: { page: number; limit: number; roleFilter: string[]; visited: boolean };
+  feedbacks: {
+    page: number;
+    limit: number;
+    startTime: string;
+    endTime: string;
+  };
 };
 
 export const DEFAULT_QUERY_PARAMS = {
@@ -70,6 +76,12 @@ export const DEFAULT_QUERY_PARAMS = {
   groups: { search: '', page: 1, limit: 10 },
   tables: { page: 1, limit: 10 },
   employees: { limit: 10, roleFilter: [], page: 1, visited: false },
+  feedbacks: {
+    page: 10,
+    limit: 1,
+    startTime: '',
+    endTime: '',
+  },
 };
 
 const fallbackInitialState: QueryParamsState = DEFAULT_QUERY_PARAMS;
