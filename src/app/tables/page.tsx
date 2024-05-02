@@ -80,17 +80,17 @@ export default function DiningTable() {
 
   const columns: ColumnsType<DiningTableType> = [
     {
-      title: 'Tên bàn',
+      title: 'Name',
       width: isMobile ? 100 : 160,
       dataIndex: 'name',
     },
     {
-      title: 'Vị trí',
+      title: 'Location',
       dataIndex: 'location',
       width: isMobile ? 100 : 160,
     },
     {
-      title: 'Loại giảm giá',
+      title: 'Discount',
       dataIndex: 'discount',
       width: isMobile ? 200 : 300,
       ellipsis: false,
@@ -113,20 +113,15 @@ export default function DiningTable() {
           </p>
           {((record.discount_has_expiration && new Date(record.discount_expiration_date) < new Date()) ||
             (record.discount_is_limited && record.discount_max_usage_limit < 1)) && (
-            <Tag text="Expired" variant="disable" className="m-[3px]" />
+            <div className="min-h-[18px] min-w-[60px] mt-[6px]">
+              {' '}
+              <Tag className="!absolute !bottom-[15px] m-[3px]" text="Expired" variant="disable" />
+            </div>
           )}
         </div>
       ),
     },
   ];
-
-  // const debouncedHandleSearch = debounce((value: string) => {
-  //   setSearchValue(value);
-  // }, 500);
-
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   debouncedHandleSearch(e.target.value);
-  // };
 
   const data = allDiningTables?.data.map((table: DiningTableType, index: number) => ({
     key: index,
@@ -144,22 +139,13 @@ export default function DiningTable() {
     discount_max_usage_limit: getDiscountById(table?.discount)?.max_usage_limit,
   }));
 
-  // const filteredTables = useMemo(() => {
-  //   return data?.filter((discount: DiningTableType) => {
-  //     const nameMatch = discount?.name?.toLowerCase().includes(searchValue.toLowerCase());
-  //     const locationMatch = discount?.location?.toLowerCase().includes(searchValue.toLowerCase());
-
-  //     return nameMatch || locationMatch;
-  //   });
-  // }, [data, searchValue]);
-
   const handleRowClick = (record: any) => {
     router.push(`tables/edit?id=${record?._id}`);
   };
   return (
     <div className={`bg-white rounded-2xl ${isMobile ? `w-full` : `w-fit`}`}>
       <Table
-        title="Tạo bàn ăn"
+        title="New table"
         columns={columns}
         dataSource={data}
         onAdd={() => router.push(`tables/add`)}

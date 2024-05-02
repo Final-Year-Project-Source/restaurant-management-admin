@@ -1,5 +1,8 @@
 'use client';
+import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
+import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
+import ProductImage from '@/components/productImage';
 import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
@@ -17,9 +20,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './sales-by-item.scss';
-import ProductImage from '@/components/productImage';
-import DateRangePicker from '@/components/dateRangePicker';
-import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
 
 const startDateDefault = (() => {
   const thisWeekStartDate = new Date();
@@ -33,7 +33,7 @@ const endDateDefault = (() => {
   thisDate.setHours(23, 59, 59, 59);
   return thisDate;
 })();
-const SalesByItem = () => {
+const SaleByItems = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -160,13 +160,13 @@ const SalesByItem = () => {
       },
     },
     {
-      title: 'Tên món ăn',
+      title: 'Product name',
       dataIndex: 'name',
       // sorter: (a, b) => a.name.localeCompare(b.name),
       // sortDirections: ['ascend', 'descend'],
     },
     {
-      title: 'Số lượng đã bán',
+      title: 'No. sold',
       dataIndex: 'no_sold',
       width: width > 1350 ? 180 : 120,
       defaultSortOrder: 'descend',
@@ -175,7 +175,7 @@ const SalesByItem = () => {
       sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
     },
     {
-      title: 'Danh mục',
+      title: 'Menu category',
       dataIndex: 'category_id',
       responsive: ['sm'],
       width: width > 1350 ? 250 : 180,
@@ -186,7 +186,7 @@ const SalesByItem = () => {
       sortDirections: ['ascend', 'descend'],
     },
     {
-      title: 'Doanh thu',
+      title: 'Net sales',
       dataIndex: 'net_sales',
       responsive: ['sm'],
       width: width > 1350 ? 180 : 120,
@@ -196,7 +196,7 @@ const SalesByItem = () => {
       sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
     },
     {
-      title: 'Lợi nhuận',
+      title: 'Est. profit',
       dataIndex: 'est_profit',
       responsive: ['sm'],
       width: width > 1350 ? 180 : 120,
@@ -240,13 +240,13 @@ const SalesByItem = () => {
           id="category_id"
           mode="multiple"
           options={CATEGORIES}
-          labelAll="Tất cả danh mục"
+          labelAll="All menu categories"
           isLoading={isFetchingCategories}
           value={queryParams?.categories}
           labelItem={getSelectedItems(
             queryParams?.categories || DEFAULT_CATEGORIES_VALUE,
             CATEGORIES,
-            'Tất cả danh mục',
+            'All menu categories',
           )}
           onChange={handleChangeCategoriesFilter}
         />
@@ -271,17 +271,17 @@ const SalesByItem = () => {
       netSales: row.net_sales,
       estProfit: row.est_profit,
     }));
-    const columNames = ['Tên món ăn', 'Số lượng đã bán', 'Danh mục', 'Doanh thu', 'Lợi nhuận'];
+    const columNames = ['Product name', 'No. sold', 'Menu Category', 'Net Sales', 'Est. Profit'];
     handleDownloadCSV(
       exportData,
-      `${getFormatDate(queryParams?.startTime)}-${getFormatDate(queryParams?.endTime)} Thống kê mặt hàng.csv`,
+      `${getFormatDate(queryParams?.startTime)}-${getFormatDate(queryParams?.endTime)} Sales By Item Report.csv`,
       columNames,
     );
   };
   return (
     <Table
       className="product-customized"
-      title="Xuất thống kê"
+      title="Export report"
       noPlusOnTitle
       columns={columns}
       dataSource={Products}
@@ -303,4 +303,4 @@ const SalesByItem = () => {
   );
 };
 
-export default SalesByItem;
+export default SaleByItems;

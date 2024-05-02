@@ -52,7 +52,7 @@ const MenuCategories = () => {
 
   const categoryColumns: ColumnsType<CategoryType> = [
     {
-      title: 'Danh mục',
+      title: 'Categories',
       dataIndex: 'categories',
       render: (text, record) => (
         <TextGroup
@@ -143,7 +143,7 @@ const MenuCategories = () => {
           onClick={handleSubmit}
           disabled={isUpdateLoading || isFetching || !isChangedData}
         >
-          Lưu
+          Save
         </Button>
       </div>
 
@@ -163,7 +163,7 @@ const MenuCategories = () => {
             onClick={handleAddCategories}
             disabled={isUpdateLoading || isFetching}
           >
-            + Thêm danh mục
+            + Add category
           </Button>
         </div>
       </div>

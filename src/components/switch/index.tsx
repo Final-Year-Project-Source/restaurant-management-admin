@@ -26,8 +26,8 @@ const CustomizedSwitch: React.FC<Props> = ({ className, checked, onChange, ...re
     >
       <SwitchElement
         className={`${className || ''} switch-customized`}
-        unCheckedChildren="Không"
-        checkedChildren="Có"
+        unCheckedChildren="No"
+        checkedChildren="Yes"
         checked={checked}
         onChange={onChange}
         {...restProps}

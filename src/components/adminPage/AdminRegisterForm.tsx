@@ -32,15 +32,15 @@ export default function AdminRegisterForm() {
 
   const validateFormInput = (field: keyof AdminRegisterFormProps, value: string) => {
     if (field === 'password') {
-      return value.length < 1 ? 'Mật khẩu bắt buộc' : '';
+      return value.length < 1 ? 'Please enter a password' : '';
     }
     if (field === 'confirmPassword') {
-      return value.length < 1 ? 'Xác nhận mật khẩu bắt buộc' : '';
+      return value.length < 1 ? 'Please confirm password' : '';
     }
     if (field === 'name') {
-      return value.length < 1 ? 'Tên bắt buộc' : '';
+      return value.length < 1 ? 'Please enter name' : '';
     }
-    if (value.length < 1) return `Email bắt buộc`;
+    if (value.length < 1) return `Please enter an email`;
 
     return '';
   };
@@ -62,7 +62,7 @@ export default function AdminRegisterForm() {
       if (!isValidEmail(registerForm.email?.trim())) {
         setErrors({
           ...errors,
-          email: 'Nhập đúng định dạng email',
+          email: 'Please enter a valid email',
         });
         return;
       }
@@ -85,7 +85,7 @@ export default function AdminRegisterForm() {
       //       .then((response) => {
       //         if (response.message !== 'Successful') {
       //           setLoad(false);
-      //           setErrorLogin('Email hoặc mật khẩu không chính xác');
+      //           setErrorLogin('Email or password is incorrect');
       //           return;
       //         }
       //         const otp_auth_url = response.data.otp_auth_url?.toString();
@@ -119,9 +119,9 @@ export default function AdminRegisterForm() {
   return (
     <div className="w-full sm:max-w-xl p-10 space-y-[5px] ">
       <div>
-        <div className="font-medium text-[16px] mb-1 text-black-500 "> Tên </div>
+        <div className="font-medium text-[16px] mb-1 text-black-500 "> Name </div>
         <div>
-          <InputText disabled={isLoading || load} onChange={(e) => handleInputChange(e, 'name')} placeholder="Tên" />
+          <InputText disabled={isLoading || load} onChange={(e) => handleInputChange(e, 'name')} placeholder="Name" />
         </div>
         {errors.name ? <p className="text-red-400 text-[14px]">{errors.name}</p> : <p className="h-[21px]"></p>}
       </div>
@@ -133,12 +133,12 @@ export default function AdminRegisterForm() {
         {errors.email ? <p className="text-red-400 text-[14px]">{errors.email}</p> : <p className="h-[21px]"></p>}
       </div>
       <div>
-        <div className="font-medium text-[16px] mb-1 text-black-500 "> Mật khẩu </div>
+        <div className="font-medium text-[16px] mb-1 text-black-500 ">Password </div>
         <div>
           <InputPasswordText
             onKeyDown={handleKeyDown}
             onChange={(e) => handleInputChange(e, 'password')}
-            placeholder="Mật khẩu"
+            placeholder="Password"
             disabled={isLoading || load}
           />
         </div>
@@ -152,12 +152,12 @@ export default function AdminRegisterForm() {
       </div>
 
       <div>
-        <div className="font-medium text-[16px] mb-1 text-black-500 "> Xác nhận mật khẩu </div>
+        <div className="font-medium text-[16px] mb-1 text-black-500 "> Confirm password </div>
         <div>
           <InputPasswordText
             onKeyDown={handleKeyDown}
             onChange={(e) => handleInputChange(e, 'confirmPassword')}
-            placeholder="Xác nhận mật khẩu"
+            placeholder="Confirm password"
             disabled={isLoading || load}
           />
         </div>
@@ -171,7 +171,7 @@ export default function AdminRegisterForm() {
       </div>
       <div>
         <Button variant="secondary" disabled={isLoading || load} onClick={handleSubmit}>
-          Đăng ký
+          Register
         </Button>
       </div>
       {(isLoading || load) && <LoadingIndicator />}

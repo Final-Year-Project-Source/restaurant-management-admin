@@ -1,0 +1,33 @@
+.ant-drawer-body {
+  background-color: var(--white-100);
+  padding: 0 !important;
+}
+// add button
+.btn--add-to-basket {
+  width: 24px;
+  .ant-btn-icon {
+    margin-inline-end: 0 !important;
+  }
+  .cart-item-badge {
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    top: -10px;
+    right: -10px;
+
+    transition: transform 1s ease-in-out;
+    &:before {
+      content: '1';
+      display: block;
+      line-height: 24px;
+      height: 24px;
+      width: 24px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #131c16;
+      color: white;
+      border-radius: 20px;
+      text-align: center;
+    }
+  }
+}

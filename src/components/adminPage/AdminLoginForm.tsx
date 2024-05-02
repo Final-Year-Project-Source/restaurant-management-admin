@@ -28,9 +28,9 @@ export default function AdminLoginForm() {
 
   const validateFormInput = (field: keyof AdminLoginFormProps, value: string) => {
     if (field === 'password') {
-      return value.length < 1 ? 'Mật khẩu bắt buộc' : '';
+      return value.length < 1 ? 'Please enter a password' : '';
     }
-    if (value.length < 1) return `Email bắt buộc`;
+    if (value.length < 1) return `Please enter an email`;
 
     return '';
   };
@@ -53,7 +53,7 @@ export default function AdminLoginForm() {
       if (!isValidEmail(loginForm.email?.trim())) {
         setErrors({
           ...errors,
-          email: 'Nhập đúng định dạng email',
+          email: 'Please enter a valid email',
         });
         return;
       }
@@ -74,7 +74,7 @@ export default function AdminLoginForm() {
           .then((response) => {
             if (response.message !== 'Successful') {
               setLoad(false);
-              setErrorLogin('Email hoặc mật khẩu không chính xác');
+              setErrorLogin('Email or password is incorrect');
               return;
             }
             const otp_auth_url = response.data.otp_auth_url?.toString();
@@ -115,12 +115,12 @@ export default function AdminLoginForm() {
         {errors.email ? <p className="text-red-400 text-[14px]">{errors.email}</p> : <p className="h-[21px]"></p>}
       </div>
       <div>
-        <div className="font-medium text-[16px] mb-1 text-black-500 "> Mật khẩu </div>
+        <div className="font-medium text-[16px] mb-1 text-black-500 ">Password </div>
         <div>
           <InputPasswordText
             onKeyDown={handleKeyDown}
             onChange={(e) => handleInputChange(e, 'password')}
-            placeholder="Mật khẩu"
+            placeholder="Password"
             disabled={isLoading || load}
           />
         </div>
@@ -134,7 +134,7 @@ export default function AdminLoginForm() {
       </div>
       <div>
         <Button variant="secondary" disabled={isLoading || load} onClick={handleSubmit}>
-          Đăng nhập
+          Login
         </Button>
       </div>
       {(isLoading || load) && <LoadingIndicator />}

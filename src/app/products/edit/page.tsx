@@ -7,7 +7,10 @@ import '../product.scss';
 
 import Button from '@/components/adminPage/Button';
 import InputText from '@/components/adminPage/Input';
+import TextAreaInput from '@/components/adminPage/TextArea';
+import CustomizedDrawer from '@/components/drawer';
 import { ArrowLeftIcon1 } from '@/components/Icons';
+import CustomizedModal from '@/components/modal';
 import CustomizedSwitch from '@/components/switch';
 import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
@@ -37,9 +40,7 @@ import { isEqual } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import TextAreaInput from '@/components/input/TextArea';
-import CustomizedDrawer from '@/components/drawer';
-import CustomizedModal from '@/components/modal';
+import { useSession } from 'next-auth/react';
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Missing Product'),
@@ -53,6 +54,7 @@ type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 const AddProduct = () => {
   const router = useRouter();
+  const { data: session } = useSession();
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const { scrollBottom } = useScrollbarState(bodyRef);
@@ -76,6 +78,11 @@ const AddProduct = () => {
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
   const product = singleProduct?.data;
+
+  if (session?.user?.role === 'Standard') {
+    toast.error('You are not authorized to access this page.');
+    router.push('/products');
+  }
 
   useEffect(() => {
     product?.image_url
@@ -223,7 +230,7 @@ const AddProduct = () => {
           reader.readAsDataURL(file.originFileObj as FileType);
           reader.onload = () => resolve(reader.result as string);
           reader.onerror = (error) => {
-            reject('Lỗi tải ảnh');
+            reject('Error loading image');
           };
         });
       } catch (error) {}
@@ -273,7 +280,7 @@ const AddProduct = () => {
             }
             type="button"
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="button"
@@ -290,7 +297,7 @@ const AddProduct = () => {
               isDeleteImageLoading
             }
           >
-            Xoá
+            Delete
           </Button>
         </div>
 
@@ -305,13 +312,13 @@ const AddProduct = () => {
             type="submit"
             disabled={isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
 
         <div className="flex max-lg:flex-col md:py-[25px] pt-[30px]">
           <div className="lg:w-1/2 lg:mr-[56px] grid lg:grid-cols-7 md:grid-cols-4 grid-cols-1 space-y-[10px]">
-            <label className="font-medium lg:col-span-2 md:pt-5">Tên món ăn</label>
+            <label className="font-medium lg:col-span-2 md:pt-5">Product name</label>
 
             <div className="lg:col-span-5">
               {isLoading ? (
@@ -321,7 +328,7 @@ const AddProduct = () => {
                   <InputText
                     disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                     id="name"
-                    placeholder="Tên món ăn"
+                    placeholder="Product name"
                     value={values.name}
                     onChange={handleChange}
                   />
@@ -332,7 +339,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Mô tả</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Description</label>
             <div className="lg:col-span-5">
               {isLoading ? (
                 <Skeleton.Button active block style={{ height: 85 }} />
@@ -340,14 +347,14 @@ const AddProduct = () => {
                 <TextAreaInput
                   disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                   id="description"
-                  placeholder="Mô tả"
+                  placeholder="Description"
                   value={values.description}
                   onChange={(e) => handleChange({ target: { id: 'description', value: e.target.value } })}
                 />
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Giá</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Price</label>
             <div className="lg:col-span-5 max-w-[172px]">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -356,7 +363,7 @@ const AddProduct = () => {
                   <InputText
                     disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                     id="price"
-                    placeholder="Giá"
+                    placeholder="Price"
                     value={values?.price || ''}
                     onChange={handleChange}
                   />
@@ -367,7 +374,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Danh mục</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Menu category</label>
             <div className="lg:col-span-5">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -375,7 +382,7 @@ const AddProduct = () => {
                 <Dropdown
                   disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                   id="category_id"
-                  placeholder="Chọn danh mục"
+                  placeholder="Select category"
                   options={CATEGORIES}
                   loading={isCategoryLoading}
                   labelItem={getLabelById(values.category_id, CATEGORIES)}
@@ -385,7 +392,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Nhóm</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Group</label>
             <div className="lg:col-span-5">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -393,7 +400,7 @@ const AddProduct = () => {
                 <Dropdown
                   disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                   id="group_id"
-                  placeholder="Chọn nhóm"
+                  placeholder="Select group"
                   options={GROUPS}
                   loading={isGroupsLoading}
                   labelItem={getLabelById(values.group_id, GROUPS)}
@@ -412,7 +419,7 @@ const AddProduct = () => {
                   disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                   id="proteins"
                   mode="multiple"
-                  placeholder="Chọn proteins"
+                  placeholder="Select proteins"
                   options={PROTEINS}
                   labelItem={getLabelById(values.proteins, PROTEINS)?.join(', ')}
                   value={values.proteins}
@@ -421,7 +428,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Chế độ ăn kiêng</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Dietary restrictions</label>
             <div className="lg:col-span-5">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -431,7 +438,7 @@ const AddProduct = () => {
                   id="dietary_restrictions"
                   fontSizeDropdown={13}
                   mode="multiple"
-                  placeholder="Chọn chế độ ăn kiêng"
+                  placeholder="Select dietary restrictions"
                   labelItem={getLabelById(values.dietary_restrictions, DIETARY_RESTRICTIONS)?.join(', ')}
                   options={DIETARY_RESTRICTIONS}
                   value={values.dietary_restrictions}
@@ -440,7 +447,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Lựa chọn</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Modifiers</label>
             <div className="lg:col-span-5">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -449,7 +456,7 @@ const AddProduct = () => {
                   disabled={isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading}
                   id="modifier_ids"
                   mode="multiple"
-                  placeholder="Chọn lựa chọn"
+                  placeholder="Select Modifiers"
                   options={MODIFIERS}
                   loading={isModifierLoading}
                   labelItem={getLabelById(values.modifier_ids, MODIFIERS)?.join(', ')}
@@ -459,7 +466,7 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2">Theo dõi hàng tồn kho</label>
+            <label className="font-medium lg:col-span-2">Track inventory</label>
             <div className="lg:col-span-5 flex-col space-y-[10px]">
               {isLoading ? (
                 <Skeleton.Button active block />
@@ -482,7 +489,7 @@ const AddProduct = () => {
                           isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading
                         }
                         id="in_stock"
-                        placeholder="Còn hàng"
+                        placeholder="In stock"
                         value={values?.in_stock || null}
                         onChange={handleChange}
                       />
@@ -497,7 +504,7 @@ const AddProduct = () => {
                           isLoading || isDeleteLoading || isUpdateLoading || isImageLoading || isDeleteImageLoading
                         }
                         id="low_stock"
-                        placeholder="Thiếu hàng"
+                        placeholder="Low stock"
                         value={values?.low_stock || null}
                         onChange={handleChange}
                       />
@@ -509,7 +516,7 @@ const AddProduct = () => {
           </div>
 
           <div className="lg:w-1/2 flex flex-col space-y-[10px] max-lg:pt-5">
-            <span className="font-medium">Ảnh</span>
+            <span className="font-medium">Product image</span>
             <div className="flex flex-col h-[300px] w-[300px]">
               {isLoading ? (
                 <Skeleton.Image active />
@@ -522,16 +529,16 @@ const AddProduct = () => {
                     onPreview={onPreview}
                     name="image_url"
                   >
-                    {fileList.length < 1 && '+ Tải ảnh lên'}
+                    {fileList.length < 1 && '+ Upload image'}
                   </Upload>
                 </ImgCrop>
               )}
             </div>
             <div className="pt-[10px] text-[11px] font-open-sans">
-              <span>Yêu cầu về hình ảnh: </span>
+              <span>Image requirements: </span>
               <ul className="list-disc pl-5">
-                <li>Tối thiểu 1024 x 1024 pixel </li>
-                <li>.png có nền trong suốt</li>
+                <li>Minimum 1024 x 1024 pixels </li>
+                <li>.png with transparent background</li>
               </ul>
             </div>
           </div>
@@ -539,7 +546,7 @@ const AddProduct = () => {
         {isModalDeleteOpen && (
           <>
             <CustomizedModal
-              className="modifier-modal-customized"
+              className="customized-width"
               open={isModalDeleteOpen && !isMobile}
               title="Confirm deletion"
               onOk={handleOkDelete}
@@ -547,7 +554,7 @@ const AddProduct = () => {
               onCancel={() => setIsModalDeleteOpen(false)}
             >
               <div className="text-center text-black-400 flex flex-col mb-[30px]">
-                <span>Bạn có chắc muốn xoá?</span> <span>Điều này không thể được hoàn tác.</span>
+                <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
               </div>
             </CustomizedModal>
             <CustomizedDrawer
@@ -561,7 +568,7 @@ const AddProduct = () => {
               width={screenWidth}
             >
               <div className="text-center text-black-400 flex flex-col">
-                <span>Bạn có chắc muốn xoá?</span> <span>Điều này không thể được hoàn tác.</span>
+                <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
               </div>
             </CustomizedDrawer>
           </>

@@ -70,13 +70,13 @@ const DropdownHourPeriod: FC<Props> = ({
     }
   };
   const OptionHourPeriod = [
-    { label: 'All day', value: 'All day' },
+    { label: 'Cả ngày', value: 'Cả ngày' },
     {
       label: (
         <div className="flex flex-col w-full">
-          <div className="mb-1">Custom period</div>
+          <div className="mb-1">Tuỳ chỉnh</div>
           <div className="flex text-[12px] ml-[10px] flex-row space-x-[52px]">
-            <p>Start</p> <p>End</p>
+            <p>Bắt đầu</p> <p>Kết thúc</p>
           </div>
           <div className="w-full hour-picker">
             <TimePicker.RangePicker

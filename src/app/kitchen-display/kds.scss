@@ -1,0 +1,145 @@
+.kds-header {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: 767px) {
+    display: none !important;
+  }
+
+  @media (max-width: 1300px) {
+    flex-flow: column-reverse;
+  }
+
+  .list-filter-1 {
+    display: flex;
+    flex-flow: row;
+    width: 40%;
+    justify-content: flex-start;
+
+    .statuses-item-filter {
+      min-width: 199px;
+      max-width: 327px;
+    }
+
+    .group-item-filter {
+      min-width: 199px;
+      max-width: 327px;
+      margin-right: 20px;
+    }
+
+    @media (max-width: 1300px) {
+      width: 100%;
+      margin-right: 0px;
+      margin-top: 20px;
+      justify-content: space-between;
+
+      .statuses-item-filter {
+        width: 50%;
+        max-width: 327px;
+      }
+
+      .group-item-filter {
+        max-width: 300px;
+        width: 50%;
+      }
+    }
+  }
+
+  .list-filter-2 {
+    display: flex;
+    flex-flow: row;
+    width: 40%;
+    justify-content: flex-end;
+
+    @media (max-width: 1800px) {
+      width: 45%;
+    }
+
+    @media (max-width: 1600px) {
+      width: 50%;
+    }
+
+    @media (max-width: 1450px) {
+      width: 58%;
+    }
+
+    .date-range-filter {
+      min-width: 327px !important;
+      max-width: 327px !important;
+    }
+
+    @media (max-width: 1300px) {
+      width: 100%;
+      justify-content: space-between;
+
+      .search-animation {
+        max-width: 300px;
+      }
+    }
+  }
+}
+
+.kds-header-mobile {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 20px 0px 20px;
+
+  @media (min-width: 768px) {
+    display: none !important;
+  }
+
+  .list-filter-2 {
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+
+    justify-content: space-between;
+
+    .search-animation {
+      max-width: 300px;
+    }
+
+    .group-item-filter {
+      min-width: 199px !important;
+
+      @media (max-width: 480px) {
+        min-width: 175px !important;
+      }
+    }
+  }
+
+  .list-filter-1 {
+    margin-top: 20px;
+    display: flex;
+    flex-flow: row;
+
+    width: 100%;
+    justify-content: space-between;
+
+    .date-range-filter {
+      min-width: 327px !important;
+      max-width: 327px !important;
+    }
+
+    .statuses-item-filter {
+      max-width: 199px !important;
+    }
+
+    @media (max-width: 585px) {
+      flex-flow: column;
+
+      .date-range-filter {
+        margin-bottom: 20px;
+        min-width: 100% !important;
+      }
+
+      .statuses-item-filter {
+        min-width: 100% !important;
+      }
+    }
+  }
+}

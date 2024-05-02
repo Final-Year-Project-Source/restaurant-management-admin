@@ -1,0 +1,28 @@
+.product-skeleton-paragraph {
+  .ant-skeleton-title {
+    width: 95% !important;
+    height: 25px !important;
+  }
+  .ant-skeleton-paragraph {
+    margin-top: 19px !important;
+
+    & > li {
+      &:not(:first-child) {
+        margin-top: 6px !important;
+      }
+      &:last-child {
+        width: 90% !important;
+      }
+    }
+  }
+}
+
+.product-drawer {
+  .ant-drawer-header {
+    display: none !important;
+  }
+  .ant-drawer-content-wrapper {
+    box-shadow: none !important;
+    width: 100% !important;
+  }
+}

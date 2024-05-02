@@ -6,11 +6,11 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 const items: TabsProps['items'] = [
   {
     key: 'login',
-    label: 'Đăng nhập',
+    label: 'Login',
   },
   {
     key: 'register',
-    label: 'Đăng ký',
+    label: 'Register',
   },
 ];
 
