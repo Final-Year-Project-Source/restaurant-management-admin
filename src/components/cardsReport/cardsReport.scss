@@ -1,0 +1,26 @@
+.rate-customized {
+  .ant-rate-star.ant-rate-star-full,
+  .ant-rate-star.ant-rate-star-half.ant-rate-star-active {
+    color: rgba(19, 28, 22) !important;
+    fill: rgba(19, 28, 22) !important;
+    stroke: rgba(19, 28, 22, 0.2) !important;
+    margin-right: 10px !important;
+  }
+
+  .ant-rate-star.ant-rate-star-zero,
+  .ant-rate-star.ant-rate-star-full,
+  .ant-rate-star.ant-rate-star-half.ant-rate-star-active,
+  .ant-rate-star.ant-rate-star-focused {
+    color: #fff !important;
+    fill: #fff !important;
+    stroke: rgba(19, 28, 22) !important;
+    margin-right: 10px !important;
+  }
+
+  .ant-rate-star.ant-rate-star-focused {
+    color: rgba(19, 28, 22) !important;
+    fill: rgba(19, 28, 22) !important;
+    stroke: rgba(19, 28, 22, 0.2) !important;
+    margin-right: 10px !important;
+  }
+}

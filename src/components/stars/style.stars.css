@@ -7,8 +7,8 @@
 }
 
 .ant-rate-star.ant-rate-star-zero {
-  color: transparent !important;
-  fill: transparent !important;
+  color: #fff !important;
+  fill: #fff !important;
   stroke: rgba(19, 28, 22) !important;
   margin-right: 10px !important;
 }

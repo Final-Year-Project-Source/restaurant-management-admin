@@ -60,7 +60,7 @@ export default function Employees() {
 
   const columns: ColumnsType<User> = [
     {
-      title: 'Tên',
+      title: 'Name',
       dataIndex: 'name',
       width: 100,
       render: (name) => <p>{name}</p>,
@@ -73,7 +73,7 @@ export default function Employees() {
       responsive: ['md'],
     },
     {
-      title: 'Chức vụ',
+      title: 'Role',
       dataIndex: 'role',
       width: 100,
       render: (role) => <p>{role}</p>,
@@ -162,8 +162,8 @@ export default function Employees() {
         <Dropdown
           id="roles"
           mode="multiple"
-          labelItem={getSelectedItems(queryParams?.roleFilter || [], DEFAULT_ROLE_FILTER, 'Tất cả chức vụ')}
-          labelAll="Tất cả chức vụ"
+          labelItem={getSelectedItems(queryParams?.roleFilter || [], DEFAULT_ROLE_FILTER, 'All roles')}
+          labelAll="Show all roles"
           options={ROLE_FILTER}
           multipleGroup
           onChange={(value) => handleChangeRole(value)}
@@ -179,7 +179,7 @@ export default function Employees() {
   return (
     <div className={`bg-white rounded-2xl ${isMobile ? `w-full` : `w-fit`}`}>
       <Table
-        title="Tạo nhân viên"
+        title="New employee"
         // onSearch={handleSearch}
         columns={columns}
         dataSource={userList}
