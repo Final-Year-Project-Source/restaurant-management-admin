@@ -33,7 +33,7 @@ const AddModifier = () => {
 
   const modifierColumns: ColumnsType<ModifierOption> = [
     {
-      title: 'Lựa chọn',
+      title: 'Options',
       dataIndex: 'option',
       render: (text, record) => (
         <TextGroup
@@ -128,7 +128,7 @@ const AddModifier = () => {
         disabled={isAddLoading}
         onClick={() => router.back()}
       >
-        Trở lại
+        Back
       </Button>
 
       {/* Save Button */}
@@ -144,7 +144,7 @@ const AddModifier = () => {
           disabled={isAddLoading || !modifierName.trim() || isEmptyName || !modifierOptions?.length}
           onClick={handleSubmit}
         >
-          Lưu
+          Save
         </Button>
       </div>
 
@@ -152,7 +152,7 @@ const AddModifier = () => {
         <div className="md:mx-[25px] mx-5 flex flex-col space-y-2">
           <InputText
             className="md:max-w-[253px]"
-            label="Tên"
+            label="Modifier name"
             placeholder="name"
             required
             disabled={isAddLoading}
@@ -172,7 +172,7 @@ const AddModifier = () => {
 
         <div className="flex justify-center pt-[10px]">
           <Button type="button" className="w-[177px]" onClick={handleAddOption}>
-            + Thêm lựa chọn
+            + Add option
           </Button>
         </div>
       </div>

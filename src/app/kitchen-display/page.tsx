@@ -1,5 +1,6 @@
 'use client';
 import SearchInput from '@/components/adminPage/SearchInput';
+import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
@@ -15,7 +16,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import Ticket from '../../components/adminPage/Ticket';
 import './kds.scss';
 import { SkeletonTicket } from '@/components/skeleton/skeletonTicket';
-import DateRangePicker from '@/components/dateRangePicker';
 
 const startDate = (() => {
   const thisWeekStartDate = new Date();
@@ -209,8 +209,8 @@ const KitchenDisplay = () => {
               mode="multiple"
               className={` white-bg-color  `}
               options={GROUPS}
-              labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'Tất cả nhóm')}
-              labelAll="Tất cả nhóm"
+              labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'All groups')}
+              labelAll="All groups"
               isLoading={isFetchingGroups}
               onChange={(value) => handleUpdateParamsToURL({ groups: value })}
               value={queryParams?.groups}
@@ -220,13 +220,9 @@ const KitchenDisplay = () => {
             <Dropdown
               id="order_id"
               className={` white-bg-color  `}
-              labelItem={getSelectedItems(
-                queryParams?.orders || DEFAULT_ORDERS_VALUE,
-                KDS_STATUSES,
-                'Tất cả trang thái',
-              )}
+              labelItem={getSelectedItems(queryParams?.orders || DEFAULT_ORDERS_VALUE, KDS_STATUSES, 'All statuses')}
               mode="multiple"
-              labelAll="Tất cả trang thái"
+              labelAll="All statuses"
               options={KDS_STATUSES}
               onChange={(value) => handleUpdateParamsToURL({ orders: value })}
               value={queryParams?.orders}
@@ -258,8 +254,8 @@ const KitchenDisplay = () => {
               mode="multiple"
               className={` white-bg-color  `}
               options={GROUPS}
-              labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'Tất cả nhóm')}
-              labelAll="Tất cả nhóm"
+              labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'All groups')}
+              labelAll="All groups"
               isLoading={isFetchingGroups}
               onChange={(value) => handleUpdateParamsToURL({ groups: value })}
               value={queryParams?.groups}
@@ -285,13 +281,9 @@ const KitchenDisplay = () => {
             <Dropdown
               id="order_id"
               className={` white-bg-color  `}
-              labelItem={getSelectedItems(
-                queryParams?.orders || DEFAULT_ORDERS_VALUE,
-                KDS_STATUSES,
-                'Tất cả trạng thái',
-              )}
+              labelItem={getSelectedItems(queryParams?.orders || DEFAULT_ORDERS_VALUE, KDS_STATUSES, 'All statuses')}
               mode="multiple"
-              labelAll="Tất cả trạng thái"
+              labelAll="All statuses"
               options={KDS_STATUSES}
               onChange={(value) => handleUpdateParamsToURL({ orders: value })}
               value={queryParams?.orders}
@@ -301,10 +293,10 @@ const KitchenDisplay = () => {
       </div>
       {isLoading ? (
         <div
-          className={`all-kds-tickets flex flex-row space-x-[20px] w-full h-fit overflow-x-auto  ${
+          className={`all-kds-tickets flex flex-row space-x-[20px] w-full h-fit overflow-x-scroll  ${
             isMobile ? 'px-[20px] snap-mandatory snap-x' : 'px-1'
           }`}
-          style={{ height: maxHeightTicket - 10 }}
+          style={{ minHeight: maxHeightTicket }}
         >
           {[...Array(6)].map((_, index) => (
             <SkeletonTicket key={index} />
@@ -313,7 +305,7 @@ const KitchenDisplay = () => {
       ) : (
         <div
           ref={allKdsTicketsRef}
-          style={{ height: maxHeightTicket - 10 }}
+          style={{ height: maxHeightTicket }}
           className={`all-kds-tickets flex flex-row space-x-[20px] w-full h-fit overflow-x-auto ${
             isMobile ? 'px-[20px] snap-mandatory snap-x' : 'px-1'
           }`}

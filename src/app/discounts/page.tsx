@@ -26,7 +26,7 @@ export default function Discount() {
 
   const columns: ColumnsType<DiscountType> = [
     {
-      title: 'Loại giảm giá',
+      title: 'Name',
       dataIndex: 'name',
 
       render: (_, record) => {
@@ -40,7 +40,7 @@ export default function Discount() {
       },
     },
     {
-      title: 'Giá trị',
+      title: 'Value',
       dataIndex: 'value',
       render: (_, record) => {
         const isExpired = new Date() > new Date(record?.expiration_date) && record?.has_expiration;
@@ -57,7 +57,7 @@ export default function Discount() {
       },
     },
     {
-      title: 'Số lượng người dùng',
+      title: 'No.uses',
       dataIndex: 'use',
       responsive: ['md'],
       render: (_, record) => {
@@ -67,15 +67,15 @@ export default function Discount() {
 
         return record?.is_limited ? (
           <span className={`${isExpired || !isAvailable ? 'text-black-250' : ''} discount-cell`}>
-            {record?.max_usage_limit} người dùng
+            {record?.max_usage_limit} user{record?.max_usage_limit > 1 && 's'}
           </span>
         ) : (
-          <span className={`${isExpired || !isAvailable ? 'text-black-250' : ''} discount-cell`}>Không giới hạn</span>
+          <span className={`${isExpired || !isAvailable ? 'text-black-250' : ''} discount-cell`}>Unlimited</span>
         );
       },
     },
     {
-      title: 'Hết hạn',
+      title: 'Expiry',
       dataIndex: 'expiry',
       render: (_, record) => {
         const isExpired = new Date() > new Date(record?.expiration_date) && record?.has_expiration;
@@ -107,7 +107,7 @@ export default function Discount() {
           disabled={isLoading}
           onClick={() => router.push(`discounts/add`)}
         >
-          + Tạo loại giảm giá
+          + New discount
         </Button>
       </div>
       <Table

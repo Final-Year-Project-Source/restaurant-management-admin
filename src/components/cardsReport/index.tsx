@@ -1,4 +1,4 @@
-import { Rate } from 'antd';
+import { ConfigProvider, Rate } from 'antd';
 import { isNumber } from 'lodash';
 import React, { useState } from 'react';
 // import './cardsReport.scss';
@@ -42,7 +42,15 @@ const CardsReport: React.FC<CardProps> = ({ data, handleChange, className, isFee
                 onClick={() => handleChangeValue(item.label)}
               >
                 {isNumber(item.label) ? (
-                  <Rate className="rate-customized" disabled value={Number(item.label)} />
+                  <ConfigProvider
+                    theme={{
+                      token: {
+                        colorText: '#f1eee8',
+                      },
+                    }}
+                  >
+                    <Rate disabled value={Number(item.label)} />
+                  </ConfigProvider>
                 ) : (
                   <label className={`${isFeedback ? 'text-[13px]' : 'text-[11px]'} font-open-sans text-wrap`}>
                     {item.label}

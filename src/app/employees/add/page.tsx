@@ -1,17 +1,17 @@
 'use client';
-import { ArrowLeftIcon1 } from '@/components/Icons';
 import Button from '@/components/adminPage/Button';
 import InputText from '@/components/adminPage/Input';
+import Dropdown from '@/components/dropdown/Dropdown';
+import { ArrowLeftIcon1 } from '@/components/Icons';
+import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { useCreateNewUserMutation } from '@/redux/services/employeeApi';
+import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL, ROLE_EMPLOYEE } from '@/utils/constants';
 import { useFormik } from 'formik';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import Dropdown from '@/components/dropdown/Dropdown';
-import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL, ROLE_EMPLOYEE } from '@/utils/constants';
-import { useMemo, useRef } from 'react';
-import { useScrollbarState } from '@/hooks/useScrollbarState';
 export interface UserType {
   _id: string;
   key: React.Key;
@@ -23,9 +23,9 @@ export interface UserType {
 }
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Tên bắt buộc'),
-  email: Yup.string().required('Email bắt buộc'),
-  role: Yup.string().required('Chức vụ bắt buộc'),
+  name: Yup.string().required('Missing name'),
+  email: Yup.string().required('Missing email'),
+  role: Yup.string().required('Missing role'),
 });
 
 const EditEmployee = () => {
@@ -82,7 +82,7 @@ const EditEmployee = () => {
           type="button"
           onClick={() => router.push('/employees')}
         >
-          Trở lại
+          Back
         </Button>
         <div
           className={`${
@@ -95,7 +95,7 @@ const EditEmployee = () => {
             variant="secondary"
             disabled={isCreating || isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
         <div className="pt-[30px] md:px-[25px] max-md:px-5 max-md:pb-[10px] flex space-x-2 items-center justify-center">
@@ -104,11 +104,11 @@ const EditEmployee = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Tên nhân viên</label>
+            <label className="font-medium md:pt-[12px]">Employee name</label>
             <div className="col-span-3">
               <InputText
                 id="name"
-                placeholder="Tên nhân viên"
+                placeholder="Employee name"
                 disabled={isCreating}
                 value={values.name}
                 onChange={handleChange}
@@ -129,13 +129,13 @@ const EditEmployee = () => {
               />
               {errors.email && touched.email && <span className="text-[12px] text-red-500">{errors.email}</span>}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Chức vụ</label>
+            <label className="font-medium max-md:pt-[10px]">Role</label>
             <div className="col-span-3">
               <Dropdown
                 mode="tags"
                 id="role"
                 disabled={isCreating}
-                placeholder="Chọn chức vụ"
+                placeholder="Select role"
                 includeEmptyValue={false}
                 options={ROLE_EMPLOYEE}
                 value={values.role}

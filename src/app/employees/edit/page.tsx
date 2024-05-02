@@ -22,6 +22,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import '../employees.scss';
+
 export interface UserType {
   _id: string;
   key: React.Key;
@@ -141,7 +143,7 @@ const EditEmployee = () => {
             type="button"
             onClick={() => router.push('/employees')}
           >
-            Trở lại
+            Back
           </Button>
           <Button
             type="button"
@@ -149,7 +151,7 @@ const EditEmployee = () => {
             variant="primary"
             disabled={isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword}
           >
-            Xoá
+            Delete
           </Button>
           <div
             className={`${
@@ -164,7 +166,7 @@ const EditEmployee = () => {
                 isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword || isDisabled
               }
             >
-              Lưu
+              Save
             </Button>
           </div>
         </div>
@@ -174,7 +176,7 @@ const EditEmployee = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Tên nhân viên</label>
+            <label className="font-medium md:pt-[12px]">Employee name</label>
             <div className="col-span-3">
               {isFetching ? (
                 <Skeleton.Input active block />
@@ -182,7 +184,7 @@ const EditEmployee = () => {
                 <div>
                   <InputText
                     id="name"
-                    placeholder="Tên nhân viên"
+                    placeholder="Name"
                     disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
                     value={values.name}
                     onChange={handleChange}
@@ -211,7 +213,7 @@ const EditEmployee = () => {
                 </div>
               )}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Chức vụ</label>
+            <label className="font-medium max-md:pt-[10px]">Role</label>
             <div className="col-span-3">
               {isFetching ? (
                 <Skeleton.Input active block />
@@ -220,7 +222,7 @@ const EditEmployee = () => {
                   mode="tags"
                   id="role"
                   disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
-                  placeholder="Chọn chức vụ"
+                  placeholder="Select role"
                   includeEmptyValue={false}
                   options={ROLE_EMPLOYEE}
                   value={values.role}
@@ -229,7 +231,7 @@ const EditEmployee = () => {
               )}
             </div>
 
-            <label className="font-medium place-self-start mt-2 max-md:pt-[10px]">Lựa chọn</label>
+            <label className="font-medium place-self-start mt-2 max-md:pt-[10px]">Options</label>
             <div className="col-span-3 w-[235px]">
               <Button
                 className="w-full"
@@ -261,41 +263,37 @@ const EditEmployee = () => {
                   !user?.is_change_default_password
                 }
               >
-                Đặt lạiPassword
+                Reset password
               </Button>
             </div>
           </div>
         </div>
-        {isModalDeleteOpen && (
-          <>
-            <CustomizedModal
-              className="customized-width"
-              open={isModalDeleteOpen && !isMobile}
-              title="Xác nhận"
-              onOk={handleDeleteOk}
-              okText="Xoá"
-              onCancel={() => setIsModalDeleteOpen(false)}
-            >
-              <div className="text-center text-black-400 flex flex-col mb-[30px]">
-                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
-              </div>
-            </CustomizedModal>
-            <CustomizedDrawer
-              className="bill-drawer"
-              type="confirm"
-              open={isModalDeleteOpen && isMobile}
-              onClose={() => setIsModalDeleteOpen(false)}
-              title="Xác nhận"
-              okText="Xoá"
-              onOk={handleDeleteOk}
-              width={screenWidth}
-            >
-              <div className="text-center text-black-400 flex flex-col">
-                <span>Bạn có chắc muốn xoá?</span> <span>Thao tác này không thể hoàn tác.</span>
-              </div>
-            </CustomizedDrawer>
-          </>
-        )}
+        <CustomizedModal
+          className="customized-width"
+          open={isModalDeleteOpen && !isMobile}
+          title="Confirm deletion"
+          onOk={handleDeleteOk}
+          okText="Delete"
+          onCancel={() => setIsModalDeleteOpen(false)}
+        >
+          <div className="text-center text-black-400 flex flex-col mb-[30px]">
+            <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
+          </div>
+        </CustomizedModal>
+        <CustomizedDrawer
+          className="bill-drawer"
+          type="confirm"
+          open={isModalDeleteOpen && isMobile}
+          onClose={() => setIsModalDeleteOpen(false)}
+          title="Confirm deletion"
+          okText="Delete"
+          onOk={handleDeleteOk}
+          width={screenWidth}
+        >
+          <div className="text-center text-black-400 flex flex-col">
+            <span>Are you sure you want to delete?</span> <span>This cannot be undone.</span>
+          </div>
+        </CustomizedDrawer>
       </form>
     </div>
   );

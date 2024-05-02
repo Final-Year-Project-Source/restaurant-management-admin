@@ -18,8 +18,8 @@ import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL } from '@/utils/constants';
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Tên bàn ăn bắt buộc'),
-  location: Yup.string().required('Vị trí bắt buộc'),
+  name: Yup.string().required('Missing Table'),
+  location: Yup.string().required('Missing Location'),
 });
 
 const AddTable = () => {
@@ -104,7 +104,7 @@ const AddTable = () => {
           type="button"
           onClick={() => router.push('/tables')}
         >
-          Trở lại
+          Back
         </Button>
 
         <div
@@ -118,7 +118,7 @@ const AddTable = () => {
             type="submit"
             disabled={isAddLoading || isFetchingDiscount || isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
         <div className="pt-[30px] md:px-[25px] max-md:px-5 max-md:pb-[10px] flex space-x-2 items-center justify-center">
@@ -127,11 +127,11 @@ const AddTable = () => {
               isMobile ? 'grid-cols-1' : 'grid-cols-4'
             }`}
           >
-            <label className="font-medium md:pt-[12px]">Tên bàn</label>
+            <label className="font-medium md:pt-[12px]">Table name</label>
             <div className="col-span-3">
               <InputText
                 id="name"
-                placeholder="Tên bàn"
+                placeholder="Name"
                 value={values.name}
                 onChange={handleChange}
                 allowClear
@@ -139,12 +139,12 @@ const AddTable = () => {
               />
               {errors.name && touched.name && <span className="text-[12px] text-red-500">{errors.name}</span>}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Vị trí</label>
+            <label className="font-medium max-md:pt-[10px]">Location</label>
             <div className="col-span-3">
               <InputText
                 type="text"
                 id="location"
-                placeholder="Vị trí"
+                placeholder="Location"
                 value={values.location}
                 onChange={handleChange}
                 allowClear
@@ -154,7 +154,7 @@ const AddTable = () => {
                 <span className="text-[12px] text-red-500">{errors.location}</span>
               )}
             </div>
-            <label className="font-medium max-md:pt-[10px]">Loại giảm giá</label>
+            <label className="font-medium max-md:pt-[10px]">Discount</label>
             <div className="col-span-3">
               <Dropdown
                 disabled={isAddLoading}
@@ -162,7 +162,7 @@ const AddTable = () => {
                 customFilterOptionsForSearch
                 mode="tags"
                 id="discount"
-                placeholder="Chọn loại Loại giảm giá"
+                placeholder="Select discount"
                 options={discountsList?.map((item: any) => ({
                   label: renderDiscount(item),
                   value: item._id,

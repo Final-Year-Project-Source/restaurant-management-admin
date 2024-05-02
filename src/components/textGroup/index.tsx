@@ -22,10 +22,10 @@ const TextGroup: React.FC<Props> = ({
   return (
     <div className="flex md:space-x-10 space-x-2.5 ">
       <div className="flex justify-center items-center space-x-5 md:max-w-[252px] max-md:max-w-[197px]">
-        {!isMobile && <label className="text-[14px] font-rubik">Tên</label>}
+        {!isMobile && <label className="text-[14px] font-rubik">Name</label>}
         <InputText
           className="md:max-w-[194px]"
-          placeholder="Tên"
+          placeholder="Name"
           value={nameValue}
           onChange={onChangeName}
           disabled={disabled}
@@ -34,8 +34,8 @@ const TextGroup: React.FC<Props> = ({
 
       {isInputPrice && (
         <div className="flex justify-center items-center space-x-5 md:max-w-[157px] max-md:max-w-[68px]">
-          {!isMobile && <label className="text-[14px] font-rubik">Giá</label>}
-          <InputText placeholder="Giá" value={priceValue || 0} onChange={onChangePrice} disabled={disabled} />
+          {!isMobile && <label className="text-[14px] font-rubik">Price</label>}
+          <InputText placeholder="Price" value={priceValue || 0} onChange={onChangePrice} disabled={disabled} />
         </div>
       )}
     </div>

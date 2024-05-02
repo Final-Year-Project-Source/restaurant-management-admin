@@ -62,6 +62,7 @@ const Bills = () => {
   const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery();
   const { data: allDiscounts, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
   const [addBill, { isLoading: isCreateBillLoading }] = useAddBillMutation();
+  const [isBillCreating, setIsBillCreating] = useState(false);
   const diningTableList = allDiningTables?.data;
   const discountsList = allDiscounts?.data;
 
@@ -265,9 +266,9 @@ const Bills = () => {
           labelItem={getSelectedItems(
             (queryParams?.orderStatus || defaultOrderStatus).concat(queryParams?.paymentStatus || defaultPaymentStatus),
             defaultOrderStatus.concat(defaultPaymentStatus),
-            'Tất cả trạng thái',
+            'All Statuses',
           )}
-          labelAll="Tất cả trạng thái"
+          labelAll="Show all statuses"
           options={BILL_STATUSES}
           multipleGroup
           onChange={(value) => handleChangeStatus(value)}
@@ -287,6 +288,7 @@ const Bills = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
+      setIsBillCreating(true);
       const data = {
         dining_table_id: values.table_id,
         discount_id: values.discount_id,
@@ -305,6 +307,7 @@ const Bills = () => {
           toast.error(error.data.message);
           setIsOpenModalNewBill(false);
           setIsOpenDrawerNewBill(false);
+          setIsBillCreating(false);
         });
     },
   });
@@ -324,12 +327,12 @@ const Bills = () => {
     }));
   const columns: ColumnsType<BillType> = [
     {
-      title: 'Ngày',
+      title: 'Date',
       dataIndex: 'createdAt',
       width: isMobile ? 90 : 150,
       showSorterTooltip: false,
       defaultSortOrder: 'descend',
-      sortDirections: ['ascend', 'descend'],
+      sortDirections: ['ascend'],
       sorter: (a, b) => {
         const dateA = new Date(a.created_at).getTime();
         const dateB = new Date(b.created_at).getTime();
@@ -339,31 +342,31 @@ const Bills = () => {
       render: (createdAt) => <p>{createdAt}</p>,
     },
     {
-      title: 'Tên',
+      title: 'Name',
       dataIndex: 'name',
       width: isMobile ? 140 : 180,
       render: (name) => <p>{name}</p>,
     },
     {
-      title: 'Trạng thái đặt món',
+      title: 'Order status',
       dataIndex: 'status',
       width: isMobile ? 75 : 130,
     },
     {
-      title: 'Trạng thái thanh toán',
+      title: 'Payment status',
       dataIndex: 'payment_status',
       width: 140,
       responsive: ['md'],
     },
     {
-      title: 'Món ăn / đặt món',
+      title: 'Item / orders',
       dataIndex: 'item_order',
       width: 150,
       responsive: ['md'],
       render: (item_order) => <p>{item_order}</p>,
     },
     {
-      title: 'Đánh giá',
+      title: 'Review',
       dataIndex: 'review',
       width: 170,
       responsive: ['lg'],
@@ -384,7 +387,7 @@ const Bills = () => {
           mode="tags"
           height={48}
           placeholder="-"
-          label="Tên bàn ăn"
+          label="Table name"
           options={diningTableList?.map((item: any) => ({
             label: `${item.name} (${item.location})`,
             value: item._id,
@@ -395,8 +398,8 @@ const Bills = () => {
         {errors.table_id && touched.table_id && <span className="text-[12px] text-red-500">{errors.table_id}</span>}
         <InputText
           id="customer_name"
-          placeholder="Nhập tên khách hàng"
-          label="Tên khách hàng"
+          placeholder="Enter name"
+          label="Customer Name"
           value={values.customer_name}
           onChange={handleChange}
           allowClear
@@ -412,7 +415,7 @@ const Bills = () => {
           mode="tags"
           height={48}
           placeholder="-"
-          label="Giảm giá"
+          label="Discount"
           // options={convertDiscountToOptions(discountsList)}
           options={discountsList?.map((item: any) => ({
             label: renderDiscount(item),
@@ -430,7 +433,7 @@ const Bills = () => {
     <div className="bg-white rounded-2xl">
       <Table
         columns={columns}
-        title="Tạo hoá đơn"
+        title="New bill"
         dataSource={data}
         isLoading={isFetching || isLoadingDiscount || isLoadingTable}
         cursorPointerOnRow
@@ -461,10 +464,10 @@ const Bills = () => {
         className="m-[10px]"
         onCancel={() => setIsOpenModalNewBill(false)}
         onOk={() => submitForm()}
-        okText="Tạo hóa đơn mới"
+        okText="Create new bill"
         loading={isFetching}
-        title="Tạo hóa đơn mới"
-        disableOkButton={isCreateBillLoading}
+        title="Create new bill"
+        disableOkButton={isCreateBillLoading || isBillCreating}
       >
         {formNewBill}
       </CustomizedModal>
@@ -472,11 +475,11 @@ const Bills = () => {
         className="bill-drawer"
         open={isOpenDrawerNewBill && isMobile}
         onClose={() => setIsOpenDrawerNewBill(false)}
-        title="Tạo hóa đơn mới"
-        okText="Tạo hóa đơn mới"
+        title="Create new bill"
+        okText="Create new bill"
         onOk={() => submitForm()}
         width={width}
-        disableOkButton={isCreateBillLoading}
+        disableOkButton={isCreateBillLoading || isBillCreating}
       >
         {formNewBill}
       </CustomizedDrawer>

@@ -348,7 +348,11 @@ const Layout: FC<Props> = ({ children }) => {
               {/* {session?.user.name?.toUpperCase()} */} Vy Nguyen
             </div>
             {/* )}  */}
-            <Avatar className="cursor-pointer bg-white text-black-500 mr-4" size={38}>
+            <Avatar
+              className="cursor-pointer bg-white text-black-500 mr-4"
+              size={38}
+              onClick={() => router.push('/account')}
+            >
               {/* {session?.user.name[0].toUpperCase()} */}
             </Avatar>
           </div>

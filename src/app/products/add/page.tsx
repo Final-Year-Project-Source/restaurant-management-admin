@@ -30,7 +30,8 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import TextAreaInput from '@/components/input/TextArea';
+import TextAreaInput from '@/components/adminPage/TextArea';
+import { useSession } from 'next-auth/react';
 
 const schema = Yup.object().shape({
   name: Yup.string().required('Missing Product'),
@@ -46,7 +47,7 @@ const AddProduct = () => {
   const router = useRouter();
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
-
+  const { data: session } = useSession();
   const { scrollBottom } = useScrollbarState(bodyRef);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [addProduct, { isLoading: isAddLoading }] = useAddProductMutation();
@@ -57,6 +58,11 @@ const AddProduct = () => {
   const CATEGORIES = convertCategoriesToOptions(allCategories?.data, 'id');
   const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery();
   const GROUPS = convertGroupsToOptions(groupsData?.data, 'id');
+
+  if (session?.user?.role === 'Standard') {
+    toast.error('You are not authorized to access this page.');
+    router.push('/products');
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -172,7 +178,7 @@ const AddProduct = () => {
             disabled={isAddLoading || isCategoryLoading || isGroupsLoading || isImageLoading || isModifierLoading}
             type="button"
           >
-            Trở lại
+            Back
           </Button>
         </div>
         <div
@@ -186,19 +192,19 @@ const AddProduct = () => {
             type="submit"
             disabled={isDisabled}
           >
-            Lưu
+            Save
           </Button>
         </div>
         <div className="flex max-lg:flex-col md:py-[25px] pt-[30px]">
           <div className="lg:w-1/2 lg:mr-[56px] grid lg:grid-cols-7 md:grid-cols-4 grid-cols-1 space-y-[10px]">
-            <label className="font-medium lg:col-span-2 md:pt-5">Tên món ăn</label>
+            <label className="font-medium lg:col-span-2 md:pt-5">Product name</label>
 
             <div className="lg:col-span-5">
               <div>
                 <InputText
                   disabled={isAddLoading}
                   id="name"
-                  placeholder="Tên món ăn"
+                  placeholder="Product name"
                   value={values.name}
                   onChange={handleChange}
                 />
@@ -208,23 +214,23 @@ const AddProduct = () => {
               </div>
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Mô tả</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Description</label>
             <div className="lg:col-span-5">
               <TextAreaInput
                 disabled={isAddLoading}
                 id="description"
-                placeholder="Mô tả"
+                placeholder="Description"
                 value={values.description}
                 onChange={(e) => handleChange({ target: { id: 'description', value: e.target.value } })}
               />
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Giá</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Price</label>
             <div className="lg:col-span-5 max-w-[172px]">
               <InputText
                 disabled={isAddLoading}
                 id="price"
-                placeholder="Giá"
+                placeholder="Price"
                 value={values?.price || ''}
                 onChange={handleChange}
               />
@@ -233,12 +239,12 @@ const AddProduct = () => {
               )}
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Danh mục</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Menu category</label>
             <div className="lg:col-span-5">
               <Dropdown
                 disabled={isAddLoading}
                 id="category_id"
-                placeholder="Chọn danh mục"
+                placeholder="Select category"
                 options={CATEGORIES}
                 loading={isCategoryLoading}
                 labelItem={getLabelById(values.category_id, CATEGORIES)}
@@ -247,12 +253,12 @@ const AddProduct = () => {
               />
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Nhóm</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Group</label>
             <div className="lg:col-span-5">
               <Dropdown
                 disabled={isAddLoading}
                 id="group_id"
-                placeholder="Chọn nhóm"
+                placeholder="Select group"
                 options={GROUPS}
                 loading={isGroupsLoading}
                 labelItem={getLabelById(values.group_id, GROUPS)}
@@ -267,7 +273,7 @@ const AddProduct = () => {
                 disabled={isAddLoading}
                 id="proteins"
                 mode="multiple"
-                placeholder="Chọn proteins"
+                placeholder="Select proteins"
                 options={PROTEINS}
                 labelItem={getLabelById(values.proteins, PROTEINS)?.join(', ')}
                 value={values.proteins}
@@ -275,14 +281,14 @@ const AddProduct = () => {
               />
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px]">Chế độ ăn kiêng</label>
+            <label className="font-medium lg:col-span-2 pt-[10px]">Dietary restrictions</label>
             <div className="lg:col-span-5">
               <Dropdown
                 disabled={isAddLoading}
                 id="dietary_restrictions"
                 fontSizeDropdown={13}
                 mode="multiple"
-                placeholder="Chọn chế độ ăn kiêng"
+                placeholder="Select dietary restrictions"
                 labelItem={getLabelById(values.dietary_restrictions, DIETARY_RESTRICTIONS)?.join(', ')}
                 options={DIETARY_RESTRICTIONS}
                 value={values.dietary_restrictions}
@@ -290,13 +296,13 @@ const AddProduct = () => {
               />
             </div>
 
-            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Lựa chọn</label>
+            <label className="font-medium lg:col-span-2 pt-[10px] md:pl-[30px] lg:pl-[0px]">Modifiers</label>
             <div className="lg:col-span-5">
               <Dropdown
                 disabled={isAddLoading}
                 id="modifier_ids"
                 mode="multiple"
-                placeholder="Chọn lựa chọn"
+                placeholder="Select Modifiers"
                 options={MODIFIERS}
                 loading={isModifierLoading}
                 labelItem={getLabelById(values.modifier_ids, MODIFIERS)?.join(', ')}
@@ -305,7 +311,7 @@ const AddProduct = () => {
               />
             </div>
 
-            <label className="font-medium lg:col-span-2">Theo dõi hàng tồn kho</label>
+            <label className="font-medium lg:col-span-2">Track inventory</label>
             <div className="lg:col-span-5 flex-col space-y-[10px]">
               <CustomizedSwitch
                 id="track_inventory"
@@ -315,20 +321,20 @@ const AddProduct = () => {
               />
               {values.track_inventory && (
                 <div className="flex space-x-[10px]">
-                  <div className="w-[120px]">
+                  <div className="w-[102px]">
                     <InputText
                       disabled={isAddLoading}
                       id="in_stock"
-                      placeholder="Còn hàng"
+                      placeholder="In stock"
                       value={values?.in_stock || ''}
                       onChange={handleChange}
                     />
                   </div>
-                  <div className="w-[120px]">
+                  <div className="w-[102px]">
                     <InputText
                       disabled={isAddLoading}
                       id="low_stock"
-                      placeholder="Thiếu hàng"
+                      placeholder="Low stock"
                       value={values?.low_stock || ''}
                       onChange={handleChange}
                     />
@@ -339,7 +345,7 @@ const AddProduct = () => {
           </div>
 
           <div className="lg:w-1/2 flex flex-col space-y-[10px] max-lg:pt-5">
-            <span className="font-medium">Ảnh</span>
+            <span className="font-medium">Product image</span>
             <div className="flex flex-col h-[300px] w-[300px]">
               <div>
                 {
@@ -351,17 +357,17 @@ const AddProduct = () => {
                       onPreview={onPreview}
                       name="image_url"
                     >
-                      {fileList.length < 1 && '+ Tải ảnh lên'}
+                      {fileList.length < 1 && '+ Upload image'}
                     </Upload>
                   </ImgCrop>
                 }
               </div>
             </div>
             <div className="pt-[10px] text-[11px] font-open-sans">
-              <span>Yêu cầu về hình ảnh: </span>
+              <span>Image requirements: </span>
               <ul className="list-disc pl-5">
-                <li>Tối thiểu 1024 x 1024 pixel </li>
-                <li>.png có nền trong suốt</li>
+                <li>Minimum 1024 x 1024 pixels </li>
+                <li>.png with transparent background</li>
               </ul>
             </div>
           </div>

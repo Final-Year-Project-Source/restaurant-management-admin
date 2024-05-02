@@ -4,15 +4,15 @@ import { updateBasket } from '@/redux/features/basketSlice';
 import { open_sans } from '@/utils/fontUtils';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import ProductImage from '@/components/productImage';
 import { CountButton } from '@/components/button';
+import CustomizedModal from '@/components/modal';
+import Tag from '@/components/tag/Tag';
 import { useChangeItemQuantityMutation } from '@/redux/services/billApi';
 import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
-import { useWindowDimensions } from '@/hooks/useWindowDimensions';
-import ProductImage from '@/components/productImage';
-import Tag from '@/components/tag/tag';
-import CustomizedModal from '@/components/modal';
 import CustomizedDrawer from '@/components/drawer';
+import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 
 interface ItemsProps {
   name: string;
@@ -255,24 +255,26 @@ const OrderItem: React.FC<ItemsProps> = ({
 
             <CustomizedModal
               open={isModalOpen && !isMobile}
-              title="Xác nhận xoá món ăn"
-              okText="Xoá"
+              title="Remove item"
+              okText="Remove"
               onOk={handleOk}
               onCancel={handleCancel}
             >
-              Bạn có chắc muốn xoá {name?.toLowerCase()} khỏi giỏ hàng?
+              Are you sure you want to remove the {name?.toLowerCase()} from your basket?
             </CustomizedModal>
             <CustomizedDrawer
               className="bill-drawer"
               type="confirm"
               open={isModalOpen && isMobile}
               onClose={handleCancel}
-              title="Xác nhận xoá món ăn"
-              okText="Xoá"
+              title="Confirm removing item"
+              okText="Confirm"
               onOk={handleOk}
               width={width}
             >
-              <div className="text-center">Bạn có chắc muốn xoá {name?.toLowerCase()} khỏi giỏ hàng?</div>
+              <div className="text-center">
+                <p> Are you sure you want to remove the {name?.toLowerCase()} from your basket?</p>
+              </div>
             </CustomizedDrawer>
           </div>
         </>

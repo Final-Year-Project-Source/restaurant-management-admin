@@ -1,6 +1,5 @@
 'use client';
 import Dropdown from '@/components/dropdown/Dropdown';
-import ProductImage from '@/components/productImage';
 import CustomizedSwitch from '@/components/switch';
 import Table from '@/components/table/Table';
 import Tag from '@/components/tag/tag';
@@ -33,6 +32,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './product.scss';
+import { useWindowDimensions } from '@/hooks/useWindowDimensions';
+import ProductImage from '@/components/productImage';
 
 const Product = () => {
   const searchParams = useSearchParams();
@@ -40,7 +41,7 @@ const Product = () => {
   const dispatch = useDispatch();
   const [isOpenSearchInput, setIsOpenSearchInput] = useState(false);
   const { data: session } = useSession();
-
+  const { isMobile } = useWindowDimensions();
   const [updateProductStatus, { isLoading: isStatusLoading }] = useUpdateProductStatusMutation();
   const { data: allCategories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
   const { data: allGroups, isFetching: isFetchingGroups } = useGetGroupsQuery();
@@ -209,6 +210,7 @@ const Product = () => {
       width: 68,
       render: (_, record) => {
         const isAvailable = record?.is_available;
+        const isLowStock = record?.stock_status === LOW_STOCK;
         return (
           <ProductImage
             className={`image-customized ${!isAvailable ? 'opacity' : ''}`}
@@ -221,23 +223,31 @@ const Product = () => {
       },
     },
     {
-      title: 'Tên món ăn',
+      title: 'Product name',
       dataIndex: 'name',
       render: (_, record) => {
         const isLowStock = record?.stock_status === LOW_STOCK;
         const isAvailable = record?.is_available;
         return (
-          <div className={`flex items-center space-x-5 ${!isAvailable ? 'text-black-250' : ''}`}>
+          <div className={`flex items-center space-x-4 ${!isAvailable ? 'text-black-250' : ''}`}>
             <span className={`${isAvailable ? '' : '!text-black-250'} ${isLowStock ? 'text-red-200' : ''}`}>
               {record?.name}
             </span>
-            {isLowStock && <Tag variant="warning" text={record?.stock_status} />}
+            {isLowStock && (
+              <div className="min-h-[17px] min-w-[65px]">
+                <Tag
+                  className={`!absolute ${isMobile ? `bottom-[26px]` : `bottom-[16.5px]`} `}
+                  variant="warning"
+                  text={record?.stock_status}
+                />{' '}
+              </div>
+            )}
           </div>
         );
       },
     },
     {
-      title: 'Giá',
+      title: 'Price',
       dataIndex: 'price',
       responsive: ['sm'],
       render: (_, record) => {
@@ -251,7 +261,7 @@ const Product = () => {
       },
     },
     {
-      title: 'Danh mục',
+      title: 'Menu category',
       dataIndex: 'category_id',
       responsive: ['sm'],
       render: (_, record) => {
@@ -265,7 +275,7 @@ const Product = () => {
       },
     },
     {
-      title: 'Nhóm',
+      title: 'Group',
       dataIndex: 'group_id',
       responsive: ['sm'],
       render: (_, record) => {
@@ -281,7 +291,7 @@ const Product = () => {
     },
 
     {
-      title: 'Có sẵn',
+      title: 'Available',
       dataIndex: 'is_available',
       render: (_, record) => {
         const isOutOfStock = record?.stock_status === OUT_OF_STOCK;
@@ -306,13 +316,13 @@ const Product = () => {
           id="category_id"
           mode="multiple"
           options={CATEGORIES}
-          labelAll="Tất cả danh mục"
+          labelAll="All menu categories"
           isLoading={isFetchingCategories}
           value={queryParams?.categories}
           labelItem={getSelectedItems(
             queryParams?.categories || DEFAULT_CATEGORIES_VALUE,
             CATEGORIES,
-            'Tất cả danh mục',
+            'All menu categories',
           )}
           onChange={(value) => handleUpdateParamsToURL({ categories: value, page: 1, limit: 10 })}
         />
@@ -322,8 +332,8 @@ const Product = () => {
           id="group_id"
           mode="multiple"
           options={GROUPS}
-          labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'Tất cả nhóm')}
-          labelAll="Tất cả nhóm"
+          labelItem={getSelectedItems(queryParams?.groups || DEFAULT_GROUPS_VALUE, GROUPS, 'All groups')}
+          labelAll="All groups"
           isLoading={isFetchingGroups}
           onChange={(value) => handleUpdateParamsToURL({ groups: value, page: 1, limit: 10 })}
           value={queryParams?.groups}
@@ -335,8 +345,8 @@ const Product = () => {
           mode="multiple"
           loading={isFetchingSocks}
           options={STOCKS}
-          labelItem={getSelectedItems(queryParams?.stocks || DEFAULT_STOCKS_VALUE, STOCKS, 'Tất cả tồn kho')}
-          labelAll="Tất cả tồn kho"
+          labelItem={getSelectedItems(queryParams?.stocks || DEFAULT_STOCKS_VALUE, STOCKS, 'All stocks')}
+          labelAll="All stocks"
           isLoading={isFetchingCategories}
           onChange={(value) => handleUpdateParamsToURL({ stocks: value, page: 1, limit: 10 })}
           value={queryParams?.stocks}
@@ -354,21 +364,22 @@ const Product = () => {
   };
 
   const handleRowClick = (record: any) => {
+    if (session?.user?.role === 'Standard') return;
     router.push(`products/edit?id=${record?._id}`);
   };
 
   return (
     <Table
       className="product-customized"
-      title="Tạo món ăn"
+      title="New product"
       columns={columns}
       dataSource={Products}
       isOpenSearchInput={isOpenSearchInput}
       setIsOpenSearch={() => setIsOpenSearchInput((prev) => !prev)}
-      onAdd={() => router.push('products/add')}
+      onAdd={session?.user?.role !== 'Standard' ? () => router.push('products/add') : undefined}
       isLoading={isFetching || isStatusLoading}
       onSearch={handleSearch}
-      cursorPointerOnRow
+      cursorPointerOnRow={session?.user?.role !== 'Standard'}
       onRowClick={handleRowClick}
       defaultSearchValue={searchUrl || ''}
       page={pageUrl || 1}

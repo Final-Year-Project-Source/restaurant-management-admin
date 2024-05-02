@@ -32,17 +32,16 @@ const OrderSummary: FC<OrderSummaryProps> = ({
       <div className={`text-[10px] font-normal ${open_sans.className}`}>
         {discountAmount! > 0 && (
           <div className="flex items-center justify-between ">
-            <span>{discount_text} Giảm giá </span>
+            <span>{discount_text} Discount</span>
             <span>-{discountAmount}</span>
           </div>
         )}
         <div className="flex items-center justify-between ">
-          <div> Tổng cộng (`${totalItems} món`) </div>
-
+          <span>Subtotal</span>
           <span>{subTotal}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span>10% Phí dịch vụ</span>
+          <span>10% Service Charge</span>
           <span>{serviceCharge}</span>
         </div>
         <div className="flex items-center justify-between">
@@ -51,7 +50,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({
         </div>
       </div>
       <div className="flex items-center justify-between text-sm  font-normal">
-        <span>Thành tiền</span>
+        <span>Total</span>
         <span>{total}</span>
       </div>
     </div>

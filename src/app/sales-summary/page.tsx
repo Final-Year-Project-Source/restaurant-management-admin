@@ -124,11 +124,11 @@ const SalesSummary = () => {
   useEffect(() => {
     if (searchParams) {
       if (isEqual(startHourParam, 0) && isEqual(endHourParam, 24)) {
-        setHourPeriodLabel('Cả ngày');
-        setValueFIlterByHour('Cả ngày');
+        setHourPeriodLabel('All day');
+        setValueFIlterByHour('All day');
       } else {
-        setHourPeriodLabel(`Từ: ${startHourParam}h - đến: ${endHourParam}h`);
-        setValueFIlterByHour('Tuỳ chỉnh');
+        setHourPeriodLabel(`From: ${startHourParam}h - to: ${endHourParam}h`);
+        setValueFIlterByHour('Custom period');
       }
       setDateRange([new Date(startTimeParam || startDateDefault), new Date(endTimeParam || endDateDefault)]);
       dispatch(
@@ -157,11 +157,11 @@ const SalesSummary = () => {
     {
       title: '',
       options: [
-        { label: 'Tổng doanh thu', value: saleData?.grossSales },
-        { label: 'Hoàn tiền', value: saleData?.refunds },
-        { label: 'Giảm giá', value: saleData?.totalDiscounts },
-        { label: 'Doanh thu thực', value: saleData?.netSales },
-        { label: 'Lợi nhuận', value: saleData?.estimatedProfit },
+        { label: 'Gross sales', value: saleData?.grossSales },
+        { label: 'Refunds', value: saleData?.refunds },
+        { label: 'Discounts', value: saleData?.totalDiscounts },
+        { label: 'Net sales', value: saleData?.netSales },
+        { label: 'Est. profit', value: saleData?.estimatedProfit },
       ],
     },
   ];
@@ -169,35 +169,35 @@ const SalesSummary = () => {
 
   const columns: ColumnsType<SaleSummaryType> = [
     {
-      title: 'Thời gian',
+      title: 'Time',
       dataIndex: 'time',
       width: 160,
       render: (time) => <p>{getFormatDateTime(time)}</p>,
     },
     {
-      title: 'Tổng doanh thu',
+      title: 'Gross Sales',
       dataIndex: 'grossSales',
       width: 80,
     },
     {
-      title: 'Hoàn tiền',
+      title: 'Refunds',
       dataIndex: 'refunds',
       width: 80,
     },
     {
-      title: 'Giảm giá',
+      title: 'Discounts',
       responsive: ['md'],
       dataIndex: 'discounts',
       width: 80,
     },
     {
-      title: 'Doanh thu thực',
+      title: 'Net Sales',
       responsive: ['md'],
       dataIndex: 'netSales',
       width: 80,
     },
     {
-      title: 'Lợi nhuận',
+      title: 'Est. Profit',
       responsive: ['md'],
       dataIndex: 'estimatedProfit',
       width: 80,
@@ -231,7 +231,7 @@ const SalesSummary = () => {
       limit: 10,
     });
 
-    if (valueFIlterByHour === 'Tuỳ chỉnh') {
+    if (valueFIlterByHour === 'Custom period') {
       handleUpdateParamsToURL({
         startHourFilter: value?.[0].$H.toString(),
         endHourFilter: value?.[1].$H.toString(),
@@ -249,18 +249,18 @@ const SalesSummary = () => {
       netSales: row.netSales,
       estProfit: row.estimatedProfit,
     }));
-    const columNames = ['Thời gian', 'Tổng doanh thu', 'Hoàn tiền', 'Giảm giá', 'Doanh thu thực', 'Lợi nhuận'];
+    const columNames = ['Time', 'Gross Sales', 'Refunds', 'Discounts', 'Net Sales', 'Est. Profit'];
     handleDownloadCSV(
       exportData,
-      `${getFormatDate(queryParams?.startTime)}-${getFormatDate(queryParams?.endTime)} Doanh_thu.csv`,
+      `${getFormatDate(queryParams?.startTime)}-${getFormatDate(queryParams?.endTime)} Sales Summary Report.csv`,
       columNames,
     );
   };
   const handleChangeHourPeriodOption = (value: any) => {
-    if (value === 'Cả ngày') {
+    if (value === 'All day') {
       handleUpdateParamsToURL({ startHourFilter: '0', endHourFilter: '24', page: 1, limit: 10 });
     }
-    if (value === 'Tuỳ chỉnh') {
+    if (value === 'Custom period') {
       handleUpdateParamsToURL({
         startHourFilter: queryParams?.startHourFilter,
         endHourFilter: queryParams?.endHourFilter,
@@ -280,6 +280,8 @@ const SalesSummary = () => {
           <div className={`time-filter w-[199px]`}>
             <DropdownHourPeriod
               id="time"
+              className={``}
+              // options={OptionHourPeriod}
               labelItem={hourPeriodLabel}
               onChange={(value) => handleChangeHourPeriodOption(value)}
               value={valueFIlterByHour}
@@ -295,16 +297,17 @@ const SalesSummary = () => {
           disabled={isLoadingData}
           onClick={exportToCSV}
         >
-          Xuất thống kê
+          Export report
         </Button>
       </div>
-      <CardsReport
-        className="sales-summary-buttons"
-        data={SalesSummaryButton}
-        handleChange={(label: string) => {
-          setTypeChart(label.toLowerCase());
-        }}
-      />
+      <div className="flex flex-row w-full ">
+        <CardsReport
+          data={SalesSummaryButton}
+          handleChange={(label) => {
+            setTypeChart(label.toLowerCase());
+          }}
+        />
+      </div>
       <div>
         <AreaChart data={chartData} />
       </div>

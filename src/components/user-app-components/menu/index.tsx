@@ -221,9 +221,10 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
 
   const btnText = (
     <div>
-      <span>Xem giỏ hàng</span>
+      <span>View basket</span>
       <span id="basket-ele" className="font-normal">
-        ・{totalItems} món ăn
+        ・{totalItems} item
+        {totalItems > 1 ? 's' : ''}
       </span>
     </div>
   );
@@ -233,7 +234,7 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
       {organizedProductsAfterFilter?.length === 0 && !isFetching && (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<span className="text-black-300 text-lg">Không món ăn nào được tìm thấy</span>}
+          description={<span className="text-black-300 text-lg">No items found</span>}
         />
       )}
       {organizedProductsAfterFilter?.map((category, index) => {
@@ -328,7 +329,7 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
             }}
             onClose={onClose}
             open={open && isMobile}
-            okText="Filters"
+            okText="Apply filters"
           >
             <OtherLayout isShowBackBtn={true} isShowFooter={true} onClickBackBtn={onClose} title="Filter menu">
               <div className="flex flex-col space-y-[29px] mt-[12px] pl-[25px]">
@@ -438,7 +439,7 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
                       isShowBackBtn={true}
                       isShowSecondaryButton={true}
                       onClickBackBtn={onClose}
-                      secondaryBtnChildren="Filters"
+                      secondaryBtnChildren="Apply filters"
                       title="Filter menu"
                       onClickSecondaryBtn={() => {
                         dispatch(updateDietaryRestrictions(dietaryRestrictionsSelected));
