@@ -17,7 +17,8 @@ import {
 import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL, ROLE_EMPLOYEE } from '@/utils/constants';
 import { Skeleton } from 'antd';
 import { useFormik } from 'formik';
-import { capitalize, isEqual, startCase } from 'lodash';
+import { isEqual, startCase } from 'lodash';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,7 +26,7 @@ import * as Yup from 'yup';
 import '../employees.scss';
 
 export interface UserType {
-  _id: string;
+  id: string;
   key: React.Key;
   name: string;
   email: string;
@@ -45,19 +46,20 @@ const EditEmployee = () => {
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const { scrollBottom } = useScrollbarState(bodyRef);
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
 
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
-  const { data: singleUser, isFetching } = useGetSingleUserQuery({ id: id }, { skip: !id });
+  const { data: singleUser, isFetching } = useGetSingleUserQuery({ access_token: access_token, id: id }, { skip: !id });
   const user = singleUser?.data as UserType;
   const [deleteUser, { isLoading: isDeleteLoading }] = useDeleteUserMutation();
-  const [reset2FA, { isLoading: isResetting2FA }] = useReset2FAMutation();
   const [updateEmployee, { isLoading: isUpdating }] = useUpdateEmployeeMutation();
   const [resetPassword, { isLoading: isResettingPassword }] = useResetPasswordMutation();
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
   const handleDeleteOk = async () => {
-    deleteUser({ id })
+    deleteUser({ access_token, id })
       .unwrap()
       .then(() => {
         setIsModalDeleteOpen(false);
@@ -68,14 +70,14 @@ const EditEmployee = () => {
         toast.error(`Delete user failed: ${rejectedValueOrSerializedError.data?.message}`);
       });
   };
-  const handleOkReset2FA = async () => {
-    reset2FA({ id })
-      .unwrap()
-      .then(() => {})
-      .catch((rejectedValueOrSerializedError) => {
-        toast.error(`Reset 2FA failed: ${rejectedValueOrSerializedError.data.message}`);
-      });
-  };
+  // const handleOkReset2FA = async () => {
+  //   reset2FA({ id })
+  //     .unwrap()
+  //     .then(() => {})
+  //     .catch((rejectedValueOrSerializedError) => {
+  //       toast.error(`Reset 2FA failed: ${rejectedValueOrSerializedError.data.message}`);
+  //     });
+  // };
   const handleOkResetPassword = async () => {
     resetPassword({ id })
       .unwrap()
@@ -97,7 +99,7 @@ const EditEmployee = () => {
         email: values.email.trim().toLowerCase(),
         role: values.role,
       };
-      updateEmployee({ id: user?._id, data: dataUpdate })
+      updateEmployee({ access_token, id: user?.id, data: dataUpdate })
         .unwrap()
         .then(() => {})
         .catch((error) => toast.error(error?.data?.message));
@@ -108,8 +110,8 @@ const EditEmployee = () => {
   useEffect(() => {
     resetForm({
       values: {
-        name: startCase(user?.name),
-        email: capitalize(user?.email),
+        name: user?.name,
+        email: user?.email,
         role: user?.role,
       },
     });
@@ -139,7 +141,7 @@ const EditEmployee = () => {
           <Button
             className="mr-2"
             icon={<ArrowLeftIcon1 />}
-            disabled={isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword}
+            disabled={isFetching || isDeleteLoading || isUpdating || isResettingPassword}
             type="button"
             onClick={() => router.push('/employees')}
           >
@@ -149,7 +151,7 @@ const EditEmployee = () => {
             type="button"
             onClick={() => setIsModalDeleteOpen(true)}
             variant="primary"
-            disabled={isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword}
+            disabled={isFetching || isDeleteLoading || isUpdating || isResettingPassword}
           >
             Delete
           </Button>
@@ -162,9 +164,7 @@ const EditEmployee = () => {
               className="w-full max-md:!max-h-[61px] h-[61px]"
               type="submit"
               variant="secondary"
-              disabled={
-                isFetching || isDeleteLoading || isResetting2FA || isUpdating || isResettingPassword || isDisabled
-              }
+              disabled={isFetching || isDeleteLoading || isUpdating || isResettingPassword || isDisabled}
             >
               Save
             </Button>
@@ -185,7 +185,7 @@ const EditEmployee = () => {
                   <InputText
                     id="name"
                     placeholder="Name"
-                    disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
+                    disabled={isUpdating || isResettingPassword || isDeleteLoading}
                     value={values.name}
                     onChange={handleChange}
                     allowClear
@@ -203,7 +203,7 @@ const EditEmployee = () => {
                   <InputText
                     type="text"
                     id="email"
-                    disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
+                    disabled={isUpdating || isResettingPassword || isDeleteLoading}
                     placeholder="Email"
                     value={values.email}
                     onChange={handleChange}
@@ -221,7 +221,7 @@ const EditEmployee = () => {
                 <Dropdown
                   mode="tags"
                   id="role"
-                  disabled={isResetting2FA || isUpdating || isResettingPassword || isDeleteLoading}
+                  disabled={isUpdating || isResettingPassword || isDeleteLoading}
                   placeholder="Select role"
                   includeEmptyValue={false}
                   options={ROLE_EMPLOYEE}
@@ -231,9 +231,9 @@ const EditEmployee = () => {
               )}
             </div>
 
-            <label className="font-medium place-self-start mt-2 max-md:pt-[10px]">Options</label>
+            <label className="font-medium">Reset password</label>
             <div className="col-span-3 w-[235px]">
-              <Button
+              {/* <Button
                 className="w-full"
                 type="button"
                 onClick={handleOkReset2FA}
@@ -241,14 +241,14 @@ const EditEmployee = () => {
                 disabled={
                   isFetching ||
                   isDeleteLoading ||
-                  isResetting2FA ||
+                  
                   isUpdating ||
                   isResettingPassword ||
                   !user?.otp_enabled
                 }
               >
                 Reset 2FA
-              </Button>
+              </Button> */}
               <Button
                 className="w-full mt-[10px]"
                 type="button"
@@ -257,7 +257,6 @@ const EditEmployee = () => {
                 disabled={
                   isFetching ||
                   isDeleteLoading ||
-                  isResetting2FA ||
                   isUpdating ||
                   isResettingPassword ||
                   !user?.is_change_default_password

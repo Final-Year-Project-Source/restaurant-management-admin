@@ -77,14 +77,14 @@ const CustomOption: FC<CustomOptionProps> = ({
                     options={option?.statuses}
                     value={checkedList?.[index]?.statuses?.map((status: any) => status.value || status)}
                     onChange={(list) => handleChangeCheckboxGroup(list, index)}
-                    disabled={checkAll}
+                    // disabled={checkAll}
                   />
                 </div>
               </div>
             ))
           ) : (
             <Checkbox.Group
-              disabled={checkAll}
+              // disabled={checkAll}
               className="mt-[4px]"
               value={checkedList}
               onChange={handleChangeCheckbox}

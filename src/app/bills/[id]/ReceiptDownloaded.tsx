@@ -1,8 +1,8 @@
 'use client';
-import { YellowLaneBlackIcon } from '@/components/Icons';
 import OrderItem from '@/components/user-app-components/orderItem';
 import { open_sans } from '@/utils/fontUtils';
 import moment from 'moment';
+import Image from 'next/image';
 
 const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill: any }) => {
   const discount = bill?.discount_info;
@@ -26,7 +26,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
   return (
     <div className={`${className || ''} px-6 pt-[60px]`} id="receipt">
       <div className="flex items-center flex-col">
-        <YellowLaneBlackIcon />
+        <Image priority src="/assets/icons/logo.svg" alt="logo" width={30} height={30} />
         <span
           className={`text-center leading-normal max-w-[260px] text-black-500 text-[10px] mt-[20.78px] mb-[30px] font-normal ${open_sans.className}`}
         >

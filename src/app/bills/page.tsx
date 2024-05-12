@@ -57,14 +57,14 @@ const Bills = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { data: session } = useSession();
   const { isMobile, width } = useWindowDimensions();
-  const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery();
-  const { data: allDiscounts, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
+  const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery({ access_token: access_token });
+  const { data: discountsList, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
   const [addBill, { isLoading: isCreateBillLoading }] = useAddBillMutation();
   const [isBillCreating, setIsBillCreating] = useState(false);
   const diningTableList = allDiningTables?.data;
-  const discountsList = allDiscounts?.data;
 
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const [isOpenSearchInput, setIsOpenSearchInput] = useState(false);
@@ -82,6 +82,7 @@ const Bills = () => {
       order_statuses: queryParams?.orderStatus?.join(',') || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
+      access_token: access_token,
     },
     { refetchOnMountOrArgChange: true },
   );
@@ -386,11 +387,11 @@ const Bills = () => {
           id="table_id"
           mode="tags"
           height={48}
-          placeholder="-"
+          placeholder="Select table"
           label="Table name"
           options={diningTableList?.map((item: any) => ({
             label: `${item.name} (${item.location})`,
-            value: item._id,
+            value: item.id,
           }))}
           value={values.table_id}
           onChange={(value) => handleChange({ target: { id: 'table_id', value } })}
@@ -419,7 +420,7 @@ const Bills = () => {
           // options={convertDiscountToOptions(discountsList)}
           options={discountsList?.map((item: any) => ({
             label: renderDiscount(item),
-            value: item._id,
+            value: item.id,
             searchLabel: item.name,
           }))}
           value={values.discount_id}

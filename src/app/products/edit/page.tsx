@@ -52,7 +52,7 @@ const schema = Yup.object().shape({
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const AddProduct = () => {
+const EditProduct = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
@@ -60,6 +60,7 @@ const AddProduct = () => {
   const { scrollBottom } = useScrollbarState(bodyRef);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [isChangedImage, setIsChangedImage] = useState(false);
+  const access_token = session?.user?.access_token || '';
 
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
@@ -69,9 +70,9 @@ const AddProduct = () => {
   const { data: allModifiers, isLoading: isModifierLoading } = useGetModifiersQuery({ search: '' });
   const MODIFIERS = convertModifiersToOptions(allModifiers?.data);
   const { data: allCategories, isLoading: isCategoryLoading } = useGetCategoriesQuery();
-  const CATEGORIES = convertCategoriesToOptions(allCategories?.data, 'id');
+  const CATEGORIES = convertCategoriesToOptions(allCategories, 'id');
   const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery();
-  const GROUPS = convertGroupsToOptions(groupsData?.data, 'id');
+  const GROUPS = convertGroupsToOptions(groupsData, 'id');
   const [deleteProduct, { isLoading: isDeleteLoading }] = useDeleteProductMutation();
   const [deleteImageProduct, { isLoading: isDeleteImageLoading }] = useDeleteImageProductMutation();
 
@@ -133,27 +134,43 @@ const AddProduct = () => {
         id: id || '',
       };
 
-      updateProduct({
-        data: data,
-      })
-        .unwrap()
-        .then((response) => {
-          if (response && response.data) {
-            if (fileList[0] && fileList[0].originFileObj) {
-              uploadImage({
-                id: response.data._id,
-                image_file: fileList[0].originFileObj as File,
-              });
-            } else if (isChangedImage) {
-              deleteImageProduct({
-                id: response.data._id,
-              });
-              setFileList([]);
-            }
-          }
-          router.push(`/products`);
+      // updateProduct({ access_token, data: data })
+      //   .unwrap()
+      //   .then((response) => {
+      //     if (response && response.data) {
+      //       if (fileList[0] && fileList[0].originFileObj) {
+      //         uploadImage({
+      //           image_file: fileList[0].originFileObj as File,
+      //         });
+      //       } else if (isChangedImage) {
+      //         deleteImageProduct({
+      //           id: response.data.id,
+      //         });
+      //         setFileList([]);
+      //       }
+      //     }
+      //     router.push(`/products`);
+      //   })
+      //   .catch((error) => toast.error(error?.data?.message));
+
+      if (fileList[0] && fileList[0].originFileObj) {
+        uploadImage({
+          image_file: fileList[0].originFileObj as File,
         })
-        .catch((error) => toast.error(error?.data?.message));
+          .unwrap()
+          .then((response) => {
+            updateProduct({ access_token, data: { ...data, image_url: response?.data?.[0].location } })
+              .unwrap()
+              .then(() => router.push(`/products`))
+              .catch((error) => toast.error(error?.data?.message));
+          });
+      } else {
+        updateProduct({ access_token, data: { ...data, image_url: '' } })
+          .unwrap()
+          .then(() => router.push(`/products`))
+          .catch((error) => toast.error(error?.data?.message));
+        setFileList([]);
+      }
     },
   });
 
@@ -242,7 +259,7 @@ const AddProduct = () => {
   };
 
   const handleOkDelete = () => {
-    deleteProduct({ id: id || '' })
+    deleteProduct({ id: id || '', access_token })
       .unwrap()
       .then((response) => {
         setIsModalDeleteOpen(false);
@@ -577,4 +594,4 @@ const AddProduct = () => {
     </main>
   );
 };
-export default AddProduct;
+export default EditProduct;

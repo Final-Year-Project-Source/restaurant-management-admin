@@ -14,8 +14,7 @@ export default function Discount() {
   const router = useRouter();
   const { isMobile, width: screenWidth } = useWindowDimensions();
 
-  const { data: dataRes, isLoading } = useGetDiscountsQuery();
-  const listOfDiscount = dataRes?.data;
+  const { data: listOfDiscount, isLoading } = useGetDiscountsQuery();
 
   const [Discounts, setDiscounts] = useState<DiscountType[]>([]);
 
@@ -95,7 +94,7 @@ export default function Discount() {
   ];
 
   const handleRowClick = (record: DiscountType) => {
-    router.push(`discounts/edit?id=${record?._id}`);
+    router.push(`discounts/edit?id=${record?.id}`);
   };
 
   return (

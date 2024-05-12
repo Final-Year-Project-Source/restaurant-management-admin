@@ -1,6 +1,6 @@
 export interface GroupType {
   key?: React.Key;
-  _id?: string;
+  id?: string;
   name: string;
   createdAt?: string;
   updatedAt?: string;

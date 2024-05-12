@@ -29,8 +29,7 @@ const AddTable = () => {
   const { scrollBottom } = useScrollbarState(bodyRef);
   const { data: session } = useSession();
   const [addDiningTable, { isLoading: isAddLoading }] = useAddDiningTableMutation();
-  const { data: discountsRes, isFetching: isFetchingDiscount } = useGetDiscountsQuery();
-  const discountsList = discountsRes?.data;
+  const { data: discountsList, isFetching: isFetchingDiscount } = useGetDiscountsQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -165,7 +164,7 @@ const AddTable = () => {
                 placeholder="Select discount"
                 options={discountsList?.map((item: any) => ({
                   label: renderDiscount(item),
-                  value: item._id,
+                  value: item.id,
                   searchLabel: item.name,
                 }))}
                 value={values.discount || '-'}
