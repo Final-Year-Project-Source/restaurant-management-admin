@@ -9,37 +9,37 @@ export const diningTableApi = createApi({
   }),
   tagTypes: ['Dining Table'],
   endpoints: (builder) => ({
-    getDiningTables: builder.query<any, void>({
-      query: () => ({
-        url: 'diningTable?isAll=true',
+    getDiningTables: builder.query<any, { access_token: string }>({
+      query: ({ access_token }) => ({
+        url: 'diningTable',
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       providesTags: ['Dining Table'],
     }),
-    getDiningTablesWithPagination: builder.query<any, { page: number; limit: number }>({
+    getDiningTablesWithPagination: builder.query<any, { access_token: string; page: number; limit: number }>({
       query: (arg) => ({
         url: `diningTable?page=${arg.page}&limit=${arg.limit}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${arg.access_token}`,
         },
       }),
       providesTags: ['Dining Table'],
     }),
     getSingleDiningTable: builder.query<any, { id: string }>({
-      query: ({ id }) => `diningTable?id=${id}`,
+      query: ({ id }) => `diningTable/${id}`,
       providesTags: ['Dining Table'],
     }),
     addDiningTable: builder.mutation<any, { access_token: string; data: any }>({
       query: ({ access_token, data }) => ({
         url: 'diningTable',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -47,23 +47,20 @@ export const diningTableApi = createApi({
       }),
       invalidatesTags: ['Dining Table'],
     }),
-    updateDiningTable: builder.mutation<any, { access_token: string; data: any }>({
-      query: ({ access_token, data }) => ({
-        url: `diningTable?id=${data.id}`,
+    updateDiningTable: builder.mutation<any, { data: any }>({
+      query: ({ data }) => ({
+        url: `diningTable/${data.id}`,
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Dining Table'],
     }),
     deleteDiningTable: builder.mutation<any, { data: any; access_token: string }>({
       query: ({ data, access_token }) => ({
-        url: `diningTable?id=${data.id}`,
+        url: `diningTable/${data.id}`,
         method: 'DELETE',
         body: { data },
         headers: {

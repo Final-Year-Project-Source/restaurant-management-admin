@@ -19,16 +19,14 @@ export const modifierApi = createApi({
       providesTags: ['Modifier'],
     }),
     getSingleModifier: builder.query<any, { id: string }>({
-      query: ({ id }) => `modifier?id=${id}`,
+      query: ({ id }) => `modifier/${id}`,
       providesTags: ['Modifier'],
     }),
     addModifier: builder.mutation<any, { access_token: string; data: any }>({
       query: ({ access_token, data }) => ({
         url: 'modifier',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -38,11 +36,9 @@ export const modifierApi = createApi({
     }),
     updateModifier: builder.mutation<any, { access_token: string; id: string; data: any }>({
       query: ({ access_token, data, id }) => ({
-        url: `modifier?id=${id}`,
+        url: `modifier/${id}`,
         method: 'PATCH',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -50,19 +46,21 @@ export const modifierApi = createApi({
       }),
       invalidatesTags: ['Modifier'],
     }),
-    dragModifier: builder.mutation<any, { data: any }>({
-      query: ({ data }) => ({
+    dragModifier: builder.mutation<any, { access_token: string; data: any }>({
+      query: ({ data, access_token }) => ({
         url: 'modifier',
         method: 'PUT',
-        body: {
-          data,
+        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       // invalidatesTags: ['Modifier'],
     }),
     deleteModifier: builder.mutation<any, { data: any; access_token: string }>({
       query: ({ data, access_token }) => ({
-        url: `modifier?id=${data.id}`,
+        url: `modifier/${data.id}`,
         method: 'DELETE',
         body: { data },
         headers: {

@@ -1,6 +1,6 @@
 export interface DiningTableType {
   key: React.Key;
-  _id: string;
+  id: string;
   name: string;
   location: string;
   qr_code: string;

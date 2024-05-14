@@ -148,7 +148,7 @@ const EditModifier = () => {
       modifier_options: modifierOptions.map((option) => ({
         name: option?.name.trim(),
         price: option?.price,
-        _id: option?._id,
+        _id: option?.id,
       })),
     };
 

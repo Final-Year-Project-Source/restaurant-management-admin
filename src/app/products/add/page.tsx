@@ -47,7 +47,6 @@ const AddProduct = () => {
   const router = useRouter();
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
-  const { data: session } = useSession();
   const { scrollBottom } = useScrollbarState(bodyRef);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [addProduct, { isLoading: isAddLoading }] = useAddProductMutation();
@@ -55,9 +54,12 @@ const AddProduct = () => {
   const { data: allModifiers, isLoading: isModifierLoading } = useGetModifiersQuery({ search: '' });
   const MODIFIERS = convertModifiersToOptions(allModifiers?.data);
   const { data: allCategories, isLoading: isCategoryLoading } = useGetCategoriesQuery();
-  const CATEGORIES = convertCategoriesToOptions(allCategories?.data, 'id');
+  const CATEGORIES = convertCategoriesToOptions(allCategories, 'id');
   const { data: groupsData, isLoading: isGroupsLoading } = useGetGroupsQuery();
-  const GROUPS = convertGroupsToOptions(groupsData?.data, 'id');
+  const GROUPS = convertGroupsToOptions(groupsData, 'id');
+
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
 
   if (session?.user?.role === 'Standard') {
     toast.error('You are not authorized to access this page.');
@@ -93,21 +95,27 @@ const AddProduct = () => {
         modifier_ids: Array.isArray(values?.modifier_ids) ? values?.modifier_ids : [],
         description: values?.description.trim(),
       };
-
-      addProduct({
-        data: data,
-      })
-        .unwrap()
-        .then((response) => {
-          if (fileList[0]?.originFileObj) {
-            uploadImage({
-              id: response.data?._id,
-              image_file: fileList[0].originFileObj as File,
-            });
-          }
-          router.push(`/products`);
+      if (fileList[0]?.originFileObj) {
+        uploadImage({
+          image_file: fileList[0].originFileObj as File,
         })
-        .catch((error) => toast.error(error?.data?.message));
+          .unwrap()
+          .then((res) =>
+            addProduct({ access_token: access_token, data: { ...data, image_url: res?.data?.[0]?.location } })
+              .unwrap()
+              .then((response) => {
+                router.push(`/products`);
+              })
+              .catch((error) => toast.error(error?.data?.message)),
+          );
+      } else {
+        addProduct({ access_token: access_token, data: { ...data, image_url: '' } })
+          .unwrap()
+          .then((response) => {
+            router.push(`/products`);
+          })
+          .catch((error) => toast.error(error?.data?.message));
+      }
     },
   });
 

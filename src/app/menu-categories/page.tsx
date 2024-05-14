@@ -22,8 +22,7 @@ const MenuCategories = () => {
   const { isMobile, height } = useWindowDimensions();
 
   const { data: session } = useSession();
-  const { data: categoriesData, isFetching } = useGetCategoriesQuery();
-  const originalCategories = categoriesData?.data;
+  const { data: originalCategories, isFetching } = useGetCategoriesQuery();
   const [updateCategories, { isLoading: isUpdateLoading }] = useUpdateCategoryMutation();
 
   const [isChangedData, setIsChangedData] = useState(false);
@@ -111,7 +110,7 @@ const MenuCategories = () => {
     if (!isChangedData) return;
 
     const newCategories = categoriesDataSource?.map((category) => ({
-      _id: category?._id,
+      id: category?.id,
       name: category?.name.trim(),
     }));
     updateCategories({

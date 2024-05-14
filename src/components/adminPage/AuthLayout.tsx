@@ -18,7 +18,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   // const session = await getServerSession(options);
   const path = usePathname();
   const router = useRouter();
-  console.log({ path });
 
   const onChange = (key: string) => {
     router.push(`/${key}`);

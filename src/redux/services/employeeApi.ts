@@ -14,6 +14,7 @@ export const employeeApi = createApi({
         role_filter: string[];
         page?: number;
         limit?: number;
+        access_token?: string;
       }
     >({
       query: (arg) => ({
@@ -21,37 +22,41 @@ export const employeeApi = createApi({
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${arg.access_token}`,
         },
       }),
       providesTags: ['User'],
     }),
-    getSingleUser: builder.query<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `user?id=${id}`,
+    getSingleUser: builder.query<any, { access_token: string; id: string }>({
+      query: ({ access_token, id }) => ({
+        url: `user/${id}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       providesTags: ['User'],
     }),
-    createNewUser: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    createNewUser: builder.mutation<any, { access_token: string; data: object }>({
+      query: ({ data, access_token }) => ({
         url: `user`,
         method: 'POST',
-        body: { data },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['User'],
     }),
-    deleteUser: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `user?id=${id}`,
+    deleteUser: builder.mutation<any, { access_token: string; id: string }>({
+      query: ({ id, access_token }) => ({
+        url: `user/${id}`,
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['User'],
@@ -68,7 +73,7 @@ export const employeeApi = createApi({
     }),
     reset2FA: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
-        url: `user?id=${id}`,
+        url: `user/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +86,7 @@ export const employeeApi = createApi({
     }),
     resetPassword: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
-        url: `user?id=${id}`,
+        url: `user/=${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -92,14 +97,15 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    updateEmployee: builder.mutation<any, { id: string; data: object }>({
-      query: ({ id, data }) => ({
-        url: `user?id=${id}`,
+    updateEmployee: builder.mutation<any, { access_token: string; id: string; data: object }>({
+      query: ({ id, data, access_token }) => ({
+        url: `user/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        body: { data },
+        body: data,
       }),
       invalidatesTags: ['User'],
     }),

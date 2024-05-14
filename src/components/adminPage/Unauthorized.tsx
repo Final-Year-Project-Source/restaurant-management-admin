@@ -8,10 +8,10 @@ const Unauthorized: React.FC = () => {
     <Result
       status="403"
       title="403"
-      subTitle="Xin lỗi, bạn không có quyền truy cập trang này."
+      subTitle="Sorry, you are not authorized to access this page."
       extra={
-        <Button onClick={() => router.push('/bills')} type="primary">
-          Trở về trang hoá đơn
+        <Button onClick={() => (window.location.href = '/bills')} type="primary">
+          Back to Bill Page
         </Button>
       }
     />

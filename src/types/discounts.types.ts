@@ -1,6 +1,6 @@
 export interface DiscountType {
   key: React.Key;
-  _id: string;
+  id: string;
   type: string;
   name: string;
   value: number;

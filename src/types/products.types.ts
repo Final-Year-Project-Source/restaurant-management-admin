@@ -29,7 +29,7 @@ export interface Store {
 
 export interface ProductType {
   key: React.Key;
-  _id: string;
+  id: string;
   name: string;
   proteins: string[];
   image_url: string;

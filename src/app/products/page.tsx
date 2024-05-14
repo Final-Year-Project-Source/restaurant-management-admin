@@ -34,6 +34,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './product.scss';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import ProductImage from '@/components/productImage';
+import Image from 'next/image';
 
 const Product = () => {
   const searchParams = useSearchParams();
@@ -43,14 +44,11 @@ const Product = () => {
   const { data: session } = useSession();
   const { isMobile } = useWindowDimensions();
   const [updateProductStatus, { isLoading: isStatusLoading }] = useUpdateProductStatusMutation();
-  const { data: allCategories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
-  const { data: allGroups, isFetching: isFetchingGroups } = useGetGroupsQuery();
+  const { data: Categories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
+  const { data: Groups, isFetching: isFetchingGroups } = useGetGroupsQuery();
   const { data: quantityInStock, isFetching: isFetchingSocks } = useGetQuantityInStockQuery({
     quantity_in_stock: true,
   });
-
-  const Categories = allCategories?.data;
-  const Groups = allGroups?.data;
 
   const CATEGORIES = convertCategoriesToOptions(Categories);
   const GROUPS = convertGroupsToOptions(Groups);
@@ -82,13 +80,8 @@ const Product = () => {
     ? parseInt(searchParams.get('limit') || '') || 10
     : 10;
 
-  const totalPage = useMemo(() => {
-    const total = filteredProductsData?.totalRow;
-    if (!isNaN(total)) {
-      return Math.ceil(total / limitUrl);
-    }
-  }, [filteredProductsData, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+  const totalPages = filteredProductsData?.totalPages;
+  const pageUrl = useMemo(() => (page > 0 && totalPages >= page ? page : 1), [page]);
 
   const handleUpdateParamsToURL = (values: { [key: string]: any }) => {
     dispatch(updateQueryParams({ key: 'products', value: values }));
@@ -181,7 +174,7 @@ const Product = () => {
 
   const getCategoryNameById = useCallback(
     (categoryId: string | undefined) => {
-      const foundCategory = Categories?.find((category: CategoryType) => category._id === categoryId);
+      const foundCategory = Categories?.find((category: CategoryType) => category.id === categoryId);
       return foundCategory ? foundCategory.name : null;
     },
     [Categories],
@@ -189,7 +182,7 @@ const Product = () => {
 
   const getGroupNameById = useCallback(
     (groupId: string | undefined) => {
-      const foundGroup = Groups?.find((group: GroupType) => group._id === groupId);
+      const foundGroup = Groups?.find((group: GroupType) => group.id === groupId);
       return foundGroup ? foundGroup.name : null;
     },
     [Groups],
@@ -197,7 +190,7 @@ const Product = () => {
 
   const handleChangeStatus = (record: ProductType) => {
     updateProductStatus({
-      id: record?._id,
+      id: record?.id,
       data: { is_available: !record?.is_available },
       access_token: session?.user.access_token || '',
     });
@@ -212,13 +205,15 @@ const Product = () => {
         const isAvailable = record?.is_available;
         const isLowStock = record?.stock_status === LOW_STOCK;
         return (
-          <ProductImage
-            className={`image-customized ${!isAvailable ? 'opacity' : ''}`}
-            width={48}
-            height={43}
-            src={record?.image_url}
-            alt={record?.name}
-          />
+          record?.image_url && (
+            <Image
+              className={`image-customized ${!isAvailable ? 'opacity' : ''}`}
+              width={48}
+              height={43}
+              src={record?.image_url}
+              alt={record?.name}
+            />
+          )
         );
       },
     },
@@ -365,7 +360,7 @@ const Product = () => {
 
   const handleRowClick = (record: any) => {
     if (session?.user?.role === 'Standard') return;
-    router.push(`products/edit?id=${record?._id}`);
+    router.push(`products/edit?id=${record?.id}`);
   };
 
   return (
@@ -384,7 +379,7 @@ const Product = () => {
       defaultSearchValue={searchUrl || ''}
       page={pageUrl || 1}
       rowPerPage={limitUrl || 10}
-      totalPage={totalPage}
+      totalPage={totalPages}
       routerLink="/products"
       keyPage="products"
     >

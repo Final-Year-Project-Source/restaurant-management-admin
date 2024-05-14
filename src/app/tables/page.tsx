@@ -11,6 +11,7 @@ import { DiningTableType } from '@/types/tables.types';
 import { serializeFilters } from '@/utils/commonUtils';
 import { PAGINATIONLIMIT } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,26 +23,25 @@ export default function DiningTable() {
   const { isMobile, width } = useWindowDimensions();
   const dispatch = useDispatch();
 
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
+
   const queryParams = useSelector((state: RootState) => state.queryParams.tables);
 
   const { data: allDiningTables, isFetching } = useGetDiningTablesWithPaginationQuery({
+    access_token: access_token,
     page: queryParams?.page || 1,
     limit: queryParams?.limit || 10,
   });
-  const { data: discountsRes, isFetching: isFetchingDiscount } = useGetDiscountsQuery();
-  const discountsList = discountsRes?.data;
+  const { data: discountsList, isFetching: isFetchingDiscount } = useGetDiscountsQuery();
 
   const page = parseInt(searchParams.get('page') || '1');
   const limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams.get('limit') || ''))
     ? parseInt(searchParams.get('limit') || '')
     : 10;
-  const totalPage = useMemo(() => {
-    const total = allDiningTables?.totalRow;
-    if (!isNaN(total)) {
-      return Math.ceil(total / limitUrl);
-    }
-  }, [allDiningTables, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+  const totalPages = allDiningTables?.totalPages;
+
+  const pageUrl = useMemo(() => (page > 0 && totalPages >= page ? page : 1), [page]);
 
   useEffect(() => {
     let URL = '/tables?';
@@ -72,9 +72,11 @@ export default function DiningTable() {
   }, [searchParams]);
   const getDiscountById = useCallback(
     (discountId: string | undefined) => {
-      const foundDiscount = discountsList?.find((discount: any) => discount._id === discountId);
+      const foundDiscount = discountsList?.find((discount: any) => discount.id === discountId);
+
       return foundDiscount || null;
     },
+
     [discountsList],
   );
 
@@ -104,7 +106,6 @@ export default function DiningTable() {
           }`}
         >
           <p className="m-[3px] max-w-[180px] leading-[18px] truncate ...">
-            {' '}
             {record.discount_type === 'FIXED_PERCENT'
               ? `${record.discount} (${record.value}%)`
               : record.discount_type === 'FIXED_AMOUNT'
@@ -114,7 +115,6 @@ export default function DiningTable() {
           {((record.discount_has_expiration && new Date(record.discount_expiration_date) < new Date()) ||
             (record.discount_is_limited && record.discount_max_usage_limit < 1)) && (
             <div className="min-h-[18px] min-w-[60px] mt-[6px]">
-              {' '}
               <Tag className="!absolute !bottom-[15px] m-[3px]" text="Expired" variant="disable" />
             </div>
           )}
@@ -125,7 +125,7 @@ export default function DiningTable() {
 
   const data = allDiningTables?.data.map((table: DiningTableType, index: number) => ({
     key: index,
-    _id: table._id,
+    _id: table.id,
     name: table.name,
     location: table.location,
     qr_code: table.qr_code,
@@ -155,7 +155,7 @@ export default function DiningTable() {
         maxWidth={isMobile ? width : 633}
         page={pageUrl || 1}
         rowPerPage={limitUrl || 10}
-        totalPage={totalPage}
+        totalPage={totalPages}
         routerLink="/tables"
         keyPage="tables"
       />

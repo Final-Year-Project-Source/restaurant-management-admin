@@ -37,9 +37,9 @@ const EditDiscount = () => {
   const { isMobile, width: screenWidth, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const { scrollBottom } = useScrollbarState(bodyRef);
+  const access_token = session?.user?.access_token || '';
 
-  const { data: singleDiscount, isLoading } = useGetSingleDiscountQuery({ id: id }, { skip: !id });
-  const Discounts = singleDiscount?.data || {};
+  const { data: discounts, isLoading } = useGetSingleDiscountQuery({ id: id }, { skip: !id });
   const [updateDiscount, { isLoading: isUpdateLoading }] = useUpdateDiscountMutation();
   const [deleteDiscount, { isLoading: isDeleteLoading }] = useDeleteDiscountMutation();
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
@@ -49,16 +49,15 @@ const EditDiscount = () => {
   const [discountPercentError, setDiscountPercentError] = useState(false);
   const [quantityError, setQuantityError] = useState(false);
   const [isChangedData, setIsChangedData] = useState(false);
-
+  const Discounts = discounts?.data;
   const { name, type, is_limited, max_usage_limit, expiration_date, value, has_expiration } = Discounts || {};
-
   useEffect(() => {
     setValues({
       ...Discounts,
       discount_amount: type === DISCOUNT_TYPE.FIXED_AMOUNT ? value : '',
       discount_percent: type === DISCOUNT_TYPE.FIXED_PERCENT ? value : '',
     });
-  }, [singleDiscount]);
+  }, [Discounts]);
 
   const formik = useFormik({
     initialValues: {
@@ -84,17 +83,17 @@ const EditDiscount = () => {
         discount_percent,
       } = values;
 
-      const data = {
+      const body = {
         id: id,
         name: name.trim(),
         type: type,
         value: discount_amount || discount_percent,
-        expiration_date: has_expiration ? expiration_date : null,
-        max_usage_limit: is_limited ? max_usage_limit : null,
+        expiration_date: has_expiration ? expiration_date : '',
+        max_usage_limit: is_limited ? max_usage_limit : 0,
         is_limited: is_limited,
         has_expiration: has_expiration,
       };
-      updateDiscount({ access_token: session?.user?.access_token || '', id: id, data: data })
+      updateDiscount({ access_token, id, body: body })
         .unwrap()
         .then(() => {
           router.push('/discounts');
@@ -150,7 +149,7 @@ const EditDiscount = () => {
   };
 
   const handleOkDelete = () => {
-    deleteDiscount({ data: { id: id }, access_token: session?.user?.access_token || '' })
+    deleteDiscount({ access_token, id })
       .unwrap()
       .then((response) => {
         setIsModalDeleteOpen(false);
