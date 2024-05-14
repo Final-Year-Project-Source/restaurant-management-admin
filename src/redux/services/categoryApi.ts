@@ -29,7 +29,6 @@ export const categoryApi = createApi({
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            isAll: 'true',
           },
         };
       },
@@ -37,7 +36,7 @@ export const categoryApi = createApi({
     }),
     getCategoriesById: builder.query<any, { id: string }>({
       query: ({ id }) => ({
-        url: `category/?id=${id}`,
+        url: `category/${id}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +48,8 @@ export const categoryApi = createApi({
       query: ({ access_token, data }) => ({
         url: `category`,
         method: 'POST',
-        body: { data },
+        body: data,
+
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -61,7 +61,7 @@ export const categoryApi = createApi({
       query: ({ access_token, data }) => ({
         url: `category`,
         method: 'PATCH',
-        body: { data },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,

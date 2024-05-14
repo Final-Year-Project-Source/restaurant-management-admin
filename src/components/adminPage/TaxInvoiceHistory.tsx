@@ -5,6 +5,7 @@ import { ConfigProvider } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
 import Image from 'next/image';
+import React from 'react';
 
 const TaxInvoice = ({
   taxInvoiceData,
@@ -22,30 +23,30 @@ const TaxInvoice = ({
   const subTotal = taxInvoiceData?.sub_total;
   const columns: ColumnsType<any> = [
     {
-      title: 'Món ăn',
+      title: 'Item',
       dataIndex: 'key',
       ellipsis: true,
-      width: isMobile ? 50 : 70,
+      width: 50,
     },
     {
-      title: 'Mô tả',
+      title: 'Description',
       dataIndex: 'name',
       ellipsis: true,
     },
     {
-      title: 'Số lượng',
+      title: 'Qty',
       dataIndex: 'quantity',
-      width: isMobile ? 42 : 100,
+      width: isMobile ? 42 : 60,
     },
     {
-      title: 'Giá',
+      title: 'Price',
       dataIndex: 'price',
-      width: isMobile ? 55 : 100,
+      width: 75,
     },
     {
-      title: 'Tổng',
+      title: 'Total',
       dataIndex: 'total',
-      width: isMobile ? 55 : 100,
+      width: 75,
       align: 'right',
     },
   ];
@@ -66,31 +67,30 @@ const TaxInvoice = ({
         };
       });
   });
-
   return (
     <main className={isMobile ? 'p-[20px]' : 'px-[50px] py-[40px]'}>
       {isLoading ? (
         <LoadingIndicator />
       ) : (
-        <div className="bg-white flex flex-col gap-6">
+        <div className="bg-white flex flex-col gap-6 min-h-[1000px]">
           <div className="flex justify-between flex-row">
             <Image
               priority
-              src={'/assets/icons/yellowlane.svg'}
+              src="/assets/icons/mini-logo.svg"
               width={isMobile ? 100 : 300}
               height={isMobile ? 100 : 300}
               alt="logo"
             />
             <div className="flex flex-col items-end justify-center">
-              <label className="font-semibold md:text-3xl text-xl text-left ">Hóa đơn thuế</label>
-              <span className="text-right text-sm">Mã hoá đơn thuế: {tax_invoice_info?._id}</span>
+              <label className="font-semibold md:text-3xl text-xl text-left ">Tax Invoice</label>
+              <span className="text-right text-sm">Invoice no.: {tax_invoice_info?._id}</span>
               <div>{formattedDate}</div>
             </div>
           </div>
           <div className="space-y-6 overflow-y-auto pr-2 max-h-[calc(90vh-240px)]">
             <div className="flex flex-row pl-3 gap-10">
               <div className="w-1/2 flex flex-col">
-                <label className="font-semibold mb-2">Người bán</label>
+                <label className="font-semibold mb-2">Seller</label>
                 <span>{`Bella Onojie Ltd.`}</span>
                 <span>{`174 Nguyen Luong Bang `}</span>
                 <span>{`Lien Chieu 7`}</span>
@@ -100,13 +100,20 @@ const TaxInvoice = ({
                 <span>Tax ID: {`0105563107361`}</span>
               </div>
               <div className="w-1/2 flex flex-col">
-                <label className="font-semibold mb-2">Người mua</label>
+                <label className="font-semibold mb-2">Buyer</label>
                 <span>{buyerInfo?.company}</span>
-                <span>{buyerInfo?.address}</span>
+                <span>
+                  {buyerInfo?.address.split('\n').map((line: string, index: number) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index !== buyerInfo.address.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </span>
 
-                <span>Trụ sở chính: {buyerInfo?.head_office}</span>
+                <span>Branch: {buyerInfo?.head_office}</span>
 
-                <span>Mã số thuế: {buyerInfo?.tax_id}</span>
+                <span>Tax ID: {buyerInfo?.tax_id}</span>
               </div>
             </div>
             <ConfigProvider
@@ -129,36 +136,37 @@ const TaxInvoice = ({
             <div className="w-[96%] border border-black-500 mx-auto" />
             <div className="flex pr-2 justify-end items-end">
               <div className="md:mr-[115px] mr-[20px] flex flex-col gap-4 justify-center max-[768px]:text-right items-end">
-                <label>Tổng</label>
-                <label>7% Phí dịch vụ</label>
+                <label>Subtotal</label>
+                <label>7% Service charge</label>
                 <label>10% VAT</label>
                 {/* <label>Discount</label> */}
-                {/* <label className="font-semibold">Grand total</label>
-                <label>Balance owing</label> */}
+                <label className="font-semibold">Grand total</label>
+                <label>Balance owing</label>
               </div>
               <div className="flex flex-col gap-4 justify-center items-end">
-                <span>{subTotal} vnđ</span>
-                <span>{taxInvoiceData.vat_charge} vnđ</span>
-                <span>{taxInvoiceData.service_charge} vnđ</span>
-                {/* <span>-{receipt_info?.total_discount}</span> */}
-                <span className="font-semibold">{taxInvoiceData.total} vnđ</span>
-                <span>0</span>
+                <span>฿{subTotal}</span>
+                <span>฿{taxInvoiceData.vat_charge}</span>
+                <span>฿{taxInvoiceData.service_charge}</span>
+                {/* <span>-฿{receipt_info?.total_discount}</span> */}
+                <span className="font-semibold">฿{taxInvoiceData.total}</span>
+                <span>฿0.00</span>
               </div>
             </div>
 
             <div className="flex flex-row px-5 pt-[50px]">
               <div className="w-1/2 flex flex-col items-center justify-center max-[768px]:text-left">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />
-                <label className="mb-2">Chữ ký bên bán</label>
+                <label className="mb-2">Signature of Seller</label>
                 <span>Bella Ononjie Co., Ltd.</span>
               </div>
               <div className="w-1/2 flex flex-col items-center md:justify-center max-[768px]:text-right">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />
-                <label className="mb-2">Chữ ký người mua</label>
+                <label className="mb-2">Signature of Buyer</label>
                 <span className="md:w-auto">{tax_invoice_info?.company}</span>
               </div>
             </div>
           </div>
+          <div className="flex justify-center items-center mt-auto text-[13px]">Page 1 of 1</div>
         </div>
       )}
     </main>

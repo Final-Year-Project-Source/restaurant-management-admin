@@ -82,7 +82,7 @@ const Layout: FC<Props> = ({ children }) => {
 
   const pathname = usePathname();
   const firstPath = pathname.split('/')[1];
-  // const [verifyRefreshToken] = useVerifyRefreshTokenMutation();
+  const [verifyRefreshToken] = useVerifyRefreshTokenMutation();
   const urlPage = useSelector((state: RootState) => state.URLPages);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const Layout: FC<Props> = ({ children }) => {
     setManagementName(`${capitalize(firstPath?.split('-')?.join(' '))}`);
   }, [pathname, firstPath]);
 
-  const authenticatedRoutes = ['/login', '/force-change-default-password', '/2fa', '/register'];
+  const authenticatedRoutes = ['/login', '/force-change-default-password', '/register'];
 
   // const firstLetter = session?.user.name?.charAt(0).toUpperCase();
   // const itemsAvatar: MenuProps['items'] = [
@@ -126,6 +126,24 @@ const Layout: FC<Props> = ({ children }) => {
   // ];
   const refresh_token = session?.user?.refresh_token || '';
 
+  // const access_token = session?.user?.access_token || '';
+
+  // useEffect(() => {
+  //   if (session) {
+  //     const interval = setInterval(() => {
+  //       if (navigator.onLine) {
+  //         verifyRefreshToken()
+  //           .unwrap()
+  //           .then()
+  //           .catch((error) => {
+  //             toast.error(error?.data?.message, { autoClose: false });
+  //             signOut();
+  //           });
+  //       }
+  //     }, 15000);
+  //   }
+  // }, [access_token]);
+
   // useEffect(() => {
   //   const handleOnline = () => {
   //     if (session) {
@@ -158,126 +176,129 @@ const Layout: FC<Props> = ({ children }) => {
   //handle MenuItems match with role
   const items: MenuItem[] = [];
 
-  // if (session && session.user && session.user.role) { //fixed
-  // if (session.user.role === 'Administrator') {
-  items.push(
-    getItem(
-      'Orders',
-      'orders',
-      <div className="min-w-[15px]">
-        <OrdersIcon />
-      </div>,
-      [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
-    ),
-    getItem(
-      'Reports',
-      'reports',
-      <div className="min-w-[17px]">
-        <ReportsIcon />
-      </div>,
-      [getItem('Sales summary', 'sales-summary'), getItem('Sales by item', 'sales-by-item'), getDivider('divider2')],
-    ),
-    getItem(
-      'Items',
-      'items',
-      <div className="min-w-[19px]">
-        <ItemsIcon />
-      </div>,
-      [
-        getItem('Products', 'products'),
-        getItem('Modifiers', 'modifiers'),
-        getItem('Menu categories', 'menu-categories'),
-        getItem('Groups', 'groups'),
-        getItem('Discounts', 'discounts'),
-        getItem('Feedbacks', 'feedbacks'),
-
-        getDivider('divider3'),
-      ],
-    ),
-    getItem(
-      'Settings',
-      'settings',
-      <div className="min-w-[19px]">
-        <SettingIcon />
-      </div>,
-      [getItem('Tables', 'tables'), getItem('Employees', 'employees'), getItem('Account', 'account')],
-    ),
-  );
-  // } else if (session.user.role === 'Manager') {
-  //   items.push(
-  //     getItem(
-  //       'Orders',
-  //       'orders',
-  //       <div className="min-w-[15px]">
-  //         <OrdersIcon />
-  //       </div>,
-  //       [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
-  //     ),
-  //     getItem(
-  //       'Reports',
-  //       'reports',
-  //       <div className="min-w-[17px]">
-  //         <ReportsIcon />
-  //       </div>,
-  //       [
-  //         getItem('Sales summary', 'sales-summary'),
-  //         getItem('Sales by item', 'sales-by-item'),
-  //         getDivider('divider2'),
-  //       ],
-  //     ),
-  //     getItem(
-  //       'Items',
-  //       'items',
-  //       <div className="min-w-[19px]">
-  //         <ItemsIcon />
-  //       </div>,
-  //       [
-  //         getItem('Products', 'products'),
-  //         getItem('Modifiers', 'modifiers'),
-  //         getItem('Menu categories', 'menu-categories'),
-  //         getItem('Groups', 'groups'),
-  //         getItem('Discounts', 'discounts'),
-  //         getDivider('divider3'),
-  //       ],
-  //     ),
-  //     getItem(
-  //       'Settings',
-  //       'settings',
-  //       <div className="min-w-[19px]">
-  //         <SettingIcon />
-  //       </div>,
-  //       [getItem('Tables', 'tables'), getItem('Account', 'account')],
-  //     ),
-  //   );
-  // } else if (session.user.role === 'Standard') {
-  //   items.push(
-  //     getItem(
-  //       'Orders',
-  //       'orders',
-  //       <div className="min-w-[15px]">
-  //         <OrdersIcon />
-  //       </div>,
-  //       [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
-  //     ),
-  //     getItem(
-  //       'Items',
-  //       'items',
-  //       <div className="min-w-[19px]">
-  //         <ItemsIcon />
-  //       </div>,
-  //       [getItem('Products', 'products'), getDivider('divider3')],
-  //     ),
-  //     getItem(
-  //       'Settings',
-  //       'settings',
-  //       <div className="min-w-[19px]">
-  //         <SettingIcon />
-  //       </div>,
-  //       [getItem('Account', 'account')],
-  //     ),
-  //   );
-  // }
-  // }
+  if (session && session.user && session.user.role) {
+    if (session.user.role === 'Administrator') {
+      items.push(
+        getItem(
+          'Orders',
+          'orders',
+          <div className="min-w-[15px]">
+            <OrdersIcon />
+          </div>,
+          [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
+        ),
+        getItem(
+          'Reports',
+          'reports',
+          <div className="min-w-[17px]">
+            <ReportsIcon />
+          </div>,
+          [
+            getItem('Sales summary', 'sales-summary'),
+            getItem('Sales by item', 'sales-by-item'),
+            getDivider('divider2'),
+          ],
+        ),
+        getItem(
+          'Items',
+          'items',
+          <div className="min-w-[19px]">
+            <ItemsIcon />
+          </div>,
+          [
+            getItem('Products', 'products'),
+            getItem('Modifiers', 'modifiers'),
+            getItem('Menu categories', 'menu-categories'),
+            getItem('Groups', 'groups'),
+            getItem('Discounts', 'discounts'),
+            getItem('Feedbacks', 'feedbacks'),
+            getDivider('divider3'),
+          ],
+        ),
+        getItem(
+          'Settings',
+          'settings',
+          <div className="min-w-[19px]">
+            <SettingIcon />
+          </div>,
+          [getItem('Tables', 'tables'), getItem('Employees', 'employees'), getItem('Account', 'account')],
+        ),
+      );
+    } else if (session.user.role === 'Manager') {
+      items.push(
+        getItem(
+          'Orders',
+          'orders',
+          <div className="min-w-[15px]">
+            <OrdersIcon />
+          </div>,
+          [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
+        ),
+        getItem(
+          'Reports',
+          'reports',
+          <div className="min-w-[17px]">
+            <ReportsIcon />
+          </div>,
+          [
+            getItem('Sales summary', 'sales-summary'),
+            getItem('Sales by item', 'sales-by-item'),
+            getDivider('divider2'),
+          ],
+        ),
+        getItem(
+          'Items',
+          'items',
+          <div className="min-w-[19px]">
+            <ItemsIcon />
+          </div>,
+          [
+            getItem('Products', 'products'),
+            getItem('Modifiers', 'modifiers'),
+            getItem('Menu categories', 'menu-categories'),
+            getItem('Groups', 'groups'),
+            getItem('Discounts', 'discounts'),
+            getDivider('divider3'),
+          ],
+        ),
+        getItem(
+          'Settings',
+          'settings',
+          <div className="min-w-[19px]">
+            <SettingIcon />
+          </div>,
+          [getItem('Tables', 'tables'), getItem('Account', 'account')],
+        ),
+      );
+    } else if (session.user.role === 'Standard') {
+      items.push(
+        getItem(
+          'Orders',
+          'orders',
+          <div className="min-w-[15px]">
+            <OrdersIcon />
+          </div>,
+          [getItem('Bills', 'bills'), getItem('Kitchen display', 'kitchen-display'), getDivider('divider1')],
+        ),
+        getItem(
+          'Items',
+          'items',
+          <div className="min-w-[19px]">
+            <ItemsIcon />
+          </div>,
+          [getItem('Products', 'products'), getDivider('divider3')],
+        ),
+        getItem(
+          'Settings',
+          'settings',
+          <div className="min-w-[19px]">
+            <SettingIcon />
+          </div>,
+          [getItem('Account', 'account')],
+        ),
+      );
+    }
+  }
 
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrentPath(e.key);
@@ -286,7 +307,7 @@ const Layout: FC<Props> = ({ children }) => {
   };
 
   return !authenticatedRoutes.includes(pathname) ? (
-    status !== 'authenticated' ? ( //fix
+    status === 'authenticated' ? (
       <CustomLayout className={`h-screen w-full`}>
         {/* {session?.user && ( */}
         <Header
@@ -343,18 +364,20 @@ const Layout: FC<Props> = ({ children }) => {
               height={29}
               onClick={() => router.push('/')}
             />
-            {/* {session?.user && session?.user.role === 'Administrator' && ( */}
-            <div className="text-[14px] font-bold text-black ml-5 hidden md:block">
-              {/* {session?.user.name?.toUpperCase()} */} Vy Nguyen
-            </div>
-            {/* )}  */}
-            <Avatar
-              className="cursor-pointer bg-white text-black-500 mr-4"
-              size={38}
-              onClick={() => router.push('/account')}
-            >
-              {/* {session?.user.name[0].toUpperCase()} */}
-            </Avatar>
+            {session?.user && session?.user.role === 'Administrator' && (
+              <>
+                <div className="text-[14px] font-bold text-black ml-5 hidden md:block">
+                  {session?.user.name?.toUpperCase()}
+                </div>
+                <Avatar
+                  className="cursor-pointer bg-grey-100 text-black-500 mr-4"
+                  size={38}
+                  onClick={() => router.push('/account')}
+                >
+                  {session?.user.name[0].toUpperCase()}
+                </Avatar>
+              </>
+            )}
           </div>
         </Header>
         {/* )} */}

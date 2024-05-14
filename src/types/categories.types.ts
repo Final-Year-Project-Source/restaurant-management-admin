@@ -1,6 +1,6 @@
 export interface CategoryType {
   key?: React.Key;
-  _id?: string;
+  id?: string;
   name: string;
   createdAt?: string;
   updatedAt?: string;

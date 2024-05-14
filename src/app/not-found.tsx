@@ -10,13 +10,11 @@ const NotFound = () => {
     <Result
       status="404"
       title="404"
-      subTitle="Xin lỗi, trang bạn truy cập hiện không tồn tại."
+      subTitle="Sorry, the page you visited does not exist."
       extra={
-        <div className="flex justify-center">
-          <Button className="!w-[200px]" onClick={() => router.push('/')}>
-            Trở về trang chủ
-          </Button>
-        </div>
+        <Button variant="secondary" onClick={() => router.push('/')}>
+          Back Home
+        </Button>
       }
     />
   );

@@ -12,7 +12,7 @@ export const productApi = createApi({
     getProducts: builder.query<
       any,
       {
-        is_be: boolean;
+        is_be?: boolean;
         page: number;
         limit: number;
         search?: string;
@@ -46,47 +46,32 @@ export const productApi = createApi({
       providesTags: ['Product'],
     }),
     getSingleProduct: builder.query<any, { id: string }>({
-      query: (arg) => `product?id=${arg.id}`,
+      query: (arg) => `product/${arg.id}`,
       providesTags: ['Product'],
     }),
-    addProduct: builder.mutation<any, { data: any }>({
-      query: ({ data }) => ({
+    addProduct: builder.mutation<any, { access_token: string; data: any }>({
+      query: ({ access_token, data }) => ({
         url: 'product',
         method: 'POST',
-        body: {
-          data,
+        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Product'],
-      async onQueryStarted(args, { queryFulfilled }) {
-        try {
-          const { data: createdProduct } = await queryFulfilled;
-          if (!createdProduct.success) {
-            toast.error(createdProduct.message);
-          }
-        } catch (error) {
-          if (error instanceof Response) {
-            const responseData = await error.json();
-            toast.error(responseData?.data.message);
-          } else {
-            console.error(error);
-            // toast.error('An error occurred');
-          }
-        }
-      },
     }),
 
-    updateProduct: builder.mutation<any, { data: any }>({
-      query: ({ data }) => ({
-        url: `product?id=${data.id}`,
+    updateProduct: builder.mutation<any, { access_token: string; data: any }>({
+      query: ({ access_token, data }) => ({
+        url: `product`,
         method: 'POST',
-        body: {
-          data,
+        body: data,
+
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        // headers: {
-        //   'Content-Type': 'application/json',
-        //   Authorization: `Bearer ${access_token}`,
-        // },
       }),
       invalidatesTags: ['Product'],
 
@@ -107,38 +92,23 @@ export const productApi = createApi({
         }
       },
     }),
-    deleteProduct: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `product?id=${id}`,
+    deleteProduct: builder.mutation<any, { access_token: string; id: string }>({
+      query: ({ id, access_token }) => ({
+        url: `product/${id}`,
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
       }),
       invalidatesTags: ['Product'],
-
-      async onQueryStarted(data, { queryFulfilled }) {
-        try {
-          const deletedProduct = await queryFulfilled;
-
-          if (!deletedProduct.data.message) {
-            toast.error(deletedProduct.data.message);
-          }
-        } catch (error) {
-          if (error instanceof Response) {
-            const responseData = await error.json();
-            toast.error(responseData?.data.message);
-          } else {
-            console.error(error);
-            toast.error('An error occurred');
-          }
-        }
-      },
     }),
     updateProductStatus: builder.mutation<any, { id: string; data: any; access_token: string }>({
       query: ({ data, access_token, id }) => ({
-        url: `product?id=${id}`,
+        url: `product/${id}`,
         method: 'PATCH',
-        body: {
-          data,
-        },
+        body: data,
+
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -164,33 +134,17 @@ export const productApi = createApi({
         }
       },
     }),
-    uploadImage: builder.mutation<any, { id: string; image_file: any }>({
-      query: ({ id, image_file }) => {
+    uploadImage: builder.mutation<any, { image_file: any }>({
+      query: ({ image_file }) => {
         let formData = new FormData();
         formData.append('image_file', image_file);
         return {
-          url: `uploadImageProduct?id=${id}`,
+          url: `uploadImageProduct`,
           method: 'POST',
           body: formData,
         };
       },
       invalidatesTags: ['Product'],
-      async onQueryStarted(args, { queryFulfilled }) {
-        try {
-          const { data: uploadedImage } = await queryFulfilled;
-          if (!uploadedImage.success) {
-            toast.error(uploadedImage.message);
-          }
-        } catch (error) {
-          if (error instanceof Response) {
-            const responseData = await error.json();
-            toast.error(responseData?.data.message);
-          } else {
-            console.error(error);
-            // toast.error('An error occurred');
-          }
-        }
-      },
     }),
     deleteImageProduct: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({

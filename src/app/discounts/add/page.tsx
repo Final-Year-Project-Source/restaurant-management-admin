@@ -27,6 +27,8 @@ const AddDiscount = () => {
   const { scrollBottom } = useScrollbarState(bodyRef);
 
   const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
+
   const [addDiscount, { isLoading: isAddLoading }] = useAddDiscountMutation();
   const today = new Date();
   today.setHours(23, 59, 0, 0);
@@ -68,7 +70,7 @@ const AddDiscount = () => {
         is_limited: is_limited,
         has_expiration: has_expiration,
       };
-      addDiscount({ access_token: session?.user?.access_token || '', data: data })
+      addDiscount({ access_token, data: data })
         .unwrap()
         .then(() => {
           router.push('/discounts');

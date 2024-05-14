@@ -1,6 +1,6 @@
 export interface ModifierOption {
   key: number;
-  _id?: string;
+  id?: string;
   name: string;
   price: number;
   position?: number;
@@ -8,7 +8,7 @@ export interface ModifierOption {
 
 export interface ModifierType {
   key: React.Key;
-  _id: string;
+  id: string;
   name: string;
   position: number;
   stores: string[];

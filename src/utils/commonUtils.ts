@@ -174,7 +174,7 @@ export const getSelectedItems = (selectedValues: string[], options: any[], label
 
   return selectedOptions.length > 0 && selectedOptions.length === options.length
     ? labelAll
-    : `${selectedOptions.length} selected${selectedOptions.length > 1 ? 's' : ''}`;
+    : `${selectedOptions.length} selected`;
 };
 
 export const serializeFilters = (filters: {

@@ -13,7 +13,7 @@ import ProtectedRouter from '@/components/adminPage/ProtectedRouter';
 import { ConfigProvider } from 'antd';
 
 export const metadata: Metadata = {
-  title: 'Bella Onojie Admin',
+  title: 'Bella Olonje Admin',
   description: 'Management',
 };
 
@@ -32,17 +32,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <StyledComponentsRegistry>
             <ToastContainer />
             <Providers>
-              {/* <ProtectedRouter> */}
-              <ConfigProvider
-                theme={{
-                  token: {
-                    fontFamily: 'var(--font-opens)',
-                  },
-                }}
-              >
-                <Layout>{children}</Layout>
-              </ConfigProvider>
-              {/* </ProtectedRouter> */}
+              <ProtectedRouter>
+                <ConfigProvider
+                  theme={{
+                    token: {
+                      fontFamily: 'var(--font-opens)',
+                    },
+                  }}
+                >
+                  <Layout>{children}</Layout>
+                </ConfigProvider>
+              </ProtectedRouter>
               {/* {children} */}
             </Providers>
           </StyledComponentsRegistry>

@@ -13,16 +13,14 @@ export const discountApi = createApi({
       providesTags: ['Discount'],
     }),
     getSingleDiscount: builder.query<any, { id: string }>({
-      query: ({ id }) => `discount?id=${id}`,
+      query: ({ id }) => `discount/${id}`,
       providesTags: ['Discount'],
     }),
-    addDiscount: builder.mutation<any, { access_token: string; data: any }>({
-      query: ({ access_token, data }) => ({
+    addDiscount: builder.mutation<any, { data: any; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: 'discount',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -30,13 +28,11 @@ export const discountApi = createApi({
       }),
       invalidatesTags: ['Discount'],
     }),
-    updateDiscount: builder.mutation<any, { access_token: string; id: string; data: any }>({
-      query: ({ access_token, data, id }) => ({
-        url: `discount?id=${data.id}`,
+    updateDiscount: builder.mutation<any, { access_token: string; id: string; body: any }>({
+      query: ({ id, body, access_token }) => ({
+        url: `discount/${id}`,
         method: 'PATCH',
-        body: {
-          data,
-        },
+        body: body,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,
@@ -46,7 +42,7 @@ export const discountApi = createApi({
     }),
     updateRestrictedAccess: builder.mutation<any, { access_token: string; data: any }>({
       query: ({ access_token, data }) => ({
-        url: `discount?id=${data.id}`,
+        url: `discount/${data.id}`,
         method: 'PUT',
         body: {
           data,
@@ -58,11 +54,10 @@ export const discountApi = createApi({
       }),
       invalidatesTags: ['Discount'],
     }),
-    deleteDiscount: builder.mutation<any, { data: any; access_token: string }>({
-      query: ({ data, access_token }) => ({
-        url: `discount?id=${data.id}`,
+    deleteDiscount: builder.mutation<any, { access_token: string; id: string }>({
+      query: ({ id, access_token }) => ({
+        url: `discount/${id}`,
         method: 'DELETE',
-        body: { data },
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,

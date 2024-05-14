@@ -21,7 +21,7 @@ export const summaryApi = createApi({
     >({
       query: (arg) => {
         return {
-          url: `sales-summary?page=${arg.page}&limit=${arg.limit}&start_time=${arg.start_time}&end_time=${arg.end_time}&start_hour=${arg.start_hour}&end_hour=${arg.end_hour}`,
+          url: `salesSummary?page=${arg.page}&limit=${arg.limit}&start_time=${arg.start_time}&end_time=${arg.end_time}&start_hour=${arg.start_hour}&end_hour=${arg.end_hour}`,
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export const summaryApi = createApi({
       }
     >({
       query: (arg) => ({
-        url: `sales-by-item?page=${arg.page}&limit=${arg.limit}&category_filter=${arg.category_filter}&search=${arg.search}&start_time=${arg.start_time}&end_time=${arg.end_time}`,
+        url: `salesByItem?page=${arg.page}&limit=${arg.limit}&category_filter=${arg.category_filter}&search=${arg.search}&start_time=${arg.start_time}&end_time=${arg.end_time}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

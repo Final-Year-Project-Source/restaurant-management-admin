@@ -2,6 +2,7 @@ export enum USER_ROLE {
   ADMINISTRATOR = 'Administrator',
   STANDARD = 'Standard',
   MANAGER = 'Manager',
+  USER = 'User',
 }
 
 export enum OPERATOR {
