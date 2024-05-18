@@ -242,3 +242,6 @@ export const FOOTER_HEIGHT_SAVE = 101;
 export const HEADER_HEIGHT_BUTTON = 50;
 export const PADDING_HEADER_TO_BODY = 30;
 export const PADDING_BOTTOM_TO_SCROLL = 20;
+
+//menu page
+export const PADDING_BOTTOM_MENU = 40;

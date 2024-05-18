@@ -158,11 +158,11 @@ export const productApi = createApi({
         let queryString = 'product?';
         if (search) queryString += `&search=${encodeURIComponent(search)}`;
         if (dietary_restrictions && dietary_restrictions?.length > 0)
-          queryString += `&dietary_restrictions=${encodeURIComponent(
+          queryString += `&dietary_restrictionsParam=${encodeURIComponent(
             JSON.stringify(dietary_restrictions.map((r) => r.toLowerCase())),
           )}`;
         if (proteins && proteins?.length > 0)
-          queryString += `&proteins=${encodeURIComponent(JSON.stringify(proteins.map((p) => p.toLowerCase())))}`;
+          queryString += `&proteinsParam=${encodeURIComponent(JSON.stringify(proteins.map((p) => p.toLowerCase())))}`;
         return queryString;
       },
       providesTags: ['Product'],

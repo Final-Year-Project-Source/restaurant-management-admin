@@ -1,0 +1,21 @@
+@media print {
+  @page {
+    margin-block: 20px;
+  }
+
+  @page {
+    @bottom-center {
+      content: 'Page ' counter(page) ' of ' counter(pages);
+    }
+  }
+
+  .scroll-container {
+    overflow: visible !important;
+    max-height: fit-content !important;
+  }
+}
+
+.scroll-container {
+  overflow-y: auto;
+  max-height: calc(100vh - 370px); //370px Instance header and footer to scroll with the body
+}

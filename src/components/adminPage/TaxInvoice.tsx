@@ -77,8 +77,8 @@ const TaxInvoice = ({
             <Image
               priority
               src="/assets/icons/mini-logo.svg"
-              width={isMobile ? 100 : 300}
-              height={isMobile ? 100 : 300}
+              width={isMobile ? 100 : 200}
+              height={isMobile ? 100 : 200}
               alt="logo"
             />
             <div className="flex flex-col items-end justify-center">

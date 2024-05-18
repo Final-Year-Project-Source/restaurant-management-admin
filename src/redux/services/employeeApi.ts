@@ -61,14 +61,18 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    changePassword: builder.mutation<any, { email: string; passwordCurrent: string; passwordNew: string }>({
-      query: ({ email, passwordCurrent, passwordNew }) => ({
-        url: `auth/change-password`,
+    changePassword: builder.mutation<
+      any,
+      { currentPassword: string; newPassword: string; id: string; access_token: string }
+    >({
+      query: ({ currentPassword, newPassword, id, access_token }) => ({
+        url: `user/${id}/change-password`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        body: { email, passwordCurrent, passwordNew },
+        body: { currentPassword, newPassword },
       }),
     }),
     reset2FA: builder.mutation<any, { id: string }>({

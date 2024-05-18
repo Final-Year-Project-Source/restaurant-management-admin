@@ -42,9 +42,10 @@ export default function Modifier() {
     validationSchema: schema,
     onSubmit: async (values) => {
       changePassword({
-        email: session?.user.email || '',
-        passwordCurrent: values.currentPassword,
-        passwordNew: values.newPassword,
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        id: user?.id || '',
+        access_token: user?.access_token || '',
       })
         .unwrap()
         .then(() => {

@@ -29,15 +29,14 @@ export const kdsApi = createApi({
       }),
       providesTags: ['Kds'],
     }),
-    changeStatusItem: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    changeStatusItem: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: 'item',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Kds'],

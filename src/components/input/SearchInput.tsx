@@ -39,7 +39,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ ...restProps }) => {
       {/* <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8, user-scalable=no" /> */}
       <Input
         className={`search-input-container--${focus ? 'focus' : ''} search-customized`}
-        placeholder="Tìm kiếm tất cả món ăn tại đây ..."
+        placeholder="Search here..."
         onFocus={() => setFocus(true)}
         onBlur={() => setFocus(false)}
         prefix={

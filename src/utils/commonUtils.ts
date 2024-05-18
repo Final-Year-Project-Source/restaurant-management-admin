@@ -156,7 +156,7 @@ export const validateIsNotEmpty = (value: string) => {
 
 export const getColorByProgressingTime = (duration: number) => {
   if (duration >= 30) {
-    return 'var(--red-100)';
+    return 'var(--red-200)';
   } else if (duration >= 15) {
     return 'var(--yellow-500)';
   } else {
@@ -313,4 +313,14 @@ export const generateChartData = (salesSummaryData: any, typeChart: any) => {
       },
     ],
   };
+};
+
+export const formatPrice = (price: number | string) => {
+  if (!price) return '0.00';
+
+  const roundedPrice = (Math.round(Number(price) * 100) / 100).toFixed(2);
+
+  return parseFloat(roundedPrice).toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+  });
 };

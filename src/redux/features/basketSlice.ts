@@ -28,7 +28,7 @@ export const basket = createSlice({
 
       const indexItem = basket?.orderItems?.findIndex((o: any) => {
         return (
-          o?.product?._id === product?._id &&
+          o?.product?.id === product?.id &&
           isEqual(o?.dietary_restrictions || [], dietary_restrictions || []) &&
           isEqual(o?.notes || '', notes || '') &&
           isEqual(o?.modifiers || [], modifiers || [])

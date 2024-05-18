@@ -14,11 +14,15 @@ import {
   SPACE_BETWEEN_ITEMS,
 } from '@/utils/constants';
 import { lowerCase } from 'lodash';
+import { useSession } from 'next-auth/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Tag from '../tag/tag';
 import './ticket.scss';
 
 const Ticket = (order: any) => {
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
+
   const { height, isMobile } = useWindowDimensions();
   const refHeaderTicket = useRef<HTMLDivElement>(null);
   const refOrderItems = useRef<HTMLDivElement>(null);
@@ -62,7 +66,7 @@ const Ticket = (order: any) => {
       status: hasPreparingItems ? 'Preparing' : 'Completed',
     }));
 
-    changeStatusItem({ data });
+    changeStatusItem({ data, access_token });
   };
   const checkIfCancelled = (status: string) => lowerCase(status) === CANCELLED;
   const checkIfCompleted = (status: string) => lowerCase(status) === COMPLETED;
@@ -148,22 +152,33 @@ const Ticket = (order: any) => {
         }
       }}
     >
-      <div className={`flex flex-col items-start cursor-pointer `}>
+      <div className={`flex cursor-pointer`}>
         <div
           className={`text-[20px] ${checkIfCompleted(item?.status) ? 'line-through' : ''} ${
-            checkIfCancelled(item?.status) ? 'line-through text-red-200' : 'text-black-400'
+            checkIfCancelled(item?.status) ? 'text-red-200' : 'text-black-400'
           }`}
         >
-          {item.quantity} x {item.name}
+          {item.quantity}&nbsp;x&nbsp;&nbsp;
         </div>
-        <ul
-          className={`list-disc ml-[44px] font-open-sans text-[18px] ${
-            checkIfCompleted(item?.status) ? 'line-through' : ''
-          } ${checkIfCancelled(item?.status) ? 'line-through text-red-200' : 'text-black-300'}`}
-        >
-          {item.modifiers_info?.map((mod: any) => mod.id && <li key={mod.id}>{mod.name}</li>)}
-          {item.notes && <div key={item.id}>Note: {item.notes}</div>}
-        </ul>
+        <div>
+          <div
+            className={`text-[20px] ${checkIfCompleted(item?.status) ? 'line-through' : ''} ${
+              checkIfCancelled(item?.status) ? 'text-red-200' : 'text-black-400'
+            }`}
+          >
+            {item.name}
+          </div>
+
+          <ul
+            className={`list-disc font-open-sans ml-[17px] text-[18px] ${
+              checkIfCompleted(item?.status) ? 'line-through' : ''
+            } ${checkIfCancelled(item?.status) ? 'text-red-200' : 'text-black-300'}`}
+          >
+            {item.modifiers_info?.map((mod: any) => mod.id && <li key={mod.id}>{mod.name}</li>)}
+            {item.dietary_requests?.map((request: any, index: number) => <li key={index}>{request}</li>)}
+            {item.notes && <li key={item.id}>{item.notes}</li>}
+          </ul>
+        </div>
       </div>
 
       {checkIfCancelled(item.status) && (

@@ -39,8 +39,7 @@ const KitchenDisplay = () => {
   const { data: session } = useSession();
   const access_token = session?.user?.access_token || '';
 
-  const { data: allGroups, isFetching: isFetchingGroups } = useGetGroupsQuery();
-  const Groups = allGroups?.data;
+  const { data: Groups, isFetching: isFetchingGroups } = useGetGroupsQuery();
   const GROUPS = convertGroupsToOptions(Groups);
   const DEFAULT_GROUPS_VALUE = GROUPS.map((group) => group.value);
   const DEFAULT_ORDERS_VALUE = KDS_STATUSES.map((order) => order.value);
