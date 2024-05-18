@@ -4,7 +4,7 @@ import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { resetBasket } from '@/redux/features/basketSlice';
 import { useGetSingleBillQuery, useUpdateBillMutation } from '@/redux/services/billApi';
 import { RootState } from '@/redux/store';
-import { getFormattedTime } from '@/utils/commonUtils';
+import { formatPrice, getFormattedTime } from '@/utils/commonUtils';
 import { Drawer } from 'antd';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
@@ -14,6 +14,9 @@ import OtherLayout from '../layouts/OtherLayout';
 import OrderItem from '../orderItem';
 import OrderSummary from '../orderSummary';
 import './basket.scss';
+import { useSession } from 'next-auth/react';
+import { CANCELLED } from '@/utils/constants';
+import { lowerCase } from 'lodash';
 
 interface BasketProps {
   isMobile?: boolean;
@@ -26,13 +29,14 @@ interface BasketProps {
 const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsOpenBasket, setIsOpenMenu }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { data: session } = useSession();
   const { height } = useWindowDimensions();
   const [orders, setOrders] = useState<any[]>([]);
 
   const [itemsInBasket, setItemsInBasket] = useState<any[]>([]);
   const allItemInBasket = useSelector((state: RootState) => state.basketReducer.basket) as any;
   const [updateBill, { isLoading: isUpdateBillLoading }] = useUpdateBillMutation();
-  const { data: singleBill, isFetching } = useGetSingleBillQuery({ id: bill_id || '' }, { skip: !bill_id });
+  const { data: singleBill, isLoading } = useGetSingleBillQuery({ id: bill_id || '' }, { skip: !bill_id });
   const discount = singleBill?.data.discount_info;
 
   useEffect(() => {
@@ -40,7 +44,7 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
     if (bill_id) {
       setOrders(singleBill?.data.orders || []);
     }
-  }, [allItemInBasket, allItemInBasket?.orderItems, bill_id, singleBill, isUpdateBillLoading, isFetching]);
+  }, [allItemInBasket, allItemInBasket?.orderItems, bill_id, singleBill, isUpdateBillLoading, isLoading]);
 
   const modifiersTotal = useCallback(
     (orderItems: any) => {
@@ -54,7 +58,7 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
   var subTotal = useMemo(() => {
     let temp = itemsInBasket?.reduce((a: any, b: any) => a + +b?.product?.price * b?.quantity + modifiersTotal(b), 0);
     if (singleBill) {
-      for (const order of singleBill?.data.orders) {
+      for (const order of singleBill?.data?.orders) {
         for (const item of order.items) {
           temp += Number(item.price * item.quantity);
           if (item.modifiers_info) {
@@ -80,11 +84,12 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
   const handlePlaceOrder = () => {
     if (itemsInBasket?.length > 0) {
       const data = {
+        staff_email: session?.user?.email,
         id: bill_id,
         orderItems: itemsInBasket?.map((item) => ({
           ...item,
-          product: item.product._id,
-          modifiers: item.modifiers.map((modifier: any) => modifier._id),
+          product: item.product.id,
+          modifiers: item.modifiers.map((modifier: any) => modifier.id),
           dietary_requests: item.dietary_restrictions,
         })),
       };
@@ -92,6 +97,7 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
       updateBill({ data: data })
         .unwrap()
         .then(() => {
+          router.push(`/bills/${bill_id}`);
           dispatch(resetBasket());
         })
 
@@ -99,12 +105,11 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
           toast.error(error.data.message);
         });
     }
-    router.push(`/bills/${bill_id}`);
   };
 
   const btnText = (
     <div className="px-4 py-2 truncate">
-      <span>Đặt hàng </span> <span className="font-normal">・ {`Tổng ${total}`}</span>
+      <span>Place order </span> <span className="font-normal">・ {`Total ${formatPrice(total)}`}</span>
     </div>
   );
   const orderBasketHeight = height - (isMobile ? 170 : 403);
@@ -121,25 +126,27 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
               order?.items.length > 0 && (
                 <div key={index} className="space-y-[20px]">
                   <span className="text-sm font-medium text-black-400">
-                    Đơn hàng được đặt vào lúc {getFormattedTime(new Date(order.placed_at))}
+                    Order placed at {getFormattedTime(new Date(order.placed_at))}
                   </span>
                   {order?.items.map((item: any, index: number) => {
                     return (
-                      <div key={index} className="flex flex-col space-y-5">
-                        <OrderItem
-                          name={item.product_info?.name}
-                          price={item.product_info?.price}
-                          priceAfterDiscount={item?.total_price_product_after_discount}
-                          image_url={item.product_info?.image_url}
-                          quantity={item.quantity}
-                          modifiers={item.modifiers_info}
-                          note={item.notes || undefined}
-                          dietary_restrictions={item.dietary_restrictions}
-                          loading={isFetching || isUpdateBillLoading}
-                          classModifier="text-[10px]"
-                        />
-                        {index !== order?.products?.length - 1 && <hr className="w-full border-t border-black-100" />}
-                      </div>
+                      lowerCase(item?.status) !== CANCELLED && (
+                        <div key={index} className="flex flex-col space-y-5">
+                          <OrderItem
+                            name={item.product_info?.name}
+                            price={item.product_info?.price}
+                            priceAfterDiscount={item?.total_price_product_after_discount}
+                            image_url={item.product_info?.image_url}
+                            quantity={item.quantity}
+                            modifiers={item.modifiers_info}
+                            note={item.notes || undefined}
+                            dietary_restrictions={item.dietary_restrictions}
+                            classModifier="text-[10px]"
+                            orderStatus={item?.status}
+                          />
+                          {index !== order?.items?.length - 1 && <hr className="w-full border-t border-black-100" />}
+                        </div>
+                      )
                     );
                   })}
                 </div>
@@ -148,7 +155,7 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
           })}
 
           {itemsInBasket && itemsInBasket.length > 0 && (
-            <span className="text-sm font-medium text-black-400">Bổ sung mới</span>
+            <span className="text-sm font-medium text-black-400">New additions</span>
           )}
         </>
       )}
@@ -169,51 +176,48 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
                 isNewItem={true}
                 dietary_restrictions={item.dietary_restrictions}
                 disabled={isUpdateBillLoading}
-                loading={isFetching || isUpdateBillLoading}
                 classModifier="text-[10px]"
               />
-              <hr className="w-full border-t border-black-100" />
+              {index !== itemsInBasket.length - 1 && <hr className="w-full border-t border-black-100" />}
             </div>
           );
         })}
 
-      {(itemsInBasket?.length > 0 || orders?.length > 0) && (
-        <OrderSummary
-          className="pb-[40px]"
-          discount={discount}
-          discountAmount={totalDiscount}
-          serviceCharge={serviceCharge}
-          vat={vat}
-          subTotal={subTotalAfterDiscount}
-          total={total}
-        />
+      {(itemsInBasket?.length > 0 || orders?.length > 1 || (orders?.length === 1 && orders?.[0]?.items.length > 0)) && (
+        <>
+          <hr className="w-full border-t border-black-100" />
+          <OrderSummary
+            className="pb-[40px]"
+            discount={discount}
+            discountAmount={totalDiscount}
+            serviceCharge={serviceCharge}
+            vat={vat}
+            subTotal={subTotalAfterDiscount}
+            total={total}
+          />
+        </>
       )}
     </div>
   );
 
   return isMobile ? (
     <Drawer
-      // classNameFooter="py-[12px] px-5"
       rootClassName="basket-drawer"
       open={isOpenBasket}
       onClose={() => {
         setIsOpenBasket(false);
         setIsOpenMenu(true);
       }}
-      // onOk={() => {
-      //   setIsOpenBasket(false);
-      //   handlePlaceOrder();
-      // }}
-      // okText={btnText}
     >
       <OtherLayout
         isShowFooter={true}
         isMobile={isMobile}
-        disabledSecondary={isUpdateBillLoading || isFetching}
+        disabledSecondary={isLoading || isUpdateBillLoading || !(itemsInBasket && itemsInBasket?.length > 0)}
         isShowPrimaryButton={false}
         isShowBackBtn={isMobile ? true : false}
         isShowSecondaryButton={true}
-        title="Giỏ hàng"
+        disabledBackBtn={isLoading || isUpdateBillLoading}
+        title="Basket"
         onClickSecondaryBtn={() => {
           setIsOpenBasket(false);
           handlePlaceOrder();
@@ -224,7 +228,7 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
           setIsOpenBasket(false);
         }}
       >
-        {isFetching ? <LoadingIndicator /> : body}
+        {isLoading ? <LoadingIndicator /> : body}
         {isUpdateBillLoading && <LoadingIndicator />}
       </OtherLayout>
     </Drawer>
@@ -234,13 +238,13 @@ const Basket: React.FC<BasketProps> = ({ isMobile, bill_id, isOpenBasket, setIsO
       isShowPrimaryButton={false}
       isShowBackBtn={isMobile ? true : false}
       isShowSecondaryButton={true}
-      disabledSecondary={isUpdateBillLoading || isFetching}
-      disabledBackBtn={isUpdateBillLoading || isFetching}
+      disabledSecondary={isLoading || isUpdateBillLoading || !(itemsInBasket && itemsInBasket?.length > 0)}
+      disabledBackBtn={isLoading || isUpdateBillLoading}
       secondaryBtnChildren={btnText}
       onClickSecondaryBtn={handlePlaceOrder}
       // title="Order basket"
     >
-      {isFetching ? <LoadingIndicator /> : body}
+      {isLoading ? <LoadingIndicator /> : body}
       {isUpdateBillLoading && <LoadingIndicator />}
     </OtherLayout>
   );

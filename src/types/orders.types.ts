@@ -73,7 +73,7 @@ export interface DiscountInfo {
 }
 export interface OrderType {
   key: React.Key;
-  _id: string;
+  id: string;
   dining_table: string;
   dining_table_id: string;
   customer_name: string;

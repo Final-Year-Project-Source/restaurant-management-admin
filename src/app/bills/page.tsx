@@ -210,7 +210,7 @@ const Bills = () => {
   };
 
   const handleRowClick = (record: any) => {
-    router.push(`bills/${record?._id}?tab=bill`);
+    router.push(`bills/${record?.id}?tab=bill`);
   };
 
   const handleChangeStatus = (value: any) => {
@@ -302,7 +302,7 @@ const Bills = () => {
       })
         .unwrap()
         .then((res) => {
-          router.push(`bills/${res?.data?._id}?tab=bill`);
+          router.push(`bills/${res?.data?.id}?tab=bill`);
         })
         .catch((error) => {
           toast.error(error.data.message);

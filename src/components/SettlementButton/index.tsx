@@ -44,9 +44,9 @@ const SettlementButton: React.FC<Props> = ({
         <div className="flex flex-row md:space-x-[28px] space-x-[24px] items-center">
           {isActive ? <TelePhoneActiveIcon /> : disabled ? <TelePhoneIcon /> : <TelePhoneIcon />}
           <div className="flex flex-col items-start justify-center">
-            <label className={`${isActive ? `text-white` : `text-black-500`} text-left`}>Thanh toán qua EDC</label>
+            <label className={`${isActive ? `text-white` : `text-black-500`} text-left`}>EDC payment</label>
             <label className={`${isActive ? `text-white` : `text-black-500 `} font-open-sans text-[11px] text-left`}>
-              Thu tiền thanh toán theo cách thủ công
+              Collect payment manually
             </label>
           </div>
           <div className="flex flex-col space-y-[5px]">
@@ -95,7 +95,9 @@ const SettlementButton: React.FC<Props> = ({
   const RenderBeamCheckout = () => {
     return (
       <div
-        className={`min-[1200px]:pl-[71px] min-[1000px]:pl-[41px]  pl-[7%] py-[15px] ${isActive && 'cursor-default'}`}
+        className={`min-[1200px]:pl-[71px] min-[1000px]:pl-[41px]  pl-[7%] py-[15px] ${
+          isActive && 'cursor-default'
+        } min-h-[78px] flex`}
       >
         <div className="flex flex-row md:space-x-[28px] space-x-[20px] items-center">
           {isActive ? <BeamIcon /> : disabled ? <BlueBeamIcon /> : <BlueBeamIcon />}
@@ -115,7 +117,7 @@ const SettlementButton: React.FC<Props> = ({
                 isActive ? 'text-white' : disabled ? 'text-black-500' : 'text-black-500'
               }`}
             >
-              Tạo liên kết thanh toán
+              Create payment link
             </label>
           </div>
           <div className="flex flex-col space-y-[5px]">
@@ -147,9 +149,9 @@ const SettlementButton: React.FC<Props> = ({
               </div>
               <AmericanPayIcon />
 
-              <ThaiQrIcon />
+              {/* <ThaiQrIcon /> */}
             </div>
-            <div className="flex space-x-[5px] items-center justify-start">
+            {/* <div className="flex space-x-[5px] items-center justify-start">
               <ShopeeIcon />
               <div className="relative">
                 <SquareIcon />
@@ -161,7 +163,7 @@ const SettlementButton: React.FC<Props> = ({
                 stroke={!isActive ? '#131c16' : 'rgba(255, 255, 255, 0.20)'}
                 fill={!isActive ? '#180806' : 'white'}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -175,8 +177,8 @@ const SettlementButton: React.FC<Props> = ({
           <TelePhoneRefundIcon />
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <label className="text-left">Ghi lại khoản hoàn trả qua EDC</label>
-            <label className="font-open-sans text-[11px] text-left">Khi bạn hoàn tiền cho khách hàng bằng EDC</label>
+            <label className="text-left">Record EDC refund</label>
+            <label className="font-open-sans text-[11px] text-left">When you refund a customer using the EDC</label>
           </div>
         </div>
       </div>
@@ -190,8 +192,8 @@ const SettlementButton: React.FC<Props> = ({
           <BeamRefundIcon />
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <label className="text-left">Hoàn tiền thanh toán qua Beam</label>
-            <label className="font-open-sans text-[11px] text-left">Bắt đầu hoàn tiền qua Beam</label>
+            <label className="text-left">Refund Beam payment</label>
+            <label className="font-open-sans text-[11px] text-left">Initiates a refund in Beam</label>
           </div>
         </div>
       </div>
@@ -205,8 +207,8 @@ const SettlementButton: React.FC<Props> = ({
           <ReceiptIcon />
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <label className="text-left">Nhận biên lai</label>
-            <label className="font-open-sans text-[11px] text-left">Tạo một hình ảnh để chia sẻ</label>
+            <label className="text-left">Get receipt</label>
+            <label className="font-open-sans text-[11px] text-left">Generates an image to share</label>
           </div>
         </div>
       </div>
@@ -220,8 +222,8 @@ const SettlementButton: React.FC<Props> = ({
           <TaxInvoiceIcon />
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <label className="text-left">Xuất hóa đơn thuế</label>
-            <label className="font-open-sans text-[11px] text-left">Điền đầy đủ thông tin, in và ký tên</label>
+            <label className="text-left">Issue tax invoice</label>
+            <label className="font-open-sans text-[11px] text-left">Complete information, print, and sign</label>
           </div>
         </div>
       </div>

@@ -57,62 +57,58 @@ export const billApi = createApi({
       }),
       invalidatesTags: ['Bill'],
     }),
-    refundBill: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    refundBill: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: 'refund',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    cancelBill: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
+    cancelBill: builder.mutation<any, { id: string; access_token: string }>({
+      query: ({ id, access_token }) => ({
         url: `bill/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeTableBill: builder.mutation<any, { data: object; id: string }>({
-      query: ({ data, id }) => ({
+    changeTableBill: builder.mutation<any, { data: object; id: string; access_token: string }>({
+      query: ({ data, id, access_token }) => ({
         url: `diningTable/${id}`,
-        method: 'OPTIONS',
-        body: {
-          data,
-        },
+        method: 'POST',
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeDiscount: builder.mutation<any, { data: object; id: string }>({
-      query: ({ data, id }) => ({
+    changeDiscount: builder.mutation<any, { data: object; id: string; access_token: string }>({
+      query: ({ data, id, access_token }) => ({
         url: `discount/${id}`,
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeCustomerName: builder.mutation<any, { data: object; bill_id: string }>({
-      query: ({ data, bill_id }) => ({
-        url: `customer/${bill_id}`,
+    changeCustomerName: builder.mutation<any, { data: object }>({
+      query: ({ data }) => ({
+        url: `customer`,
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -123,9 +119,7 @@ export const billApi = createApi({
       query: ({ data }) => ({
         url: 'payment',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
       }),
       // invalidatesTags: ['Bill'],
     }),
@@ -136,26 +130,26 @@ export const billApi = createApi({
       }),
       invalidatesTags: ['Bill'],
     }),
-    reopenBill: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `reopenBill${id}`,
+    reopenBill: builder.mutation<any, { id: string; access_token: string }>({
+      query: ({ id, access_token }) => ({
+        url: `reopenBill/${id}`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeItemQuantity: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    changeItemQuantity: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: `item`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        body: {
-          data,
-        },
+        body: data,
       }),
       invalidatesTags: ['Bill'],
     }),
@@ -176,9 +170,7 @@ export const billApi = createApi({
       query: ({ data }) => ({
         url: 'taxinvoice',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
       }),
       invalidatesTags: ['Bill'],
     }),

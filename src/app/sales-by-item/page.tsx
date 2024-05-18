@@ -38,8 +38,7 @@ const SaleByItems = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { width } = useWindowDimensions();
-  const { data: allCategories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
-  const Categories = allCategories?.data;
+  const { data: Categories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
   const CATEGORIES = convertCategoriesToOptions(Categories);
   const DEFAULT_CATEGORIES_VALUE = CATEGORIES.map((category) => category.value);
 
@@ -73,8 +72,10 @@ const SaleByItems = () => {
     if (!isNaN(total)) {
       return Math.ceil(total / limitUrl);
     }
+    return 1;
   }, [salesByItemData, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+
+  const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
   let categoriesUrl = searchParams?.get('category_filter')?.split(',') || [];
 
   useEffect(() => {
@@ -136,7 +137,7 @@ const SaleByItems = () => {
 
   const getCategoryNameById = useCallback(
     (categoryId: string | undefined) => {
-      const foundCategory = Categories?.find((category: CategoryType) => category._id === categoryId);
+      const foundCategory = Categories?.find((category: CategoryType) => category.id === categoryId);
       return foundCategory ? foundCategory.name : null;
     },
     [Categories],

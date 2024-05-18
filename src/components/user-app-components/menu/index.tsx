@@ -65,25 +65,27 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
   });
 
   const Categories = useMemo(() => {
-    if (allCategories?.data) {
-      return [...allCategories?.data].sort((a, b) => a.name.localeCompare(b.name));
+    if (allCategories) {
+      return [...allCategories].sort((a, b) => a.name.localeCompare(b.name));
     } else {
       return [];
     }
   }, [allCategories]);
 
   const products = filteredProductsData?.data;
+
   const organizeProductsByCategory = (products: any[], categories: any[]) => {
     const clonedCategories = Array.isArray(categories) ? [...categories] : [];
 
     const organizedCategories = clonedCategories
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((category) => {
-        const categoryItems = products?.filter((product) => product.category_id === category._id);
+        const categoryItems = products?.filter((product) => product.category_id === category.id);
+
         if (categoryItems?.length > 0) {
           const sortedItems = categoryItems.sort((a, b) => a.name.localeCompare(b.name));
           return {
-            id: category._id,
+            id: category.id,
             name: category.name,
             items: sortedItems,
           };
@@ -402,6 +404,7 @@ const MenuUI: React.FC<MenuProps> = ({ isMobile, setIsOpenBasket, setIsOpenMenu,
             isEmptyData={!organizedProductsAfterFilter?.length}
             categories={organizedProductsAfterFilter}
             isMobile={isMobile}
+            bottomHeight={height}
           >
             {isFetching || isBillFetching ? <LoadingIndicator /> : body}
           </MenuLayout>

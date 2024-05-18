@@ -84,20 +84,16 @@ export default function AdminLoginForm() {
 
             toast.success('Logged in successfully');
 
-            if (!user.is_change_default_password) {
-              router.push(`/force-change-default-password`);
-            } else {
-              signIn('credentials', {
-                email: user.email,
-                access_token: tokens?.access?.token,
-                access_expires: tokens?.access?.expires,
-                refresh_token: tokens?.refresh?.token,
-                refresh_expires: tokens?.refresh?.expires,
-                redirect: false,
-              });
-              if (role === USER_ROLE.ADMINISTRATOR) router.push('/employees');
-              else router.push('/bills');
-            }
+            signIn('credentials', {
+              email: user.email,
+              access_token: tokens?.access?.token,
+              access_expires: tokens?.access?.expires,
+              refresh_token: tokens?.refresh?.token,
+              refresh_expires: tokens?.refresh?.expires,
+              redirect: false,
+            });
+            if (role === USER_ROLE.ADMINISTRATOR) router.push('/employees');
+            else router.push('/bills');
           })
           .catch((error) => {
             setLoad(false);
