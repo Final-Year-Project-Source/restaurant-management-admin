@@ -26,8 +26,8 @@ import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useSt
 import { useDispatch, useSelector } from 'react-redux';
 import MenuLayout from '../layouts/MenuLayout';
 import OtherLayout from '../layouts/OtherLayout';
-import Product from '../product';
-import ProductItem from '../productItem';
+import Product from '../Product';
+import ProductItem from '../ProductItem';
 import './menu.scss';
 
 interface MenuProps {

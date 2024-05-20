@@ -41,6 +41,12 @@ export type QueryParamsState = {
     startHourFilter: number;
     endHourFilter: number;
   };
+  feedbacks: {
+    page: number;
+    limit: number;
+    startTime: string;
+    endTime: string;
+  };
   'sales-by-item': {
     search: string;
     page: number;
@@ -90,6 +96,12 @@ export const DEFAULT_QUERY_PARAMS = {
     visited: false,
   },
   modifiers: { search: '' },
+  feedbacks: {
+    page: 1,
+    limit: 10,
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
+  },
   'sales-summary': {
     page: 1,
     limit: 10,

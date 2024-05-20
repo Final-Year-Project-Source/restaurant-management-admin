@@ -1,5 +1,5 @@
 'use client';
-import OrderItem from '@/components/user-app-components/orderItem';
+import OrderItem from '@/components/user-app-components/OrderItem';
 import { open_sans } from '@/utils/fontUtils';
 import moment from 'moment';
 import Image from 'next/image';
