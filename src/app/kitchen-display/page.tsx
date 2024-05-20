@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Ticket from '../../components/adminPage/Ticket';
 import './kds.scss';
 import { SkeletonTicket } from '@/components/skeleton/skeletonTicket';
+import { useSession } from 'next-auth/react';
 
 const startDate = (() => {
   const thisWeekStartDate = new Date();
@@ -35,9 +36,10 @@ const KitchenDisplay = () => {
   const { height, isMobile } = useWindowDimensions();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
 
-  const { data: allGroups, isFetching: isFetchingGroups } = useGetGroupsQuery();
-  const Groups = allGroups?.data;
+  const { data: Groups, isFetching: isFetchingGroups } = useGetGroupsQuery();
   const GROUPS = convertGroupsToOptions(Groups);
   const DEFAULT_GROUPS_VALUE = GROUPS.map((group) => group.value);
   const DEFAULT_ORDERS_VALUE = KDS_STATUSES.map((order) => order.value);
@@ -68,6 +70,7 @@ const KitchenDisplay = () => {
       order_statuses: queryParams?.orders || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
+      access_token: access_token,
     },
     { pollingInterval: 5000 },
   );

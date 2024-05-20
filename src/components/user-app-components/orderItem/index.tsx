@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { Skeleton } from 'antd';
 import CustomizedDrawer from '@/components/drawer';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
+import { useSession } from 'next-auth/react';
 
 interface ItemsProps {
   name: string;
@@ -70,6 +71,8 @@ const OrderItem: React.FC<ItemsProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const { isMobile, width } = useWindowDimensions();
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
   const [changeItemQuantity, { isLoading: isChangingItemQuantity }] = useChangeItemQuantityMutation();
   const handleReduceItemQuantity = async () => {
     const data = {
@@ -77,7 +80,7 @@ const OrderItem: React.FC<ItemsProps> = ({
       item_id,
       quantity: quantity - 1,
     };
-    await changeItemQuantity({ data })
+    await changeItemQuantity({ data, access_token })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));
@@ -92,7 +95,7 @@ const OrderItem: React.FC<ItemsProps> = ({
       item_id,
       quantity: quantity + 1,
     };
-    changeItemQuantity({ data })
+    changeItemQuantity({ data, access_token })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));

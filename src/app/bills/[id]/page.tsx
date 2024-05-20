@@ -40,9 +40,9 @@ import History from '@/components/adminPage/History';
 import BillTab from '@/components/billTab';
 import CustomizedModal from '@/components/modal';
 import CustomizedDrawer from '@/components/drawer';
-import TaxInvoice from '@/components/adminPage/TaxInvoiceHistory';
 import Tabs from '@/components/tabs';
 import TextAreaInput from '@/components/input/TextArea';
+import TaxInvoice from '@/components/adminPage/TaxInvoiceHistory';
 interface PropsStateForm {
   companyName: string;
   headOffice: string;
@@ -62,12 +62,14 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   const refTaxInvoice = useRef(null);
   const { isMobile, width } = useWindowDimensions();
   const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
+
   const urlPage = useSelector((state: RootState) => state.URLPages);
-  const { data: allDiningTables, isLoading: isFetchingDiningTable } = useGetDiningTablesQuery();
-  const { data: discountsRes, isLoading: isFetchingDiscount } = useGetDiscountsQuery();
+  const { data: allDiningTables, isLoading: isFetchingDiningTable } = useGetDiningTablesQuery({ access_token });
+  const { data: discountsList, isLoading: isFetchingDiscount } = useGetDiscountsQuery();
   const { data: singleBill, error, isLoading: isLoadingBill } = useGetSingleBillQuery({ id: id || '' });
   const data = singleBill?.data || '';
-  const discountsList = discountsRes?.data;
+
   const tableList = allDiningTables?.data;
   const errorMessageMap = {
     companyName: 'Company name is required',
@@ -87,7 +89,9 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
     receipt_refund_id,
     _id,
     dining_table_id,
+    dining_table_info,
   } = data;
+
   const cancelledBill = data.status === 'Cancelled' ? true : false;
   const discount_text = discount_info
     ? discount_info.type === 'FIXED_PERCENT'
@@ -157,8 +161,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   const handleSubmitCustomer = () => {
     if (customerValue && customerValue.trim() !== customer_name) {
       changeCustomer({
-        data: { staff_email: session?.user.email, name: customerValue.trim() },
-        bill_id: _id,
+        data: { staff_email: session?.user.email, name: customerValue.trim(), bill_id: id },
       })
         .unwrap()
         .then((response) => {})
@@ -169,25 +172,27 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   const handleChangeTable = (tableValue: string) => {
     if (tableValue) {
       changeTable({
-        data: { bill_id: _id, staff_email: session?.user.email },
-        id: tableValue,
+        data: { bill_id: id, staff_email: session?.user.email },
+        id: tableValue || '',
+        access_token,
       })
         .unwrap()
         .then((response) => {})
-        .catch((error) => toast.error(error.data.message));
+        .catch((error) => toast.error(error?.data?.message));
     }
   };
   const handleReopenBill = () => {
     setIsModalConfirmReopenBillOpen(false);
-    reopenBill({ id: _id })
+    reopenBill({ id: id, access_token })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));
   };
   const handleChangeDiscount = (discountValue: string) => {
     changeDiscount({
-      data: { bill_id: _id, staff_email: session?.user.email },
       id: discountValue || '',
+      data: { bill_id: id, staff_email: session?.user.email },
+      access_token,
     })
       .unwrap()
       .then((response) => {})
@@ -200,14 +205,15 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
     setIsModalEDCRefundOpen(false);
     setIsModalBeamRefundOpen(false);
     createRefund({
-      data: { bill_id: _id },
+      data: { bill_id: id },
+      access_token,
     })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));
   };
   const handleCreateEDCPayment = () => {
-    createCashPaymentReceipt({ id: _id })
+    createCashPaymentReceipt({ id: id })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));
@@ -215,7 +221,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const debounceHandleChangeCustomerName = debounce(() => {
       handleSubmitCustomer();
-    }, 800);
+    }, 1800);
 
     if (customerValue !== '') {
       debounceHandleChangeCustomerName();
@@ -235,7 +241,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
     setIsEDCPaymentButtonActive(false);
   };
   const onClickCancelBillButton = () => {
-    cancelBill({ id: _id })
+    cancelBill({ id: id, access_token })
       .unwrap()
       .then((response) => {})
       .catch((error) => toast.error(error?.data?.message));
@@ -249,7 +255,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       setIsBeamPaymentButtonActive(false);
       setQrBeamPayment('');
       setIsModalQRBeamLinkOpen(true);
-      createPayment({ data: { bill_id: _id } })
+      createPayment({ data: { bill_id: id } })
         .unwrap()
         .then((response) => {
           setQrBeamPayment(response.data.paymentLink);
@@ -259,7 +265,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   };
   const handlePrint = useReactToPrint({
     content: () => refTaxInvoice.current,
-    documentTitle: `Invoice no.: ${_id}`,
+    documentTitle: `Invoice no.: ${id}`,
   });
 
   const handleChangeTab = (value: any) => {
@@ -529,7 +535,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                     handleChangeTable(value);
                   }}
                   value={dining_table_id}
-                  defaultValue={{ dining_table_id }}
+                  defaultValue={dining_table_info?.name}
                 />
               )}
             </div>
@@ -572,11 +578,11 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
                   disabled={cancelledBill || isChangingDiscount}
                   options={discountsList?.map((item: any) => ({
                     label: renderDiscount(item),
-                    value: item._id,
+                    value: item.id,
                     searchLabel: item.name,
                   }))}
                   value={discount_info?._id || ''}
-                  defaultValue={discount_info?._id}
+                  defaultValue={discount_info?.name}
                   onChange={(value) => {
                     handleChangeDiscount(value);
                   }}

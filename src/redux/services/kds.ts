@@ -16,6 +16,7 @@ export const kdsApi = createApi({
         group_filter?: string[];
         end_time?: string;
         start_time?: string;
+        access_token: string;
       }
     >({
       query: (arg) => ({
@@ -23,19 +24,19 @@ export const kdsApi = createApi({
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${arg.access_token}`,
         },
       }),
       providesTags: ['Kds'],
     }),
-    changeStatusItem: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    changeStatusItem: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: 'item',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Kds'],

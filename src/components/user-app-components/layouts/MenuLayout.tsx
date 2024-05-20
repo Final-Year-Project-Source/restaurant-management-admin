@@ -11,6 +11,7 @@ import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { useSelector } from 'react-redux';
 import Footer, { FooterProps } from './Footer';
 import './layout.scss';
+import { PADDING_BOTTOM_MENU } from '@/utils/constants';
 import SearchInput from '@/components/input/SearchInput';
 
 export interface MenuLayoutProps extends FooterProps {
@@ -27,6 +28,7 @@ export interface MenuLayoutProps extends FooterProps {
   isMobile?: boolean;
   isShowFooter?: boolean;
   onClickBackBtn?: () => void;
+  bottomHeight?: number;
 }
 
 const MenuLayout: FC<MenuLayoutProps> = ({
@@ -48,6 +50,7 @@ const MenuLayout: FC<MenuLayoutProps> = ({
   isMobile,
   isShowSecondaryButton,
   onClickBackBtn,
+  bottomHeight = 0,
 }) => {
   const categoryBarRef = useRef(null);
   const isSticky = (categoryBarRef?.current as any)?.getBoundingClientRect()?.top === 0;
@@ -129,6 +132,7 @@ const MenuLayout: FC<MenuLayoutProps> = ({
       <div className={`flex flex-col ${isEmptyData ? 'h-full' : ''}`}>
         <div className={`w-full flex flex-row space-x-[9px] pb-[10px] px-[24px] max-md:pt-[22px]`}>
           <SearchInput
+            height={48}
             value={inputValue}
             suffix={
               inputValue && <CloseOutlined style={{ color: 'rgba(19, 28, 22, 0.50)' }} onClick={handleClearInput} />
@@ -164,7 +168,9 @@ const MenuLayout: FC<MenuLayoutProps> = ({
         {children}
         {isMobile && (
           <Footer
-            className={`pl-[26px] pr-[32px] ${scrollBottom - 40 > 0 ? 'shadow-medium-top' : ''}`}
+            className={`max-md:pl-[26px] max-md:pr-[32px] md:px-[25px] ${
+              scrollBottom - (PADDING_BOTTOM_MENU + bottomHeight) > 0 ? 'shadow-medium-top' : 'shadow-medium-none'
+            }`}
             isShowPrimaryButton={isShowPrimaryButton}
             disabledSecondary={disabledSecondary}
             onClickPrimaryBtn={onClickPrimaryBtn}

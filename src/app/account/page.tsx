@@ -42,9 +42,10 @@ export default function Modifier() {
     validationSchema: schema,
     onSubmit: async (values) => {
       changePassword({
-        email: session?.user.email || '',
-        passwordCurrent: values.currentPassword,
-        passwordNew: values.newPassword,
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        id: user?.id || '',
+        access_token: user?.access_token || '',
       })
         .unwrap()
         .then(() => {
@@ -94,6 +95,19 @@ export default function Modifier() {
                 <div>
                   <InputPasswordText
                     type="text"
+                    id="currentPassword"
+                    disabled={isChangingPassword}
+                    placeholder="Current password"
+                    value={values.currentPassword}
+                    onChange={handleChange}
+                  />
+                  {errors.currentPassword && touched.currentPassword && (
+                    <span className="text-[12px] text-red-500">{errors.currentPassword}</span>
+                  )}
+                </div>
+                <div>
+                  <InputPasswordText
+                    type="text"
                     id="newPassword"
                     disabled={isChangingPassword}
                     placeholder="New password"
@@ -117,19 +131,7 @@ export default function Modifier() {
                     <span className="text-[12px] text-red-500">{errors.confirmNewPassword}</span>
                   )}
                 </div>
-                <div>
-                  <InputPasswordText
-                    type="text"
-                    id="currentPassword"
-                    disabled={isChangingPassword}
-                    placeholder="Current password"
-                    value={values.currentPassword}
-                    onChange={handleChange}
-                  />
-                  {errors.currentPassword && touched.currentPassword && (
-                    <span className="text-[12px] text-red-500">{errors.currentPassword}</span>
-                  )}
-                </div>
+
                 <Button className="md:w-[235px] w-full" type="submit" variant="primary" disabled={isChangingPassword}>
                   Change password
                 </Button>

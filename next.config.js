@@ -1,7 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  webpack(config, { dev, isServer }) {
+    if (!dev) {
+      config.devtool = false;
+    }
+    return config;
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.loyverse.com',
+        port: '',
+        pathname: '/image/**',
+      },
+    ],
+    unoptimized: true,
   },
   async headers() {
     return [

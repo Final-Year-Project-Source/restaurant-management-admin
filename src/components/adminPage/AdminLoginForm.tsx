@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLoginFirstStepMutation } from '@/redux/services/loginApi';
+import { useLoginMutation } from '@/redux/services/loginApi';
 import { isValidEmail } from '@/utils/commonUtils';
 import { setOtpURL } from '@/utils/localStorage';
 import InputText from '../input/Input';
 import InputPasswordText from '../input/InputPassword';
 import { Button } from '../button';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-toastify';
+import { USER_ROLE } from '@/enums';
 
 interface AdminLoginFormProps {
   email: string;
@@ -22,7 +25,7 @@ export default function AdminLoginForm() {
   const [loginForm, setLoginForm] = useState<AdminLoginFormProps>({ ...initStateLoginForm });
   const [errors, setErrors] = useState<AdminLoginFormProps>({ ...initStateLoginForm });
   const [errorLogin, setErrorLogin] = useState<string>('');
-  const [loginFirstStep, { isLoading }] = useLoginFirstStepMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const [load, setLoad] = useState<boolean>(false);
   const router = useRouter();
 
@@ -37,7 +40,6 @@ export default function AdminLoginForm() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: keyof AdminLoginFormProps) => {
     const { value } = e.target;
-    console.log({ value });
 
     setLoginForm({
       ...loginForm,
@@ -69,23 +71,33 @@ export default function AdminLoginForm() {
 
       if (!errors.email && !errors.password && data.email && data.password) {
         setLoad(true);
-        loginFirstStep({ data })
+        login({ data })
           .unwrap()
-          .then((response) => {
-            if (response.message !== 'Successful') {
-              setLoad(false);
-              setErrorLogin('Email or password is incorrect');
-              return;
+          .then((res) => {
+            const user = res?.user;
+            const role = res?.user?.role;
+            const tokens = res?.tokens;
+
+            if (role === USER_ROLE.USER) {
+              return toast.error('You do not have permission to access this page');
             }
-            const otp_auth_url = response.data.otp_auth_url?.toString();
-            if (otp_auth_url) {
-              setOtpURL(otp_auth_url);
-            }
-            router.push(`/2fa`);
+
+            toast.success('Logged in successfully');
+
+            signIn('credentials', {
+              email: user.email,
+              access_token: tokens?.access?.token,
+              access_expires: tokens?.access?.expires,
+              refresh_token: tokens?.refresh?.token,
+              refresh_expires: tokens?.refresh?.expires,
+              redirect: false,
+            });
+            if (role === USER_ROLE.ADMINISTRATOR) router.push('/employees');
+            else router.push('/bills');
           })
           .catch((error) => {
             setLoad(false);
-            setErrorLogin(error.data.message);
+            setErrorLogin(error?.data?.message);
           });
       }
     } catch (error: any) {

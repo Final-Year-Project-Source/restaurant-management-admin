@@ -22,8 +22,7 @@ const Group = () => {
   const { isMobile, height } = useWindowDimensions();
 
   const { data: session } = useSession();
-  const { data: groupsData, isFetching } = useGetGroupsQuery();
-  const originalGroups = groupsData?.data;
+  const { data: originalGroups, isFetching } = useGetGroupsQuery();
   const [updateGroups, { isLoading: isUpdateLoading }] = useUpdateGroupsMutation();
 
   const [isChangedData, setIsChangedData] = useState(false);
@@ -109,7 +108,7 @@ const Group = () => {
   const handleSubmit = () => {
     if (!isChangedData) return;
 
-    const newGroups = groupsDataSource?.map((group) => ({ _id: group?._id, name: group?.name.trim() }));
+    const newGroups = groupsDataSource?.map((group) => ({ id: group?.id, name: group?.name.trim() }));
     updateGroups({
       access_token: session?.user?.access_token || '',
       data: newGroups,

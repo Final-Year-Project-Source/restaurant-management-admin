@@ -26,7 +26,7 @@ export const groupApi = createApi({
       query: ({ access_token, data }) => ({
         url: `group`,
         method: 'PATCH',
-        body: { data },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${access_token}`,

@@ -130,7 +130,7 @@ const BillTab: React.FC<Props> = ({
                           isNewItem={!removeItemButton && !(item.status === 'Cancelled')}
                           orderStatus={item.status}
                           isChangeItemQuantity={isChangeItemQuantity}
-                          bill_id={billData._id}
+                          bill_id={billData.id}
                           item_id={item._id}
                           // disabled={!removeItemButton}
                         />

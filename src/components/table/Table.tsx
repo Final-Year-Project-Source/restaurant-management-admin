@@ -89,7 +89,7 @@ const Table: React.FC<TableType> = ({
 
   const handleChangeLimit = (value: number) => {
     if (keyPage) {
-      dispatch(updateQueryParams({ key: keyPage, value: { limit: value || 10 } }));
+      dispatch(updateQueryParams({ key: keyPage, value: { limit: value || 10, page: 1 } }));
     }
   };
 

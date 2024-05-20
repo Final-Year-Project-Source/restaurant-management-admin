@@ -5,21 +5,6 @@ import { CategoryType } from '@/types/categories.types';
 import { ModifierType } from '@/types/modifiers.types';
 import { DiningTableType } from '@/types/tables.types';
 
-// export const ITEMS = [
-//   { value: 'bills', label: 'Bills' },
-//   { value: 'kitchen-display', label: 'Kitchen-display' },
-//   { value: 'sales-summary', label: '' },
-//   { value: 'sales-by-item', label: 'Món ăn' },
-//   { value: 'products', label: 'Món ăn' },
-//   { value: 'modifiers', label: 'Lựa chọn' },
-//   { value: 'menu-categories', label: 'Danh mục' },
-//   { value: 'groups', label: 'Nhóm' },
-//   { value: 'discounts', label: 'Loại giảm giá' },
-//   { value: 'tables', label: 'Bàn ăn' },
-//   { value: 'employees', label: 'nhân viên' },
-//   { value: 'feedbacks', label: 'Đánh giá' },
-// ];
-
 export const DIETARY_RESTRICTIONS = [
   { value: 'vegan', label: 'Vegan' },
   { value: 'vegetarian', label: 'Vegetarian' },
@@ -75,8 +60,8 @@ export const convertStocksToOptions = (stocks: { [key: string]: number }): { lab
 
   return [
     { label: `In stock`, value: 'in stock' },
-    { label: `Low stock (${stocks?.[STOCK_STATUSES.LOW_STOCK]})`, value: 'low stock' },
-    { label: `Out of stock (${stocks?.[STOCK_STATUSES.OUT_OF_STOCK]})`, value: 'out of stock' },
+    { label: `Low stock (${stocks?.LOW_STOCK})`, value: 'low stock' },
+    { label: `Out of stock (${stocks?.OUT_OF_STOCK})`, value: 'out of stock' },
   ];
 };
 
@@ -87,7 +72,7 @@ export const convertModifiersToOptions = (modifiers: ModifierType[] = []): { lab
 
   return modifiers.map((modifier) => ({
     label: modifier.name,
-    value: modifier._id.toString(),
+    value: modifier.id.toString(),
     subTitle: modifier.modifier_options.map((option) => option.name).join(', '),
   }));
 };
@@ -102,7 +87,7 @@ export const convertCategoriesToOptions = (
 
   return categories.map((category) => ({
     label: category.name,
-    value: type === 'id' ? category._id || '' : lowerCase(category?.name) || '',
+    value: type === 'id' ? category.id || '' : lowerCase(category?.name) || '',
   }));
 };
 
@@ -113,7 +98,7 @@ export const convertDiscountToOptions = (discountsList: DiscountType[] = []): { 
 
   return discountsList?.map((item: any) => ({
     label: item.type === 'FIXED_PERCENT' ? `${item.name} (${item.value}%)` : `${item.name} (฿${item.value})`,
-    value: item._id,
+    value: item.id,
   }));
 };
 
@@ -124,7 +109,7 @@ export const convertGroupsToOptions = (groups: GroupType[] = [], type?: string):
 
   return groups.map((group) => ({
     label: group?.name || '',
-    value: type === 'id' ? group?._id || '' : lowerCase(group?.name) || '',
+    value: type === 'id' ? group?.id || '' : lowerCase(group?.name) || '',
   }));
 };
 
@@ -134,7 +119,7 @@ export const convertTablesToOptions = (tables: DiningTableType[] = []): { label:
   }
   return tables.map((table) => ({
     label: table.name,
-    value: table._id.toString(),
+    value: table.id.toString(),
   }));
 };
 
@@ -189,9 +174,10 @@ export const ROLE_FILTER = [
     id: 1,
     title: 'Roles',
     statuses: [
-      { label: 'Standard', value: 'standard' },
-      { label: 'Manager', value: 'manager' },
-      { label: 'Administrator', value: 'administrator' },
+      { label: 'Standard', value: 'Standard' },
+      { label: 'Manager', value: 'Manager' },
+      { label: 'Administrator', value: 'Administrator' },
+      { label: 'User', value: 'User' },
     ],
   },
 ];
@@ -199,6 +185,7 @@ export const ROLE_EMPLOYEE = [
   { label: 'Standard', value: 'Standard' },
   { label: 'Manager', value: 'Manager' },
   { label: 'Administrator', value: 'Administrator' },
+  { label: 'User', value: 'User' },
 ];
 export const ROWSPERPAGE = [
   { label: '10 per page', value: 10 },
@@ -211,7 +198,7 @@ export const PAGINATIONLIMIT = [10, 25, 50, 100];
 export const DEFAULT_ORDER_STATUSES = 'ordering,preparing,partially completed,completed,cancelled';
 export const DEFAULT_ITEM_STATUSES = 'preparing,completed,cancelled';
 export const DEFAULT_PAYMENT_STATUSES = 'paid,unpaid,refunded';
-export const DEFAULT_ROLE_FILTER = ['standard', 'manager', 'administrator'];
+export const DEFAULT_ROLE_FILTER = ['Standard', 'Manager', 'Administrator', 'User'];
 export const STICKY_HEADER_HEIGHT = 77;
 export const FOOTER_HEIGHT = 85;
 export const PADDING_TO_HEADER = 20;
@@ -255,3 +242,6 @@ export const FOOTER_HEIGHT_SAVE = 101;
 export const HEADER_HEIGHT_BUTTON = 50;
 export const PADDING_HEADER_TO_BODY = 30;
 export const PADDING_BOTTOM_TO_SCROLL = 20;
+
+//menu page
+export const PADDING_BOTTOM_MENU = 40;

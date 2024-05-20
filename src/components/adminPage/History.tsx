@@ -124,7 +124,7 @@ const History: React.FC<HistoryProps> = ({ bill, isLoading }) => {
                                     <div className="flex flex-col mt-[7px] max-w-[80%] text-[11px] text-black-500">
                                       {item.modifiers_info.map((modifier: any, index: number) => (
                                         <div key={index} className={`flex items-center justify-between font-open-sans`}>
-                                          <div> Thêm {modifier.name}</div>
+                                          <div> Add {modifier.name}</div>
                                           {modifier?.price > 0 && (
                                             <div>
                                               <div className=" text-black-400">+ {modifier.price}</div>
@@ -151,7 +151,7 @@ const History: React.FC<HistoryProps> = ({ bill, isLoading }) => {
                                   <div
                                     className={`flex space-x-[5px] text-[11px] text-black-500 mt-[7px] ${open_sans.className}`}
                                   >
-                                    <div>Ghi chú: {item.notes}</div>
+                                    <div>Notes: {item.notes}</div>
                                   </div>
                                 )}
                                 <div className="flex space-x-[10px] mt-[15px]">
@@ -174,7 +174,7 @@ const History: React.FC<HistoryProps> = ({ bill, isLoading }) => {
                           setBuyerInfo(event.tax_invoice_info);
                         }}
                       >
-                        Tải xuống
+                        Download
                       </Button>
                     )}
                   </>

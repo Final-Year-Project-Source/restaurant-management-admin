@@ -18,6 +18,7 @@ export const billApi = createApi({
         payment_statuses?: string;
         end_time?: string;
         start_time?: string;
+        access_token: string;
       }
     >({
       query: (arg) => ({
@@ -25,21 +26,20 @@ export const billApi = createApi({
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${arg.access_token}`,
         },
       }),
       providesTags: ['Bill'],
     }),
     getSingleBill: builder.query<any, { id: string }>({
-      query: (arg) => `bill?id=${arg.id}`,
+      query: (arg) => `bill/${arg.id}`,
       providesTags: ['Bill'],
     }),
     addBill: builder.mutation<any, { data: object }>({
       query: ({ data }) => ({
         url: 'bill',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,71 +50,65 @@ export const billApi = createApi({
       query: ({ data }) => ({
         url: 'bill',
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    refundBill: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    refundBill: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: 'refund',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    cancelBill: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `bill/?id=${id}`,
+    cancelBill: builder.mutation<any, { id: string; access_token: string }>({
+      query: ({ id, access_token }) => ({
+        url: `bill/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeTableBill: builder.mutation<any, { data: object; id: string }>({
-      query: ({ data, id }) => ({
-        url: `diningTable/?id=${id}`,
-        method: 'OPTIONS',
-        body: {
-          data,
-        },
+    changeTableBill: builder.mutation<any, { data: object; id: string; access_token: string }>({
+      query: ({ data, id, access_token }) => ({
+        url: `diningTable/${id}`,
+        method: 'POST',
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeDiscount: builder.mutation<any, { data: object; id: string }>({
-      query: ({ data, id }) => ({
-        url: `discount/?id=${id}`,
+    changeDiscount: builder.mutation<any, { data: object; id: string; access_token: string }>({
+      query: ({ data, id, access_token }) => ({
+        url: `discount/${id}`,
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeCustomerName: builder.mutation<any, { data: object; bill_id: string }>({
-      query: ({ data, bill_id }) => ({
-        url: `customer/?bill_id=${bill_id}`,
+    changeCustomerName: builder.mutation<any, { data: object }>({
+      query: ({ data }) => ({
+        url: `customer`,
         method: 'PUT',
-        body: {
-          data,
-        },
+        body: data,
         headers: {
           'Content-Type': 'application/json',
         },
@@ -125,45 +119,43 @@ export const billApi = createApi({
       query: ({ data }) => ({
         url: 'payment',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
       }),
       // invalidatesTags: ['Bill'],
     }),
     createCashPaymentReceipt: builder.mutation<any, { id: string }>({
       query: ({ id }) => ({
-        url: `receipt/?id=${id}`,
+        url: `receipt/${id}`,
         method: 'PUT',
       }),
       invalidatesTags: ['Bill'],
     }),
-    reopenBill: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `reopenBill?id=${id}`,
+    reopenBill: builder.mutation<any, { id: string; access_token: string }>({
+      query: ({ id, access_token }) => ({
+        url: `reopenBill/${id}`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Bill'],
     }),
-    changeItemQuantity: builder.mutation<any, { data: object }>({
-      query: ({ data }) => ({
+    changeItemQuantity: builder.mutation<any, { data: object; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: `item`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        body: {
-          data,
-        },
+        body: data,
       }),
       invalidatesTags: ['Bill'],
     }),
     deleteBill: builder.mutation<any, { data: any }>({
       query: ({ data }) => ({
-        url: `bill?id=${data.id}`,
+        url: `bill${data.id}`,
         method: 'DELETE',
         body: {
           data,
@@ -178,9 +170,7 @@ export const billApi = createApi({
       query: ({ data }) => ({
         url: 'taxinvoice',
         method: 'POST',
-        body: {
-          data,
-        },
+        body: data,
       }),
       invalidatesTags: ['Bill'],
     }),

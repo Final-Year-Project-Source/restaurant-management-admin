@@ -12,6 +12,7 @@ import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { ColumnsType } from 'antd/es/table';
 import { debounce } from 'lodash';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +26,9 @@ export default function Modifier() {
   const [dataSource, setDataSource] = useState<ModifierType[]>([]);
   const [isOpenSearch, setIsOpenSearch] = useState(false);
   const queryParams = useSelector((state: RootState) => state.queryParams.modifiers);
+
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
 
   const searchUrl = searchParams.get('search') || '';
   const [dragModifier, isLoading] = useDragModifierMutation();
@@ -62,7 +66,7 @@ export default function Modifier() {
     Modifiers &&
     Modifiers.map((modifier: ModifierType, index: number) => ({
       key: index + 1,
-      _id: modifier._id,
+      id: modifier.id,
       name: modifier.name,
       position: modifier.position,
       modifier_options: modifier.modifier_options,
@@ -75,7 +79,8 @@ export default function Modifier() {
   }, [Modifiers]);
 
   useEffect(() => {
-    dragModifier({ data: { listModifier: dataSource } })
+    if (!dataSource.length) return;
+    dragModifier({ data: { listModifier: dataSource }, access_token })
       .unwrap()
       .then(() => {})
       .catch((err) => toast.error(err?.data?.message));
@@ -115,7 +120,7 @@ export default function Modifier() {
   };
 
   const handleClickRow = (record: any) => {
-    router.push(`modifiers/edit?id=${record?._id}`);
+    router.push(`modifiers/edit?id=${record?.id}`);
 
     return {};
   };

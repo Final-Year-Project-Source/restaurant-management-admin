@@ -2,6 +2,7 @@
 import React from 'react';
 import CountButton from '@/components/button/CountButton';
 import { open_sans } from '@/utils/fontUtils';
+import { formatPrice } from '@/utils/commonUtils';
 import ProductImage from '@/components/productImage';
 import Tag from '@/components/tag/tag';
 
@@ -35,15 +36,15 @@ const ProductItem: React.FC<ItemsProps> = ({
           className={`text-[11px] text-start text-black-500 mt-[7px] ${open_sans.className}`}
           dangerouslySetInnerHTML={{ __html: description || '' }}
         />
-        <div className="flex items-center justify-between mt-[9px]">
+        <div className="flex items-center justify-between mt-[9px] flex-wrap">
           {(discountPrice! < price && (
             <div className="flex space-x-[3px]">
-              <div className="text-[14px] text-black-400 line-through">{price}</div>
-              <div className="text-[14px] text-black-500">{discountPrice}</div>
+              <div className="text-[14px] text-black-400 line-through">{formatPrice(price)}</div>
+              <div className="text-[14px] text-black-500">{formatPrice(discountPrice || 0)}</div>
             </div>
-          )) || <div className="text-[14px] text-black-400">{price}</div>}
+          )) || <div className="text-[14px] text-black-400">{formatPrice(price)}</div>}
           <div className="flex space-x-[10px]">
-            {!track_stock && <Tag text="Hết hàng" />}
+            {!track_stock && <Tag className="!w-full" text="Out of stock"></Tag>}
             {track_stock && (
               <CountButton
                 className="btn--add-to-basket"

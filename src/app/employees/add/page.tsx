@@ -8,12 +8,13 @@ import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { useCreateNewUserMutation } from '@/redux/services/employeeApi';
 import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL, ROLE_EMPLOYEE } from '@/utils/constants';
 import { useFormik } from 'formik';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useRef } from 'react';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 export interface UserType {
-  _id: string;
+  id: string;
   key: React.Key;
   name: string;
   email: string;
@@ -28,11 +29,14 @@ const schema = Yup.object().shape({
   role: Yup.string().required('Missing role'),
 });
 
-const EditEmployee = () => {
+const AddEmployee = () => {
   const router = useRouter();
   const { isMobile, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
   const { scrollBottom } = useScrollbarState(bodyRef);
+
+  const { data: session } = useSession();
+  const access_token = session?.user?.access_token || '';
 
   const [createEmployee, { isLoading: isCreating }] = useCreateNewUserMutation();
 
@@ -49,7 +53,7 @@ const EditEmployee = () => {
         email: values.email.trim().toLowerCase(),
         role: values.role,
       };
-      createEmployee({ data: dataUpdate })
+      createEmployee({ access_token: access_token, data: dataUpdate })
         .unwrap()
         .then(() => {
           // resetForm()
@@ -149,4 +153,4 @@ const EditEmployee = () => {
     </div>
   );
 };
-export default EditEmployee;
+export default AddEmployee;

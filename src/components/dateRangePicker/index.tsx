@@ -15,7 +15,7 @@ interface DateRangePickerProps {
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({ dateRange, onChange }) => {
-  const [activeIndex, setActiveIndex] = useState<string | null>('Tuần này');
+  const [activeIndex, setActiveIndex] = useState<string | null>('This week');
   const [startDate, endDate] = dateRange;
   const [isOpen, setIsOpen] = useState(true);
   const { isMobile, width } = useWindowDimensions();
@@ -115,7 +115,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ dateRange, onChange }
                 <button
                   key={index}
                   type="button"
-                  className={`btn-customized text-sm text-start hover:bg-black-100 py-[5px] px-[10px] rounded-2xl w-[120px] 
+                  className={`btn-customized text-sm text-start hover:bg-black-100 py-[5px] px-[10px] rounded-2xl w-[94px] 
                   ${activeIndex == item.label ? 'bg-black-500 text-white hover:text-black hover:bg-black-500' : ''}`}
                   onClick={() => {
                     handlePresetClick(item.label, item.value);
@@ -136,7 +136,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ dateRange, onChange }
     <DatePicker
       onInputClick={() => setIsOpen(true)}
       className={`range-input-customized ${isMobile ? `!w-[${width - 40}px]` : ''}`}
-      dateFormat="dd/MM/yyyy"
+      dateFormat="dd MMM yyyy"
       selectsRange
       startDate={startDate}
       endDate={endDate}
@@ -159,14 +159,14 @@ export default DateRangePicker;
 
 const rangePresets = [
   {
-    label: 'Ngày hôm nay',
+    label: 'Today',
     value: {
       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
       endDate: new Date(),
     },
   },
   {
-    label: 'Ngày hôm qua',
+    label: 'Yesterday',
     value: {
       startDate: (() => {
         const yesterdayStartDate = new Date();
@@ -183,7 +183,7 @@ const rangePresets = [
     },
   },
   {
-    label: 'Tuần này',
+    label: 'This week',
     value: {
       startDate: (() => {
         const thisWeekStartDate = new Date();
@@ -195,7 +195,7 @@ const rangePresets = [
     },
   },
   {
-    label: 'Tuần trước',
+    label: 'Last week',
     value: {
       startDate: (() => {
         const lastWeekStartDate = new Date();
@@ -212,7 +212,7 @@ const rangePresets = [
     },
   },
   {
-    label: 'Tháng này',
+    label: 'This month',
     value: {
       startDate: (() => {
         const thisMonthStartDate = new Date();
@@ -224,7 +224,7 @@ const rangePresets = [
     },
   },
   {
-    label: 'Tháng trước',
+    label: 'Last month',
     value: {
       startDate: (() => {
         const lastMonthStartDate = new Date();

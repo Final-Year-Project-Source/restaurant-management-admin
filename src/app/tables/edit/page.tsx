@@ -42,10 +42,9 @@ const EditTable = () => {
   const { data: session } = useSession();
   const { data: singleTable, isLoading } = useGetSingleDiningTableQuery({ id: id }, { skip: !id });
   const table = singleTable?.data as DiningTableType;
-  const { data: discountsRes, isLoading: isFetchingDiscount } = useGetDiscountsQuery();
+  const { data: discountsList, isLoading: isFetchingDiscount } = useGetDiscountsQuery();
   const [deleteDiningTable, { isLoading: isDeleteLoading }] = useDeleteDiningTableMutation();
   const [updateDiningTable, { isLoading: isUpdateLoading }] = useUpdateDiningTableMutation();
-  const discountsList = discountsRes?.data;
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
 
   useEffect(() => {
@@ -67,12 +66,12 @@ const EditTable = () => {
     validationSchema: schema,
     onSubmit: async (values) => {
       const dataUpdate = {
-        id: table?._id,
+        id: table?.id,
         name: values.name.trim(),
         discount: values.discount,
         location: values.location.trim(),
       };
-      updateDiningTable({ access_token: session?.user?.access_token || '', data: dataUpdate })
+      updateDiningTable({ data: dataUpdate })
         .unwrap()
         .then(() => {
           router.push('/tables');
@@ -127,7 +126,7 @@ const EditTable = () => {
   };
 
   const handleOkDelete = () => {
-    deleteDiningTable({ data: { id: table?._id }, access_token: session?.user?.access_token || '' })
+    deleteDiningTable({ data: { id: table?.id }, access_token: session?.user?.access_token || '' })
       .unwrap()
       .then((response) => {
         setIsModalDeleteOpen(false);
@@ -253,7 +252,7 @@ const EditTable = () => {
                   placeholder="Select discount"
                   options={discountsList?.map((item: any) => ({
                     label: renderDiscount(item),
-                    value: item._id,
+                    value: item.id,
                     searchLabel: item.name,
                   }))}
                   value={values.discount || '-'}

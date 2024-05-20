@@ -8,13 +8,15 @@ export const loginApi = createApi({
   }),
   tagTypes: ['Login'],
   endpoints: (builder) => ({
-    loginFirstStep: builder.mutation<any, { data: any }>({
+    login: builder.mutation<any, { data: { email: string; password: string } }>({
       query: ({ data }) => ({
-        url: 'auth/login-1-step',
+        url: 'auth/login',
         method: 'POST',
         body: {
-          data,
+          email: data.email,
+          password: data.password,
         },
+
         headers: {
           'Content-Type': 'application/json',
         },
@@ -52,4 +54,4 @@ export const loginApi = createApi({
   }),
 });
 
-export const { useLoginFirstStepMutation, useLoginSecondStepMutation, useChangeDefaultPasswordMutation } = loginApi;
+export const { useLoginMutation, useLoginSecondStepMutation, useChangeDefaultPasswordMutation } = loginApi;
