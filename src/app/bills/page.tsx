@@ -1,9 +1,9 @@
 'use client';
 import InputText from '@/components/adminPage/Input';
+import { SortArrows } from '@/components/adminPage/SortIcons';
 import DateRangePicker from '@/components/dateRangePicker';
 import CustomizedDrawer from '@/components/drawer';
 import Dropdown from '@/components/dropdown/Dropdown';
-import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
 import CustomizedModal from '@/components/modal';
 import Stars from '@/components/stars';
 import Table from '@/components/table/Table';
@@ -16,8 +16,21 @@ import { useGetDiscountsQuery } from '@/redux/services/discountApi';
 import { useGetDiningTablesQuery } from '@/redux/services/tableApi';
 import { RootState } from '@/redux/store';
 import { BillType } from '@/types/bills.types';
-import { getFormatDateTime, getSelectedItems, itemsCount, serializeFilters } from '@/utils/commonUtils';
-import { DEFAULT_ORDER_STATUSES, DEFAULT_PAYMENT_STATUSES, PAGINATIONLIMIT, BILL_STATUSES } from '@/utils/constants';
+import {
+  getFormatDateTime,
+  getSelectedItems,
+  itemsCount,
+  serializeFilters,
+  validateAndConvertDate,
+} from '@/utils/commonUtils';
+import {
+  DEFAULT_ORDER_STATUSES,
+  DEFAULT_PAYMENT_STATUSES,
+  PAGINATIONLIMIT,
+  BILL_STATUSES,
+  endDateDefault,
+  startDateDefault,
+} from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table';
 import { useFormik } from 'formik';
 import { debounce } from 'lodash';
@@ -33,19 +46,6 @@ const schema = Yup.object().shape({
   customer_name: Yup.string().required('Missing Customer Name'),
 });
 
-const startDateDefault = (() => {
-  const thisWeekStartDate = new Date();
-  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
-  thisWeekStartDate.setHours(0, 0, 0, 0);
-  return thisWeekStartDate;
-})();
-
-const endDateDefault = (() => {
-  const thisDate = new Date();
-  thisDate.setHours(23, 59, 59, 59);
-  return thisDate;
-})();
-
 function validateStatus(orderStatus: any, defaultOrderStatus: any) {
   const uniqueOrderStatus = Array.from(new Set(orderStatus));
   return uniqueOrderStatus
@@ -60,11 +60,12 @@ const Bills = () => {
   const { isMobile, width } = useWindowDimensions();
   const { data: session } = useSession();
   const access_token = session?.user?.access_token || '';
-  const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery({ access_token: access_token });
-  const { data: discountsList, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
+  const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery({ access_token });
+  const { data: allDiscounts, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
   const [addBill, { isLoading: isCreateBillLoading }] = useAddBillMutation();
   const [isBillCreating, setIsBillCreating] = useState(false);
   const diningTableList = allDiningTables?.data;
+  const discountsList = allDiscounts?.data;
 
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const [isOpenSearchInput, setIsOpenSearchInput] = useState(false);
@@ -72,9 +73,11 @@ const Bills = () => {
   const [isOpenDrawerNewBill, setIsOpenDrawerNewBill] = useState(false);
 
   const queryParams = useSelector((state: RootState) => state.queryParams.bills);
+  const kdsQueryParams = useSelector((state: RootState) => state.queryParams['kitchen-display']);
 
   const { data: allBills, isFetching } = useGetBillsQuery(
     {
+      access_token: access_token,
       page: queryParams?.page || 1,
       limit: queryParams?.limit || 10,
       search: queryParams?.search || '',
@@ -82,10 +85,11 @@ const Bills = () => {
       order_statuses: queryParams?.orderStatus?.join(',') || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
-      access_token: access_token,
     },
     { refetchOnMountOrArgChange: true },
   );
+  const endDateToString = endDateDefault.toISOString();
+  const startDateToString = startDateDefault.toISOString();
 
   //Get Search, Status, Time from URL
   const defaultOrderStatus = DEFAULT_ORDER_STATUSES.split(',')
@@ -96,9 +100,10 @@ const Bills = () => {
     .filter((status) => status.length > 1);
 
   let searchParam = searchParams?.get('search') || '';
-  let startTimeParam = searchParams?.get('start_time');
-  let endTimeParam = searchParams?.get('end_time');
+  let startTimeParam = searchParams?.get('start_time') || '';
+  let endTimeParam = searchParams?.get('end_time') || '';
   let page = parseInt(searchParams?.get('page') || '1');
+  let sortByDate = searchParams?.get('sort_by_date');
   let limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams?.get('limit') || '10'))
     ? parseInt(searchParams?.get('limit') || '') || 10
     : 10;
@@ -107,8 +112,32 @@ const Bills = () => {
     if (!isNaN(total)) {
       return Math.ceil(total / limitUrl);
     }
+    return 1;
   }, [allBills, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+
+  const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
+
+  const [startTimeUrl, endTimeUrl] = useMemo(() => {
+    const validateStartTime = validateAndConvertDate(startTimeParam, startDateToString);
+    const validateEndTime = validateAndConvertDate(endTimeParam, endDateToString);
+
+    const startTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateStartTime) >= Date.parse(validateEndTime)
+          ? startDateToString
+          : validateStartTime
+        : undefined;
+
+    const endTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateEndTime) <= Date.parse(validateStartTime) ||
+          Date.parse(validateEndTime) > Date.parse(endDateToString)
+          ? endDateToString
+          : validateEndTime
+        : undefined;
+
+    return [startTime, endTime];
+  }, [startTimeParam, endTimeParam]);
 
   const orderStatusParam = validateStatus(
     (searchParams?.get('order_status') || '')
@@ -117,6 +146,7 @@ const Bills = () => {
       .filter((status) => status.length > 1),
     defaultOrderStatus,
   );
+
   const paymentStatusParam = validateStatus(
     (searchParams?.get('payment_status') || '')
       .split(',')
@@ -127,19 +157,14 @@ const Bills = () => {
 
   useEffect(() => {
     let URL = '/bills?';
-    if (
-      !queryParams?.search &&
-      !queryParams?.orderStatus?.length &&
-      !queryParams?.paymentStatus?.length &&
-      !queryParams?.endTime &&
-      !queryParams?.startTime
-    ) {
+    let KDS_URL = '/kitchen-display?';
+    if (!queryParams?.visited) {
       URL += serializeFilters({
         search: '',
         orderStatus: defaultOrderStatus,
         paymentStatus: defaultPaymentStatus,
-        startTime: startDateDefault.toISOString(),
-        endTime: endDateDefault.toISOString(),
+        startTime: queryParams?.startTime || startDateToString,
+        endTime: queryParams?.endTime || endDateToString,
         page: 1,
         limit: 10,
       });
@@ -153,9 +178,30 @@ const Bills = () => {
         page: queryParams?.page || 1,
         limit: queryParams?.limit || 10,
       });
+      KDS_URL += serializeFilters({
+        search: kdsQueryParams?.search || '',
+        orderStatus: kdsQueryParams?.orders || [],
+        groups: kdsQueryParams?.groups || [],
+        endTime: queryParams?.endTime || '',
+        startTime: queryParams?.startTime || '',
+      });
     }
-
+    setDateRange([
+      new Date(queryParams?.startTime) || startDateDefault,
+      new Date(queryParams?.endTime) || endDateDefault,
+    ]);
+    dispatch(
+      updateQueryParams({
+        key: 'kitchen-display',
+        value: {
+          ...kdsQueryParams,
+          endTime: queryParams?.endTime,
+          startTime: queryParams?.startTime,
+        },
+      }),
+    );
     router.push(URL);
+    dispatch(updateURLPages({ 'kitchen-display': `${KDS_URL}` }));
   }, [
     queryParams?.search,
     queryParams?.orderStatus,
@@ -164,24 +210,29 @@ const Bills = () => {
     queryParams?.endTime,
     queryParams?.startTime,
     queryParams?.limit,
+    queryParams?.sortByDate,
+    queryParams?.visited,
   ]);
 
   useEffect(() => {
-    if (searchParams) {
+    if (orderStatusParam?.length || paymentStatusParam?.length) {
       setIsOpenSearchInput(!!queryParams?.search);
-      setDateRange([new Date(startTimeParam || startDateDefault), new Date(endTimeParam || endDateDefault)]);
+      setDateRange([new Date(startTimeUrl || ''), new Date(endTimeUrl || '')]);
+
       dispatch(
         updateQueryParams({
           key: 'bills',
           value: {
             ...queryParams,
+            visited: true,
             search: searchParam || '',
             orderStatus: orderStatusParam,
             paymentStatus: paymentStatusParam,
-            endTime: endTimeParam,
-            startTime: startTimeParam,
+            endTime: endTimeUrl,
+            startTime: startTimeUrl,
             page: pageUrl,
             limit: limitUrl,
+            sortByDate: sortByDate || 'desc',
           },
         }),
       );
@@ -196,8 +247,10 @@ const Bills = () => {
 
   const handleChangeDateRangePicker = (startDate: Date | null, endDate: Date | null) => {
     setDateRange([startDate, endDate]);
+
     const formattedStartDate = startDate ? startDate.toISOString() : null;
     const formattedEndDate = endDate ? endDate.toISOString() : null;
+
     if (!!endDate && !!startDate && endDate > startDate) {
       const valuesToUpdate = {
         startTime: formattedStartDate,
@@ -248,7 +301,7 @@ const Bills = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (฿${item.value})`
+              ? `${item.name} (VND${item.value})`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||
@@ -265,8 +318,10 @@ const Bills = () => {
           id="statuses"
           mode="multiple"
           labelItem={getSelectedItems(
-            (queryParams?.orderStatus || defaultOrderStatus).concat(queryParams?.paymentStatus || defaultPaymentStatus),
-            defaultOrderStatus.concat(defaultPaymentStatus),
+            (queryParams?.orderStatus || BILL_STATUSES[0].statuses).concat(
+              queryParams?.paymentStatus || BILL_STATUSES[1].statuses,
+            ),
+            BILL_STATUSES[0].statuses.concat(BILL_STATUSES[1].statuses),
             'All Statuses',
           )}
           labelAll="Show all statuses"
@@ -302,7 +357,7 @@ const Bills = () => {
       })
         .unwrap()
         .then((res) => {
-          router.push(`bills/${res?.data?.id}?tab=bill`);
+          router.push(`bills/${res?.data?._id}?tab=bill`);
         })
         .catch((error) => {
           toast.error(error.data.message);
@@ -312,7 +367,13 @@ const Bills = () => {
         });
     },
   });
-
+  const OnChangeSorter = (pagination: any, filters: any, sorter: any) => {
+    if (sorter.field === 'createdAt') {
+      handleUpdateParamsToURL({
+        sortByDate: sorter.order === 'ascend' ? 'asc' : 'desc',
+      });
+    }
+  };
   const { errors, touched, values, handleChange, handleSubmit, resetForm, setValues, submitForm } = formik;
 
   const data = [...(allBills?.data || [])]
@@ -332,14 +393,14 @@ const Bills = () => {
       dataIndex: 'createdAt',
       width: isMobile ? 90 : 150,
       showSorterTooltip: false,
-      defaultSortOrder: 'descend',
+      defaultSortOrder: queryParams?.sortByDate === 'asc' ? 'ascend' : 'descend',
       sortDirections: ['ascend'],
       sorter: (a, b) => {
         const dateA = new Date(a.created_at).getTime();
         const dateB = new Date(b.created_at).getTime();
         return dateA - dateB;
       },
-      sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
+      sortIcon: ({ sortOrder }) => <>{SortArrows(sortOrder || '')}</>,
       render: (createdAt) => <p>{createdAt}</p>,
     },
     {
@@ -387,11 +448,11 @@ const Bills = () => {
           id="table_id"
           mode="tags"
           height={48}
-          placeholder="Select table"
+          placeholder="-"
           label="Table name"
           options={diningTableList?.map((item: any) => ({
             label: `${item.name} (${item.location})`,
-            value: item.id,
+            value: item._id,
           }))}
           value={values.table_id}
           onChange={(value) => handleChange({ target: { id: 'table_id', value } })}
@@ -420,7 +481,7 @@ const Bills = () => {
           // options={convertDiscountToOptions(discountsList)}
           options={discountsList?.map((item: any) => ({
             label: renderDiscount(item),
-            value: item.id,
+            value: item._id,
             searchLabel: item.name,
           }))}
           value={values.discount_id}
@@ -435,6 +496,7 @@ const Bills = () => {
       <Table
         columns={columns}
         title="New bill"
+        onChangeTable={OnChangeSorter}
         dataSource={data}
         isLoading={isFetching || isLoadingDiscount || isLoadingTable}
         cursorPointerOnRow

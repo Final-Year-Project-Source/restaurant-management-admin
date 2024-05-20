@@ -1,3 +1,4 @@
+import { formatPrice } from '@/utils/commonUtils';
 import { open_sans } from '@/utils/fontUtils';
 import { FC } from 'react';
 
@@ -24,7 +25,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({
 }) => {
   const discount_text = discount
     ? discount?.type === 'FIXED_AMOUNT'
-      ? `฿${discount?.value}`
+      ? ` VND ${formatPrice(discount?.value)}`
       : `${discount?.value}%`
     : null;
   return (
@@ -33,25 +34,25 @@ const OrderSummary: FC<OrderSummaryProps> = ({
         {discountAmount! > 0 && (
           <div className="flex items-center justify-between ">
             <span>{discount_text} Discount</span>
-            <span>-{discountAmount}</span>
+            <span>-{formatPrice(discountAmount || 0)}</span>
           </div>
         )}
         <div className="flex items-center justify-between ">
           <span>Subtotal</span>
-          <span>{subTotal}</span>
+          <span>{formatPrice(subTotal)}</span>
         </div>
         <div className="flex items-center justify-between">
           <span>10% Service Charge</span>
-          <span>{serviceCharge}</span>
+          <span>{formatPrice(serviceCharge)}</span>
         </div>
         <div className="flex items-center justify-between">
           <span>7% VAT</span>
-          <span>{vat}</span>
+          <span>{formatPrice(vat)}</span>
         </div>
       </div>
       <div className="flex items-center justify-between text-sm  font-normal">
         <span>Total</span>
-        <span>{total}</span>
+        <span>{formatPrice(total)}</span>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ const CardsReport: React.FC<CardProps> = ({ data, handleChange, className, isFee
         <div key={index}>
           {group?.title && <div className="font-bold text-[17px] my-3">{group?.title}</div>}
           <div className={`${className || ''} snap-x flex m-[-10px] w-full`}>
-            {group.options.map((item: SalesItem, idx: number) => (
+            {group?.options?.map((item: SalesItem, idx: number) => (
               <button
                 type="button"
                 key={idx}

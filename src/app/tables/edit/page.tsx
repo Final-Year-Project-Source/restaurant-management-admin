@@ -40,6 +40,7 @@ const EditTable = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
   const { data: session } = useSession();
+  const access_token = session?.user.access_token || '';
   const { data: singleTable, isLoading } = useGetSingleDiningTableQuery({ id: id }, { skip: !id });
   const table = singleTable?.data as DiningTableType;
   const { data: discountsList, isLoading: isFetchingDiscount } = useGetDiscountsQuery();
@@ -71,7 +72,7 @@ const EditTable = () => {
         discount: values.discount,
         location: values.location.trim(),
       };
-      updateDiningTable({ data: dataUpdate })
+      updateDiningTable({ data: dataUpdate, access_token })
         .unwrap()
         .then(() => {
           router.push('/tables');
@@ -114,7 +115,7 @@ const EditTable = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (฿${item.value})`
+              ? `${item.name} (VND${item.value})`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||

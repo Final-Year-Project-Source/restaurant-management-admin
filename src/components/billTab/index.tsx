@@ -6,6 +6,7 @@ import OrderSummary from '../user-app-components/orderSummary';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { Empty, Skeleton } from 'antd';
 import SettlementButton from '../SettlementButton';
+import { formatPrice } from '@/utils/commonUtils';
 
 interface Props {
   paymentStatus?: 'Cancelled' | 'Unpaid' | 'Paid' | 'Refunded';
@@ -196,7 +197,7 @@ const BillTab: React.FC<Props> = ({
                       onClick={onClickRecordPaymentButton}
                       disabled={!isEDCPaymentButtonActive && !isBeamPaymentButtonActive}
                     >
-                      Record payment ・ {total}
+                      Record payment ・ {formatPrice(total)}
                     </Button>
                   </div>
                 </div>

@@ -191,6 +191,10 @@ export const serializeFilters = (filters: {
   roleFilter?: string[];
   startHour?: number | string;
   endHour?: number | string;
+  sortByNoSold?: string;
+  sortByNetSales?: string;
+  sortByEstProfit?: string;
+  sortByDate?: string;
 }): string => {
   const {
     search,
@@ -206,6 +210,10 @@ export const serializeFilters = (filters: {
     roleFilter,
     startHour,
     endHour,
+    sortByNoSold,
+    sortByNetSales,
+    sortByEstProfit,
+    sortByDate,
   } = filters;
   let queryParams = '';
   if (page) {
@@ -240,6 +248,18 @@ export const serializeFilters = (filters: {
   }
   if (endHour) {
     queryParams += 'end_hour=' + endHour + '&';
+  }
+  if (sortByNoSold) {
+    queryParams += 'sort_by_no_sold=' + sortByNoSold + '&';
+  }
+  if (sortByNetSales) {
+    queryParams += 'sort_by_net_sales=' + sortByNetSales + '&';
+  }
+  if (sortByEstProfit) {
+    queryParams += 'sort_by_est_profit=' + sortByEstProfit + '&';
+  }
+  if (sortByDate) {
+    queryParams += 'sort_by_date=' + sortByDate + '&';
   }
   if (startTime) {
     queryParams += 'start_time=' + startTime + '&';
@@ -315,12 +335,20 @@ export const generateChartData = (salesSummaryData: any, typeChart: any) => {
   };
 };
 
-export const formatPrice = (price: number | string) => {
-  if (!price) return '0.00';
+export const formatPrice = (price: number | string): string => {
+  if (!price) return '0';
 
-  const roundedPrice = (Math.round(Number(price) * 100) / 100).toFixed(2);
+  const roundedPrice = Math.round(Number(price));
 
-  return parseFloat(roundedPrice).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-  });
+  return roundedPrice.toLocaleString('en-US').replace(/,/g, '.');
+};
+
+export const validateAndConvertDate = (dateString: string, defaultDateValue: string) => {
+  if (!dateString) return defaultDateValue;
+
+  if (isNaN(Date.parse(dateString))) {
+    return defaultDateValue;
+  }
+
+  return dateString;
 };

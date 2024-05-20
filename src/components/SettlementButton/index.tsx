@@ -41,15 +41,15 @@ const SettlementButton: React.FC<Props> = ({
       <div
         className={`min-[1200px]:pl-[71px]  min-[1000px]:pl-[41px] pl-[7%] py-[15px] ${isActive && 'cursor-default'}`}
       >
-        <div className="flex flex-row md:space-x-[28px] space-x-[24px] items-center">
+        <div className="flex flex-row md:space-x-[28px] space-x-[24px] items-center h-[48px]">
           {isActive ? <TelePhoneActiveIcon /> : disabled ? <TelePhoneIcon /> : <TelePhoneIcon />}
-          <div className="flex flex-col items-start justify-center">
-            <label className={`${isActive ? `text-white` : `text-black-500`} text-left`}>EDC payment</label>
-            <label className={`${isActive ? `text-white` : `text-black-500 `} font-open-sans text-[11px] text-left`}>
-              Collect payment manually
-            </label>
+          <div className="flex flex-col items-start justify-center ">
+            <label className={`pl-2 ${isActive ? `text-white` : `text-black-500`} text-left`}>EDC payment</label>
           </div>
-          <div className="flex flex-col space-y-[5px]">
+          <label className={`${isActive ? `text-white` : `text-black-500 `} font-open-sans text-[11px] text-left`}>
+            Collect payment manually
+          </label>
+          {/* <div className="flex flex-col space-y-[5px]">
             <div className="flex space-x-[5px] items-center justify-start">
               <div className="relative">
                 <SquareIcon stroke={!isActive ? '#131c16' : 'rgba(255, 255, 255, 0.20)'} />
@@ -86,7 +86,7 @@ const SettlementButton: React.FC<Props> = ({
                 fill={!isActive ? '#180806' : 'white'}
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
@@ -97,30 +97,22 @@ const SettlementButton: React.FC<Props> = ({
       <div
         className={`min-[1200px]:pl-[71px] min-[1000px]:pl-[41px]  pl-[7%] py-[15px] ${
           isActive && 'cursor-default'
-        } min-h-[78px] flex`}
+        } min-h-[78px] flex `}
       >
-        <div className="flex flex-row md:space-x-[28px] space-x-[20px] items-center">
+        <div className="flex flex-row md:space-x-[28px] space-x-[20px] items-center justify-center">
           {isActive ? <BeamIcon /> : disabled ? <BlueBeamIcon /> : <BlueBeamIcon />}
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <Image
-              priority
-              src={`/assets/icons/${
-                isActive ? 'beam-checkout' : disabled ? 'blue-beam-checkout' : 'blue-beam-checkout'
-              }.svg`}
-              width={123}
-              height={13}
-              alt="beam-checkout"
-            />
-            <label
-              className={`font-open-sans text-[11px] text-left ${
-                isActive ? 'text-white' : disabled ? 'text-black-500' : 'text-black-500'
-              }`}
-            >
-              Create payment link
-            </label>
+            <Image priority src={`/assets/icons/payos-logo.svg`} width={75} height={10} alt="beam-checkout" />
           </div>
-          <div className="flex flex-col space-y-[5px]">
+          <label
+            className={`font-open-sans text-[11px] text-left pl-[15px] ${
+              isActive ? 'text-white' : disabled ? 'text-black-500' : 'text-black-500'
+            }`}
+          >
+            Create payment link
+          </label>
+          {/* <div className="flex flex-col space-y-[5px]">
             <div className="flex space-x-[5px] items-center justify-start">
               <div className="relative">
                 <SquareIcon stroke={!isActive ? '#131c16' : 'rgba(255, 255, 255, 0.20)'} />
@@ -149,9 +141,9 @@ const SettlementButton: React.FC<Props> = ({
               </div>
               <AmericanPayIcon />
 
-              {/* <ThaiQrIcon /> */}
+              <ThaiQrIcon />
             </div>
-            {/* <div className="flex space-x-[5px] items-center justify-start">
+            <div className="flex space-x-[5px] items-center justify-start">
               <ShopeeIcon />
               <div className="relative">
                 <SquareIcon />
@@ -163,8 +155,8 @@ const SettlementButton: React.FC<Props> = ({
                 stroke={!isActive ? '#131c16' : 'rgba(255, 255, 255, 0.20)'}
                 fill={!isActive ? '#180806' : 'white'}
               />
-            </div> */}
-          </div>
+            </div>
+          </div> */}
         </div>
       </div>
     );
@@ -192,8 +184,8 @@ const SettlementButton: React.FC<Props> = ({
           <BeamRefundIcon />
 
           <div className="flex flex-col items-start justify-center space-y-[5px]">
-            <label className="text-left">Refund Beam payment</label>
-            <label className="font-open-sans text-[11px] text-left">Initiates a refund in Beam</label>
+            <label className="text-left">Refund PayOS payment</label>
+            <label className="font-open-sans text-[11px] text-left">Initiates a refund in PayOS</label>
           </div>
         </div>
       </div>
