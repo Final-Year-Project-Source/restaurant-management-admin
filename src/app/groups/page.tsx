@@ -6,8 +6,8 @@ import TextGroup from '@/components/textGroup';
 import { useScrollbarState } from '@/hooks/useScrollbarState';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { useGetGroupsQuery, useUpdateGroupsMutation } from '@/redux/services/groupApi';
+import { GroupType } from '@/types/groups.types';
 
-import { GroupType } from '@/types/Groups.types';
 import { FOOTER_HEIGHT_SAVE, HEADER_LAYOUT, PADDING_TOP_TO_SCROLL } from '@/utils/constants';
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';

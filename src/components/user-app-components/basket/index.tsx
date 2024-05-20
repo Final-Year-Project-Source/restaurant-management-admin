@@ -11,8 +11,8 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } f
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import OtherLayout from '../layouts/OtherLayout';
-import OrderItem from '../orderItem';
-import OrderSummary from '../orderSummary';
+import OrderItem from '../OrderItem';
+import OrderSummary from '../OrderSummary';
 import './basket.scss';
 import { useSession } from 'next-auth/react';
 import { CANCELLED } from '@/utils/constants';

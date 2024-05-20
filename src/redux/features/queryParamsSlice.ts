@@ -30,6 +30,12 @@ export type QueryParamsState = {
     startHourFilter: number;
     endHourFilter: number;
   };
+  feedbacks: {
+    page: number;
+    limit: number;
+    startTime: string;
+    endTime: string;
+  };
   'sales-by-item': {
     search: string;
     page: number;
@@ -63,6 +69,12 @@ export const DEFAULT_QUERY_PARAMS = {
   bills: { search: '', limit: 10, startTime: '', endTime: '', orderStatus: [], paymentStatus: [], page: 1 },
   'kitchen-display': { search: '', endTime: '', startTime: '', groups: [], orders: [] },
   modifiers: { search: '' },
+  feedbacks: {
+    page: 1,
+    limit: 10,
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
+  },
   'sales-summary': {
     page: 1,
     limit: 10,
