@@ -52,6 +52,7 @@ interface TableType {
   setIsOpenSearch?: () => void;
   keyPage?: keyof RootState['queryParams'];
   noScroll?: boolean;
+  onChangeTable?: (pagination: any, filters: any, sorter: any) => void;
 }
 
 const Table: React.FC<TableType> = ({
@@ -79,6 +80,7 @@ const Table: React.FC<TableType> = ({
   noPlusOnTitle = false,
   keyPage,
   noScroll = false,
+  onChangeTable,
 }) => {
   const { isMobile, height } = useWindowDimensions();
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -92,7 +94,6 @@ const Table: React.FC<TableType> = ({
       dispatch(updateQueryParams({ key: keyPage, value: { limit: value || 10, page: 1 } }));
     }
   };
-
   return (
     <div
       ref={bodyRef}
@@ -157,6 +158,7 @@ const Table: React.FC<TableType> = ({
             size={size}
             style={cursorPointerOnRow ? { cursor: 'pointer' } : { cursor: '' }}
             pagination={false}
+            onChange={onChangeTable}
             locale={{
               emptyText: (
                 <div
@@ -185,27 +187,22 @@ const Table: React.FC<TableType> = ({
       </ConfigProvider>
       {!hiddenPagination && (
         <div>
-          {isLoading ? (
-            <div className={`flex justify-between ${isMobile ? 'hidden' : 'h-fit'}`}>
-              <div className="my-5 skeleton-pagination">
-                <SkeletonRows />
+          <div
+            className={`footer-bills-page flex flex-wrap items-center justify-between pt-5 ${
+              isMobile
+                ? `px-[10px] fixed-footer ${
+                    scrollBottom > PADDING_BOTTOM_TO_SCROLL && isMobile ? 'shadow-medium-top' : ''
+                  }`
+                : `px-[15px]`
+            }`}
+          >
+            {isLoading ? (
+              <div className={`flex justify-between ${isMobile ? 'hidden' : 'h-fit'}`}>
+                <div className="my-5 skeleton-pagination">
+                  <SkeletonRows />
+                </div>
               </div>
-              <div className="my-5 mr-5">
-                <SkeletonRows />
-              </div>
-            </div>
-          ) : (
-            // !!totalPage ?
-            //check pagination variables before displaying it
-            <div
-              className={`footer-bills-page flex flex-wrap items-center justify-between pt-5 ${
-                isMobile
-                  ? `px-[10px] fixed-footer ${
-                      scrollBottom > PADDING_BOTTOM_TO_SCROLL && isMobile ? 'shadow-medium-top' : ''
-                    }`
-                  : `px-[15px]`
-              }`}
-            >
+            ) : (
               <div className={`pagination-container ${isMobile ? `w-full m-[auto]` : ``}`}>
                 <Pagination
                   currentPage={(keyPage && (queryParams[keyPage] as any)?.page) || 1}
@@ -214,23 +211,24 @@ const Table: React.FC<TableType> = ({
                   link={routerLink || ''}
                 />
               </div>
-              <div className="!ml-auto rows-per-page-container">
-                <Dropdown
-                  id={`row-per-page${rowPerPage}`}
-                  className="max-w-[148px]"
-                  includeEmptyValue={false}
-                  mode="tags"
-                  label=""
-                  defaultValue="10 per row"
-                  options={ROWSPERPAGE}
-                  value={rowPerPage}
-                  onChange={(value) => handleChangeLimit(value)}
-                  placeholder=""
-                />
-              </div>
+            )}
+
+            <div className="!ml-auto rows-per-page-container">
+              <Dropdown
+                id={`row-per-page${rowPerPage}`}
+                className="max-w-[148px]"
+                includeEmptyValue={false}
+                mode="tags"
+                label=""
+                defaultValue="10 per row"
+                options={ROWSPERPAGE}
+                value={rowPerPage}
+                onChange={(value) => handleChangeLimit(value)}
+                placeholder=""
+              />
             </div>
-            // ) : (//
-          )}
+          </div>
+
           <div className={`${noScroll && isMobile ? 'h-[172px]' : ''}`}></div>
         </div>
       )}

@@ -109,7 +109,7 @@ export default function DiningTable() {
             {record.discount_type === 'FIXED_PERCENT'
               ? `${record.discount} (${record.value}%)`
               : record.discount_type === 'FIXED_AMOUNT'
-                ? `${record.discount} (฿${record.value})`
+                ? `${record.discount} (VND${record.value})`
                 : '-'}
           </p>
           {((record.discount_has_expiration && new Date(record.discount_expiration_date) < new Date()) ||

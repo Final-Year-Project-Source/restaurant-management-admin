@@ -39,10 +39,17 @@ export const summaryApi = createApi({
         end_time?: string;
         category_filter?: string[];
         search?: string;
+        sort_by_net_sales?: string;
+        sort_by_est_profit?: string;
+        sort_by_no_sold?: string;
       }
     >({
       query: (arg) => ({
-        url: `salesByItem?page=${arg.page}&limit=${arg.limit}&category_filter=${arg.category_filter}&search=${arg.search}&start_time=${arg.start_time}&end_time=${arg.end_time}`,
+        url: `salesByItem?page=${arg.page}&limit=${arg.limit}&category_filter=${arg.category_filter}${
+          arg.sort_by_no_sold ? `&sort_by_no_sold=${arg.sort_by_no_sold}` : ''
+        }${arg.sort_by_net_sales ? `&sort_by_net_sales=${arg.sort_by_net_sales}` : ''}${
+          arg.sort_by_est_profit ? `&sort_by_est_profit=${arg.sort_by_est_profit}` : ''
+        }&search=${arg.search}&start_time=${arg.start_time}&end_time=${arg.end_time}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

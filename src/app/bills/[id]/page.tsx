@@ -96,7 +96,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   const discount_text = discount_info
     ? discount_info.type === 'FIXED_PERCENT'
       ? `${discount_info.name} (${discount_info.value}%)`
-      : `${discount_info.name} (฿${discount_info.value})`
+      : `${discount_info.name} (VND${discount_info.value})`
     : 'No discount';
   const [customerValue, setCustomerValue] = useState('');
   const [qrBeamPayment, setQrBeamPayment] = useState('');
@@ -258,7 +258,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       createPayment({ data: { bill_id: id } })
         .unwrap()
         .then((response) => {
-          setQrBeamPayment(response.data.paymentLink);
+          setQrBeamPayment(response.data.qrCode);
         })
         .catch((error) => toast.error(error?.data?.message));
     }
@@ -294,7 +294,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (฿${item.value})`
+              ? `${item.name} (VND${item.value})`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||
@@ -626,7 +626,6 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       <ReceiptDownLoadedImage className="hidden" bill={data} />
 
       {/* Modal QR Beam Link */}
-      {/* Modal QR Beam Link */}
       <CustomizedModal
         width={500}
         open={isModalQRBeamLinkOpen && !isMobile}
@@ -677,7 +676,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
           setIsModalBeamRefundOpen(false);
         }}
       >
-        <p className="mb-7 text-center">Are you sure you want to process a refund via BEAM for this bill?</p>
+        <p className="mb-7 text-center">Are you sure you want to process a refund via PayOS for this bill?</p>
       </CustomizedModal>
       <CustomizedDrawer
         className="bill-drawer"
@@ -689,7 +688,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
         onOk={handleCreateRefund}
         width={width}
       >
-        <div className="text-center">Are you sure you want to process a refund via BEAM for this bill?</div>
+        <div className="text-center">Are you sure you want to process a refund via PayOS for this bill?</div>
       </CustomizedDrawer>
 
       {/* Modal Confirm EDC Refund  */}

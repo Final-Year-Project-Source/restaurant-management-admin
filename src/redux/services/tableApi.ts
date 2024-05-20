@@ -47,13 +47,14 @@ export const diningTableApi = createApi({
       }),
       invalidatesTags: ['Dining Table'],
     }),
-    updateDiningTable: builder.mutation<any, { data: any }>({
-      query: ({ data }) => ({
+    updateDiningTable: builder.mutation<any, { data: any; access_token: string }>({
+      query: ({ data, access_token }) => ({
         url: `diningTable/${data.id}`,
         method: 'PUT',
         body: data,
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
       }),
       invalidatesTags: ['Dining Table'],

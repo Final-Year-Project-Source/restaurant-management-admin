@@ -1,4 +1,5 @@
 'use client';
+import { SortArrows } from '@/components/adminPage/SortIcons';
 import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
 import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
@@ -11,9 +12,15 @@ import { useGetCategoriesQuery } from '@/redux/services/categoryApi';
 import { useGetSalesByItemQuery } from '@/redux/services/summary';
 import { RootState } from '@/redux/store';
 import { CategoryType } from '@/types/categories.types';
-import { ProductType } from '@/types/products.types';
-import { getFormatDate, getSelectedItems, handleDownloadCSV, serializeFilters } from '@/utils/commonUtils';
-import { convertCategoriesToOptions, PAGINATIONLIMIT } from '@/utils/constants';
+import {
+  formatPrice,
+  getFormatDate,
+  getSelectedItems,
+  handleDownloadCSV,
+  serializeFilters,
+  validateAndConvertDate,
+} from '@/utils/commonUtils';
+import { convertCategoriesToOptions, endDateDefault, PAGINATIONLIMIT, startDateDefault } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table/interface';
 import { debounce } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -21,23 +28,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './sales-by-item.scss';
 
-const startDateDefault = (() => {
-  const thisWeekStartDate = new Date();
-  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
-  thisWeekStartDate.setHours(0, 0, 0, 0);
-  return thisWeekStartDate;
-})();
-
-const endDateDefault = (() => {
-  const thisDate = new Date();
-  thisDate.setHours(23, 59, 59, 59);
-  return thisDate;
-})();
 const SaleByItems = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { width } = useWindowDimensions();
+  const { isMobile, width } = useWindowDimensions();
   const { data: Categories, isFetching: isFetchingCategories } = useGetCategoriesQuery();
   const CATEGORIES = convertCategoriesToOptions(Categories);
   const DEFAULT_CATEGORIES_VALUE = CATEGORIES.map((category) => category.value);
@@ -46,6 +41,7 @@ const SaleByItems = () => {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
 
   const queryParams = useSelector((state: RootState) => state.queryParams['sales-by-item']);
+  const salesSummaryQueryParams = useSelector((state: RootState) => state.queryParams['sales-summary']);
 
   const { data: salesByItemData, isFetching } = useGetSalesByItemQuery(
     {
@@ -55,15 +51,25 @@ const SaleByItems = () => {
       category_filter: queryParams?.categories || [],
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
+      sort_by_no_sold: queryParams?.sortByNoSold || '',
+      sort_by_est_profit: queryParams?.sortByEstProfit || '',
+      sort_by_net_sales: queryParams?.sortByNetSales || '',
     },
     { refetchOnMountOrArgChange: true },
   );
-  const Products = salesByItemData?.data || [];
+  const Products = (salesByItemData?.data || []).map((item: any) => ({
+    ...item,
+    net_sales: formatPrice(item?.net_sales),
+    est_profit: formatPrice(item?.est_profit),
+  }));
 
   let searchParam = searchParams?.get('search') || '';
-  let startTimeParam = searchParams?.get('start_time');
-  let endTimeParam = searchParams?.get('end_time');
+  let startTimeParam = searchParams?.get('start_time') || '';
+  let endTimeParam = searchParams?.get('end_time') || '';
   let page = parseInt(searchParams?.get('page') || '1');
+  let sortByNoSold = searchParams?.get('sort_by_no_sold');
+  let sortByEstProfit = searchParams?.get('sort_by_est_profit');
+  let sortByNetSales = searchParams?.get('sort_by_net_sales');
   let limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams?.get('limit') || '10'))
     ? parseInt(searchParams?.get('limit') || '') || 10
     : 10;
@@ -74,34 +80,93 @@ const SaleByItems = () => {
     }
     return 1;
   }, [salesByItemData, limitUrl]);
-
   const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
+
+  const endDateToString = endDateDefault.toISOString();
+  const startDateToString = startDateDefault.toISOString();
+
+  const [startTimeUrl, endTimeUrl] = useMemo(() => {
+    const validateStartTime = validateAndConvertDate(startTimeParam, startDateToString);
+    const validateEndTime = validateAndConvertDate(endTimeParam, endDateToString);
+
+    const startTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateStartTime) >= Date.parse(validateEndTime)
+          ? startDateToString
+          : validateStartTime
+        : undefined;
+
+    const endTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateEndTime) <= Date.parse(validateStartTime) ||
+          Date.parse(validateEndTime) > Date.parse(endDateToString)
+          ? endDateToString
+          : validateEndTime
+        : undefined;
+
+    return [startTime, endTime];
+  }, [startTimeParam, endTimeParam]);
+
   let categoriesUrl = searchParams?.get('category_filter')?.split(',') || [];
 
   useEffect(() => {
+    if (isFetchingCategories) return;
+
     let URL = '/sales-by-item?';
-    if (!queryParams?.search && !queryParams?.categories?.length && !queryParams?.endTime && !queryParams?.startTime) {
+    let salesSummaryURL = '/sales-summary?';
+
+    if (!queryParams?.visited) {
       URL += serializeFilters({
         search: '',
         categories: DEFAULT_CATEGORIES_VALUE || [],
-        startTime: startDateDefault.toISOString(),
-        endTime: endDateDefault.toISOString(),
+        startTime: queryParams?.startTime || startDateToString,
+        endTime: queryParams?.endTime || endDateToString,
         page: 1,
         limit: 10,
+        sortByNoSold: '',
+        sortByEstProfit: '',
+        sortByNetSales: '',
       });
     } else {
       URL += serializeFilters({
         search: queryParams?.search || '',
         categories: queryParams?.categories || [],
-
         endTime: queryParams?.endTime || '',
         startTime: queryParams?.startTime || '',
         page: queryParams?.page || 1,
         limit: queryParams?.limit || 10,
+        sortByNoSold: queryParams?.sortByNoSold,
+        sortByEstProfit: queryParams?.sortByEstProfit,
+        sortByNetSales: queryParams?.sortByNetSales,
+      });
+
+      salesSummaryURL += serializeFilters({
+        startHour: salesSummaryQueryParams?.startHourFilter || '0',
+        endHour: salesSummaryQueryParams?.endHourFilter || 24,
+        endTime: queryParams?.endTime || '',
+        startTime: queryParams?.startTime || '',
+        page: salesSummaryQueryParams?.page || 1,
+        limit: salesSummaryQueryParams?.limit || 10,
       });
     }
+    setDateRange([
+      new Date(queryParams?.startTime) || startDateDefault,
+      new Date(queryParams?.endTime) || endDateDefault,
+    ]);
+
+    dispatch(
+      updateQueryParams({
+        key: 'sales-summary',
+        value: {
+          ...salesSummaryQueryParams,
+          endTime: queryParams?.endTime,
+          startTime: queryParams?.startTime,
+        },
+      }),
+    );
 
     router.push(URL);
+    dispatch(updateURLPages({ 'sales-summary': `${salesSummaryURL}` }));
   }, [
     queryParams?.search,
     queryParams?.categories,
@@ -109,24 +174,42 @@ const SaleByItems = () => {
     queryParams?.endTime,
     queryParams?.startTime,
     queryParams?.limit,
+    queryParams?.sortByNoSold,
+    queryParams?.visited,
+    queryParams?.sortByEstProfit,
+    queryParams?.sortByNetSales,
     isFetchingCategories,
   ]);
 
   useEffect(() => {
-    if (searchParams) {
+    if (isFetchingCategories) return;
+
+    if (categoriesUrl?.length) {
       setIsOpenSearchInput(!!queryParams?.search);
-      setDateRange([new Date(startTimeParam || startDateDefault), new Date(endTimeParam || endDateDefault)]);
+      setDateRange([new Date(startTimeUrl || ''), new Date(endTimeUrl || '')]);
+      if (DEFAULT_CATEGORIES_VALUE?.length) {
+        categoriesUrl =
+          (searchParams?.get('category_filter')?.split(',') || [])?.length > 0
+            ? (searchParams?.get('category_filter')?.split(',') || []).filter((value) =>
+                DEFAULT_CATEGORIES_VALUE.includes(value),
+              )
+            : [];
+      }
       dispatch(
         updateQueryParams({
           key: 'sales-by-item',
           value: {
             ...queryParams,
+            visited: true,
             search: searchParam || '',
             categories: categoriesUrl,
-            endTime: endTimeParam,
-            startTime: startTimeParam,
+            endTime: endTimeUrl,
+            startTime: startTimeUrl,
             page: pageUrl,
             limit: limitUrl,
+            sortByNoSold: sortByNoSold || '',
+            sortByEstProfit: sortByEstProfit || '',
+            sortByNetSales: sortByNetSales || '',
           },
         }),
       );
@@ -163,48 +246,67 @@ const SaleByItems = () => {
     {
       title: 'Product name',
       dataIndex: 'name',
-      // sorter: (a, b) => a.name.localeCompare(b.name),
-      // sortDirections: ['ascend', 'descend'],
+      render: (name) => <p>{name}</p>,
     },
     {
       title: 'No. sold',
       dataIndex: 'no_sold',
       width: width > 1350 ? 180 : 120,
-      defaultSortOrder: 'descend',
-      sortDirections: ['ascend', 'descend'],
-      sorter: (a, b) => a.no_sold - b.no_sold,
-      sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
+      showSorterTooltip: false,
+      defaultSortOrder:
+        queryParams?.sortByNoSold === 'asc' ? 'ascend' : queryParams?.sortByNoSold === 'desc' ? 'descend' : undefined,
+      sortDirections: ['ascend'],
+      sorter: (a, b) => {
+        return Number(a.no_sold) - Number(b.no_sold);
+      },
+      sortIcon: ({ sortOrder }) => {
+        return <>{SortArrows(sortOrder || '')}</>;
+      },
     },
     {
       title: 'Menu category',
       dataIndex: 'category_id',
-      responsive: ['sm'],
+      responsive: !isMobile ? ['lg'] : ['sm'],
       width: width > 1350 ? 250 : 180,
       render: (_, record) => {
-        return <span>{getCategoryNameById(record?.category_id)}</span>;
+        return <span className={``}>{getCategoryNameById(record?.category_id)}</span>;
       },
-      sorter: (a, b) => getCategoryNameById(a.category_id).localeCompare(getCategoryNameById(b.category_id)),
-      sortDirections: ['ascend', 'descend'],
     },
     {
       title: 'Net sales',
       dataIndex: 'net_sales',
-      responsive: ['sm'],
+      showSorterTooltip: false,
+      responsive: isMobile ? ['sm'] : undefined,
       width: width > 1350 ? 180 : 120,
-      defaultSortOrder: 'descend',
-      sortDirections: ['ascend', 'descend'],
-      sorter: (a, b) => a.net_sales - b.net_sales,
-      sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
+      defaultSortOrder:
+        queryParams?.sortByNetSales === 'asc'
+          ? 'ascend'
+          : queryParams?.sortByNetSales === 'desc'
+            ? 'descend'
+            : undefined,
+      sortDirections: ['ascend'],
+      sorter: (a, b) => {
+        return Number(a.net_sales) - Number(b.net_sales);
+      },
+      sortIcon: ({ sortOrder }) => <>{SortArrows(sortOrder || '', '73px')}</>,
     },
     {
       title: 'Est. profit',
       dataIndex: 'est_profit',
-      responsive: ['sm'],
+      showSorterTooltip: false,
+      responsive: isMobile ? ['sm'] : undefined,
       width: width > 1350 ? 180 : 120,
-      defaultSortOrder: 'descend',
-      sortDirections: ['ascend', 'descend'],
-      sorter: (a, b) => a.est_profit - b.est_profit,
-      sortIcon: ({ sortOrder }) => (sortOrder === 'descend' ? <DownOutlinedIcon /> : <UpOutlinedIcon />),
+      defaultSortOrder:
+        queryParams?.sortByEstProfit === 'asc'
+          ? 'ascend'
+          : queryParams?.sortByEstProfit === 'desc'
+            ? 'descend'
+            : undefined,
+      sortDirections: ['ascend'],
+      sorter: (a, b) => {
+        return a.est_profit - b.est_profit;
+      },
+      sortIcon: ({ sortOrder }) => <>{SortArrows(sortOrder || '', '78px')}</>,
     },
   ];
 
@@ -262,13 +364,35 @@ const SaleByItems = () => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     debouncedHandleSearch(e.target?.value);
   };
+  const OnChangeSorter = (pagination: any, filters: any, sorter: any) => {
+    if (sorter.field === 'no_sold') {
+      handleUpdateParamsToURL({
+        sortByNoSold: sorter.order === 'ascend' ? 'asc' : 'desc',
+        sortByEstProfit: '',
+        sortByNetSales: '',
+      });
+    }
+    if (sorter.field === 'net_sales') {
+      handleUpdateParamsToURL({
+        sortByNetSales: sorter.order === 'ascend' ? 'asc' : 'desc',
+        sortByEstProfit: '',
+        sortByNoSold: '',
+      });
+    }
+    if (sorter.field === 'est_profit') {
+      handleUpdateParamsToURL({
+        sortByEstProfit: sorter.order === 'ascend' ? 'asc' : 'desc',
+        sortByNetSales: '',
+        sortByNoSold: '',
+      });
+    }
+  };
 
   const exportToCSV = () => {
     const exportData = salesByItemData?.allData.map((row: any) => ({
       name: row.name,
       no_sold: row.no_sold,
       category: getCategoryNameById(row.category_id),
-      discounts: row.discounts,
       netSales: row.net_sales,
       estProfit: row.est_profit,
     }));
@@ -291,6 +415,7 @@ const SaleByItems = () => {
       onAdd={exportToCSV}
       isLoading={isFetching}
       onSearch={handleSearch}
+      onChangeTable={OnChangeSorter}
       cursorPointerOnRow={false}
       defaultSearchValue={searchParam || ''}
       page={pageUrl || 1}

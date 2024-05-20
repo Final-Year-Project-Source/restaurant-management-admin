@@ -61,9 +61,9 @@ const TaxInvoice = ({
         return {
           key: index,
           name: item.name,
-          total: `฿${total}`,
+          total: `VND${total}`,
           quantity: item.quantity,
-          price: `฿${price}`,
+          price: `VND${price}`,
         };
       });
   });
@@ -144,12 +144,12 @@ const TaxInvoice = ({
                 <label>Balance owing</label>
               </div>
               <div className="flex flex-col gap-4 justify-center items-end">
-                <span>฿{subTotal}</span>
-                <span>฿{taxInvoiceData.vat_charge}</span>
-                <span>฿{taxInvoiceData.service_charge}</span>
-                {/* <span>-฿{receipt_info?.total_discount}</span> */}
-                <span className="font-semibold">฿{taxInvoiceData.total}</span>
-                <span>฿0.00</span>
+                <span>VND{subTotal}</span>
+                <span>VND{taxInvoiceData.vat_charge}</span>
+                <span>VND{taxInvoiceData.service_charge}</span>
+                {/* <span>-VND{receipt_info?.total_discount}</span> */}
+                <span className="font-semibold">VND{taxInvoiceData.total}</span>
+                <span>VND0.00</span>
               </div>
             </div>
 

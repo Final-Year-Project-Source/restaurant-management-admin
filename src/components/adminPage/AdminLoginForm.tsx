@@ -149,6 +149,12 @@ export default function AdminLoginForm() {
           Login
         </Button>
       </div>
+      <label
+        className="text-[14px] flex justify-end italic ... underline"
+        onClick={() => router.push('/forgot-password')}
+      >
+        Forgot password
+      </label>
       {(isLoading || load) && <LoadingIndicator />}
     </div>
   );

@@ -11,20 +11,20 @@
   &.active {
     border-color: #131c16;
     color: #131c16;
-    width: 59px;
+    width: 70px;
   }
 
   &.disable {
     border-color: #131c16;
     color: #131c16;
     opacity: 0.5;
-    width: 59px;
+    width: 70px;
   }
 
   &.warning {
     border-color: #ff3912;
     color: #ff3912;
 
-    width: 65px !important;
+    width: 70px !important;
   }
 }
