@@ -33,7 +33,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './product.scss';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
-import ProductImage from '@/components/productImage';
+import ProductImage from '@/components/ProductImage';
 import Image from 'next/image';
 
 const Product = () => {

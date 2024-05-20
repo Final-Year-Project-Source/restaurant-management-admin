@@ -1,11 +1,12 @@
 import { OrderType } from '@/types/orders.types';
 import { useCallback, useMemo } from 'react';
 import Button from '../adminPage/Button';
-import OrderItem from '../user-app-components/orderItem';
-import OrderSummary from '../user-app-components/orderSummary';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { Empty, Skeleton } from 'antd';
 import SettlementButton from '../SettlementButton';
+import { formatPrice } from '@/utils/commonUtils';
+import OrderItem from '../user-app-components/OrderItem';
+import OrderSummary from '../user-app-components/OrderSummary';
 
 interface Props {
   paymentStatus?: 'Cancelled' | 'Unpaid' | 'Paid' | 'Refunded';

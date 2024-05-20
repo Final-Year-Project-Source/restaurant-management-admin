@@ -2,7 +2,7 @@
 import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
 import { DownOutlinedIcon, UpOutlinedIcon } from '@/components/Icons';
-import ProductImage from '@/components/productImage';
+import ProductImage from '@/components/ProductImage';
 import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';

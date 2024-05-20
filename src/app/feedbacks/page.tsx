@@ -1,7 +1,6 @@
 'use client';
 import CardsReport from '@/components/cardsReport';
 import DateRangePicker from '@/components/dateRangePicker';
-import Stars from '@/components/stars';
 import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
