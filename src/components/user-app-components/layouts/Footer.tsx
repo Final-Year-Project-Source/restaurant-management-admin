@@ -56,7 +56,7 @@ const Footer: FC<FooterProps> = ({
             {secondaryBtnChildren}
           </Button>
           {isMobile && (
-            <div className="cursor-pointer" onClick={onClickBackBtn}>
+            <div className="cursor-pointer" onClick={() => onClickBackBtn}>
               <CloseOutlinedIcon1 width={23} height={22} />
             </div>
           )}

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { useLoginFirstStepMutation } from '@/redux/services/loginApi';
 import { isValidEmail } from '@/utils/commonUtils';
 import { setOtpURL } from '@/utils/localStorage';
 import InputText from '../input/Input';
@@ -26,7 +25,6 @@ export default function AdminRegisterForm() {
   const [registerForm, setRegisterForm] = useState<AdminRegisterFormProps>({ ...initStateRegisterForm });
   const [errors, setErrors] = useState<AdminRegisterFormProps>({ ...initStateRegisterForm });
   const [errorLogin, setErrorLogin] = useState<string>('');
-  const [loginFirstStep, { isLoading }] = useLoginFirstStepMutation();
   const [load, setLoad] = useState<boolean>(false);
   const router = useRouter();
 
@@ -121,14 +119,14 @@ export default function AdminRegisterForm() {
       <div>
         <div className="font-medium text-[16px] mb-1 text-black-500 "> Name </div>
         <div>
-          <InputText disabled={isLoading || load} onChange={(e) => handleInputChange(e, 'name')} placeholder="Name" />
+          <InputText disabled={load} onChange={(e) => handleInputChange(e, 'name')} placeholder="Name" />
         </div>
         {errors.name ? <p className="text-red-400 text-[14px]">{errors.name}</p> : <p className="h-[21px]"></p>}
       </div>
       <div>
         <div className="font-medium text-[16px] mb-1 text-black-500 "> Email </div>
         <div>
-          <InputText disabled={isLoading || load} onChange={(e) => handleInputChange(e, 'email')} placeholder="Email" />
+          <InputText disabled={load} onChange={(e) => handleInputChange(e, 'email')} placeholder="Email" />
         </div>
         {errors.email ? <p className="text-red-400 text-[14px]">{errors.email}</p> : <p className="h-[21px]"></p>}
       </div>
@@ -139,7 +137,7 @@ export default function AdminRegisterForm() {
             onKeyDown={handleKeyDown}
             onChange={(e) => handleInputChange(e, 'password')}
             placeholder="Password"
-            disabled={isLoading || load}
+            disabled={load}
           />
         </div>
         {errorLogin ? (
@@ -158,7 +156,7 @@ export default function AdminRegisterForm() {
             onKeyDown={handleKeyDown}
             onChange={(e) => handleInputChange(e, 'confirmPassword')}
             placeholder="Confirm password"
-            disabled={isLoading || load}
+            disabled={load}
           />
         </div>
         {errorLogin ? (
@@ -170,11 +168,11 @@ export default function AdminRegisterForm() {
         )}
       </div>
       <div>
-        <Button variant="secondary" disabled={isLoading || load} onClick={handleSubmit}>
+        <Button variant="secondary" disabled={load} onClick={handleSubmit}>
           Register
         </Button>
       </div>
-      {(isLoading || load) && <LoadingIndicator />}
+      {load && <LoadingIndicator />}
     </div>
   );
 }
