@@ -405,7 +405,7 @@ const Layout: FC<Props> = ({ children }) => {
           <div
             className={`${
               isMobile ? `mb-[-15px] h-full ${firstPath !== 'kitchen-display' && `bg-white`}` : `p-5 `
-            }  app-body w-full overflow-y-auto`}
+            }  app-body w-full overflow-y-auto overflow-x-hidden`}
           >
             {children}
           </div>

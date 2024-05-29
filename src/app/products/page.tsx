@@ -231,7 +231,7 @@ const Product = () => {
             {isLowStock && (
               <div className="min-h-[17px] min-w-[65px]">
                 <Tag
-                  className={`!absolute ${isMobile ? `bottom-[26px]` : `bottom-[16.5px]`} `}
+                  // className={`!absolute ${isMobile ? `bottom-[26px]` : `bottom-[16.5px]`} `}
                   variant="warning"
                   text={record?.stock_status}
                 />{' '}

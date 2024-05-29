@@ -24,7 +24,7 @@ const TextGroup: React.FC<Props> = ({
       <div className="flex justify-center items-center space-x-5 md:max-w-[252px] max-md:max-w-[197px]">
         {!isMobile && <label className="text-[14px] font-rubik">Name</label>}
         <InputText
-          className="md:max-w-[194px]"
+          className="md:max-w-[200px]"
           placeholder="Name"
           value={nameValue}
           onChange={onChangeName}

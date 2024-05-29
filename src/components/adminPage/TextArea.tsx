@@ -29,7 +29,7 @@ const TextAreaInput: FC<TextAreaProps> = ({ onChange, value, disabled, placehold
             lineHeight: 1.5,
             colorText: '#131C16',
             fontFamily: `${open_sans}, sans-serif`,
-            fontSize: 14,
+            fontSize: 13,
             colorBgContainer: 'transparent',
             colorBorder: 'rgba(19, 28, 22, 0.2)',
             colorPrimary: 'transparent',
