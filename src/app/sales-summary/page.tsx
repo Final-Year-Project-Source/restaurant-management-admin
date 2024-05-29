@@ -15,9 +15,11 @@ import {
   getFormatDate,
   getFormatDateTime,
   handleDownloadCSV,
+  formatPrice,
   serializeFilters,
+  validateAndConvertDate,
 } from '@/utils/commonUtils';
-import { PAGINATIONLIMIT } from '@/utils/constants';
+import { endDateDefault, PAGINATIONLIMIT, startDateDefault } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table/interface';
 import { isEqual } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -25,30 +27,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './summary.scss';
 
-const startDateDefault = (() => {
-  const thisWeekStartDate = new Date();
-  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
-  thisWeekStartDate.setHours(0, 0, 0, 0);
-  return thisWeekStartDate;
-})();
-
-const endDateDefault = (() => {
-  const thisDate = new Date();
-  thisDate.setHours(23, 59, 59, 59);
-  return thisDate;
-})();
-
 interface SaleSummaryType {
   key: React.Key;
   time: string;
-  grossSale: string;
+  grossSales: string;
   refunds: string;
   discounts: string;
   netSales: string;
-  estProfit: string;
+  estimatedProfit: string;
 }
 
-const format = 'HH';
 const SalesSummary = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
@@ -60,6 +48,8 @@ const SalesSummary = () => {
   const [hourPeriodLabel, setHourPeriodLabel] = useState('');
   const [typeChart, setTypeChart] = useState('gross sales');
   const queryParams = useSelector((state: RootState) => state.queryParams['sales-summary']);
+  const salesByItemQueryParams = useSelector((state: RootState) => state.queryParams['sales-by-item']);
+  console.log({ startDateDefault, endDateDefault });
 
   const { data: salesSummaryData, isLoading: isLoadingData } = useGetSalesSummaryQuery({
     page: queryParams?.page || 1,
@@ -70,13 +60,16 @@ const SalesSummary = () => {
     start_hour: queryParams?.startHourFilter || 0,
   });
 
-  const startTimeParam = searchParams.get('start_time');
-  const endTimeParam = searchParams.get('end_time');
+  const startTimeParam = searchParams.get('start_time') || '';
+  const endTimeParam = searchParams.get('end_time') || '';
   const startHourUrl = parseInt(searchParams.get('start_hour') || '0');
   const endHourUrl = parseInt(searchParams.get('end_hour') || '24');
-  const startHourParam = startHourUrl > 24 || startHourUrl < 0 ? '0' : startHourUrl;
-  const endHourParam = endHourUrl > 24 || endHourUrl < 0 ? 24 : endHourUrl;
+  const startHourParam = startHourUrl > 24 || startHourUrl < 0 || startHourUrl >= endHourUrl ? '0' : startHourUrl;
+  const endHourParam = endHourUrl > 24 || endHourUrl < 0 || endHourUrl <= startHourUrl ? 24 : endHourUrl;
   const page = parseInt(searchParams?.get('page') || '1');
+
+  const endDateToString = endDateDefault.toISOString();
+  const startDateToString = startDateDefault.toISOString();
 
   const limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams?.get('limit') || '10'))
     ? parseInt(searchParams?.get('limit') || '') || 10
@@ -86,17 +79,43 @@ const SalesSummary = () => {
     if (!isNaN(total)) {
       return Math.ceil(total / limitUrl);
     }
+    return 1;
   }, [salesSummaryData, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+
+  const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
+
+  const [startTimeUrl, endTimeUrl] = useMemo(() => {
+    const validateStartTime = validateAndConvertDate(startTimeParam, startDateToString);
+    const validateEndTime = validateAndConvertDate(endTimeParam, endDateToString);
+
+    const startTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateStartTime) >= Date.parse(validateEndTime)
+          ? startDateToString
+          : validateStartTime
+        : undefined;
+
+    const endTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateEndTime) <= Date.parse(validateStartTime) ||
+          Date.parse(validateEndTime) > Date.parse(endDateToString)
+          ? endDateToString
+          : validateEndTime
+        : undefined;
+
+    return [startTime, endTime];
+  }, [startTimeParam, endTimeParam]);
 
   useEffect(() => {
     let URL = '/sales-summary?';
+    let salesByItemURL = '/sales-by-item?';
+
     if (!queryParams?.endTime && !queryParams?.startTime) {
       URL += serializeFilters({
         startHour: 0,
         endHour: 24,
-        startTime: startDateDefault.toISOString(),
-        endTime: endDateDefault.toISOString(),
+        startTime: queryParams?.startTime || startDateToString,
+        endTime: queryParams?.endTime || endDateToString,
         page: 1,
         limit: 10,
       });
@@ -109,9 +128,32 @@ const SalesSummary = () => {
         page: queryParams?.page || 1,
         limit: queryParams?.limit || 10,
       });
+      salesByItemURL += serializeFilters({
+        endTime: queryParams?.endTime || '',
+        startTime: queryParams?.startTime || '',
+        search: salesByItemQueryParams?.search || '',
+        categories: salesByItemQueryParams?.categories || '',
+        page: salesByItemQueryParams?.page || 1,
+        limit: salesByItemQueryParams?.limit || 10,
+      });
     }
+    setDateRange([
+      new Date(queryParams?.startTime) || startDateDefault,
+      new Date(queryParams?.endTime) || endDateDefault,
+    ]);
 
+    dispatch(
+      updateQueryParams({
+        key: 'sales-by-item',
+        value: {
+          ...salesByItemQueryParams,
+          endTime: queryParams?.endTime,
+          startTime: queryParams?.startTime,
+        },
+      }),
+    );
     router.push(URL);
+    dispatch(updateURLPages({ 'sales-by-item': `${salesByItemURL}` }));
   }, [
     queryParams?.startHourFilter,
     queryParams?.endHourFilter,
@@ -130,7 +172,7 @@ const SalesSummary = () => {
         setHourPeriodLabel(`From: ${startHourParam}h - to: ${endHourParam}h`);
         setValueFIlterByHour('Custom period');
       }
-      setDateRange([new Date(startTimeParam || startDateDefault), new Date(endTimeParam || endDateDefault)]);
+      setDateRange([new Date(startTimeUrl || ''), new Date(endTimeUrl || '')]);
       dispatch(
         updateQueryParams({
           key: 'sales-summary',
@@ -138,8 +180,8 @@ const SalesSummary = () => {
             ...queryParams,
             startHourFilter: startHourParam,
             endHourFilter: endHourParam,
-            endTime: endTimeParam,
-            startTime: startTimeParam,
+            endTime: endTimeUrl,
+            startTime: startTimeUrl,
             page: pageUrl,
             limit: limitUrl,
           },
@@ -151,19 +193,21 @@ const SalesSummary = () => {
   }, [searchParams]);
 
   const saleData = salesSummaryData?.saleData;
-  const tableData = salesSummaryData?.data;
+  const tableData = salesSummaryData?.data.map((item: SaleSummaryType) => ({
+    ...item,
+    grossSales: formatPrice(item.grossSales),
+    refunds: formatPrice(item.refunds),
+    discounts: formatPrice(item.discounts),
+    netSales: formatPrice(item.netSales),
+    estProfits: formatPrice(item.estimatedProfit),
+  }));
 
   const SalesSummaryButton = [
-    {
-      title: '',
-      options: [
-        { label: 'Gross sales', value: saleData?.grossSales },
-        { label: 'Refunds', value: saleData?.refunds },
-        { label: 'Discounts', value: saleData?.totalDiscounts },
-        { label: 'Net sales', value: saleData?.netSales },
-        { label: 'Est. profit', value: saleData?.estimatedProfit },
-      ],
-    },
+    { label: 'Gross sales', value: formatPrice(saleData?.grossSales) },
+    { label: 'Refunds', value: formatPrice(saleData?.refunds) },
+    { label: 'Discounts', value: formatPrice(saleData?.totalDiscounts) },
+    { label: 'Net sales', value: formatPrice(saleData?.netSales) },
+    { label: 'Est. profit', value: formatPrice(saleData?.estimatedProfit) },
   ];
   const chartData = generateChartData(salesSummaryData, typeChart);
 
@@ -199,7 +243,7 @@ const SalesSummary = () => {
     {
       title: 'Est. Profit',
       responsive: ['md'],
-      dataIndex: 'estimatedProfit',
+      dataIndex: 'estProfits',
       width: 80,
     },
   ];
@@ -210,8 +254,10 @@ const SalesSummary = () => {
 
   const handleChangeDateRangePicker = (startDate: Date | null, endDate: Date | null) => {
     setDateRange([startDate, endDate]);
+
     const formattedStartDate = startDate ? startDate.toISOString() : null;
     const formattedEndDate = endDate ? endDate.toISOString() : null;
+
     if (!!endDate && !!startDate && endDate > startDate) {
       const valuesToUpdate = {
         startTime: formattedStartDate,
@@ -243,11 +289,11 @@ const SalesSummary = () => {
   const exportToCSV = () => {
     const exportData = salesSummaryData?.allData.map((row: any) => ({
       time: getFormatDateTime(row.time),
-      grossSales: row.grossSales,
-      refunds: row.refunds,
-      discounts: row.discounts,
-      netSales: row.netSales,
-      estProfit: row.estimatedProfit,
+      grossSales: formatPrice(row.grossSales),
+      refunds: formatPrice(row.refunds),
+      discounts: formatPrice(row.discounts),
+      netSales: formatPrice(row.netSales),
+      estProfit: formatPrice(row.estimatedProfit),
     }));
     const columNames = ['Time', 'Gross Sales', 'Refunds', 'Discounts', 'Net Sales', 'Est. Profit'];
     handleDownloadCSV(

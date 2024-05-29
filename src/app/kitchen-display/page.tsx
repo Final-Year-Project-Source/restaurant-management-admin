@@ -1,35 +1,30 @@
 'use client';
 import SearchInput from '@/components/adminPage/SearchInput';
-import DateRangePicker from '@/components/dateRangePicker';
 import Dropdown from '@/components/dropdown/Dropdown';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
 import { updateQueryParams } from '@/redux/features/queryParamsSlice';
 import { useGetGroupsQuery, useGetOrdersQuery } from '@/redux/services/kds';
 import { RootState } from '@/redux/store';
-import { getSelectedItems, serializeFilters } from '@/utils/commonUtils';
-import { convertGroupsToOptions, HEADER_LAYOUT, KDS_STATUSES, PADDING_BLOCK_CONTENT_LAYOUT } from '@/utils/constants';
+import { getSelectedItems, serializeFilters, validateAndConvertDate } from '@/utils/commonUtils';
+import {
+  convertGroupsToOptions,
+  endDateDefault,
+  HEADER_LAYOUT,
+  KDS_STATUSES,
+  PADDING_BLOCK_CONTENT_LAYOUT,
+  startDateDefault,
+} from '@/utils/constants';
 import { debounce } from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Ticket from '../../components/adminPage/Ticket';
 import './kds.scss';
 import { SkeletonTicket } from '@/components/skeleton/skeletonTicket';
+import DateRangePicker from '@/components/dateRangePicker';
 import { useSession } from 'next-auth/react';
 
-const startDate = (() => {
-  const thisWeekStartDate = new Date();
-  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
-  thisWeekStartDate.setHours(0, 0, 0, 0);
-  return thisWeekStartDate;
-})();
-const endDateDefault = (() => {
-  const thisDate = new Date();
-  thisDate.setHours(23, 59, 59, 59);
-  return thisDate;
-})();
-const endDate = endDateDefault;
 const KitchenDisplay = () => {
   const searchParams = useSearchParams();
   const audioRef = useRef(null);
@@ -50,10 +45,36 @@ const KitchenDisplay = () => {
   const startTimeParam = searchParams.get('start_time') || '';
   const endTimeParam = searchParams.get('end_time') || '';
 
+  const endDateToString = endDateDefault.toISOString();
+  const startDateToString = startDateDefault.toISOString();
+
+  const [startTimeUrl, endTimeUrl] = useMemo(() => {
+    const validateStartTime = validateAndConvertDate(startTimeParam, startDateToString);
+    const validateEndTime = validateAndConvertDate(endTimeParam, endDateToString);
+
+    const startTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateStartTime) >= Date.parse(validateEndTime)
+          ? startDateToString
+          : validateStartTime
+        : undefined;
+
+    const endTime =
+      validateStartTime && validateEndTime
+        ? Date.parse(validateEndTime) <= Date.parse(validateStartTime)
+          ? endDateToString
+          : validateEndTime
+        : undefined;
+
+    return [startTime, endTime];
+  }, [startTimeParam, endTimeParam]);
+
   const [isOpenSearch, setIsOpenSearch] = useState(false);
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDate, endDate]);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const allKdsTicketsRef = useRef<HTMLDivElement | null>(null);
   const queryParams = useSelector((state: RootState) => state.queryParams['kitchen-display']);
+  const billQueryParams = useSelector((state: RootState) => state.queryParams.bills);
+
   const headerKDSElement = isMobile
     ? document.getElementsByClassName('kds-header-mobile')[0]
     : document.getElementsByClassName('kds-header')[0];
@@ -65,12 +86,12 @@ const KitchenDisplay = () => {
     isFetching,
   } = useGetOrdersQuery(
     {
+      access_token: access_token,
       search: queryParams?.search || '',
       group_filter: queryParams?.groups || [],
       order_statuses: queryParams?.orders || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
-      access_token: access_token,
     },
     { pollingInterval: 5000 },
   );
@@ -101,20 +122,18 @@ const KitchenDisplay = () => {
   }, [queryParams?.search, queryParams?.orders, queryParams?.groups, queryParams?.endTime, queryParams?.startTime]);
 
   useEffect(() => {
+    if (isFetchingGroups) return;
+
     let URL = '/kitchen-display?';
-    if (
-      !queryParams?.search &&
-      !queryParams?.orders?.length &&
-      !queryParams?.groups?.length &&
-      !queryParams?.endTime &&
-      !queryParams?.startTime
-    ) {
+    let BILL_URL = '/bills?';
+
+    if (!queryParams?.visited) {
       URL += serializeFilters({
         search: '',
         orderStatus: DEFAULT_ORDERS_VALUE,
         groups: DEFAULT_GROUPS_VALUE,
-        startTime: startDate.toISOString(),
-        endTime: endDate.toISOString(),
+        startTime: queryParams?.startTime || startDateToString,
+        endTime: queryParams?.endTime || endDateToString,
       });
     } else {
       URL += serializeFilters({
@@ -124,22 +143,50 @@ const KitchenDisplay = () => {
         endTime: queryParams?.endTime || '',
         startTime: queryParams?.startTime || '',
       });
-    }
 
+      BILL_URL += serializeFilters({
+        search: billQueryParams?.search || '',
+        orderStatus: billQueryParams?.orderStatus || [],
+        paymentStatus: billQueryParams?.paymentStatus || [],
+        endTime: queryParams?.endTime || '',
+        startTime: queryParams?.startTime || '',
+        page: billQueryParams?.page || 1,
+        limit: billQueryParams?.limit || 10,
+      });
+    }
+    setDateRange([
+      new Date(queryParams?.startTime) || startDateDefault,
+      new Date(queryParams?.endTime) || endDateDefault,
+    ]);
+
+    dispatch(
+      updateQueryParams({
+        key: 'bills',
+        value: {
+          ...billQueryParams,
+          endTime: queryParams?.endTime,
+          startTime: queryParams?.startTime,
+        },
+      }),
+    );
     router.push(URL);
+    dispatch(updateURLPages({ bills: `${BILL_URL}` }));
   }, [
     queryParams?.search,
     queryParams?.orders,
     queryParams?.groups,
     queryParams?.endTime,
     queryParams?.startTime,
+    queryParams?.visited,
     isFetchingGroups,
   ]);
 
   useEffect(() => {
-    if (searchParams) {
+    if (isFetchingGroups) return;
+
+    if (groupsUrl?.length || orderUrl?.length) {
       setIsOpenSearch(!!queryParams?.search);
-      setDateRange([new Date(startTimeParam || startDate), new Date(endTimeParam || endDate)]);
+      setDateRange([new Date(startTimeUrl || ''), new Date(endTimeUrl || '')]);
       if (DEFAULT_GROUPS_VALUE?.length) {
         groupsUrl =
           (searchParams?.get('group_filter')?.split(',') || [])?.length > 0
@@ -163,26 +210,29 @@ const KitchenDisplay = () => {
           key: 'kitchen-display',
           value: {
             ...queryParams,
+            visited: true,
             search: searchUrl || '',
             orders: orderUrl,
             groups: groupsUrl,
-            endTime: endTimeParam,
-            startTime: startTimeParam,
+            endTime: endTimeUrl,
+            startTime: startTimeUrl,
           },
         }),
       );
 
       dispatch(updateURLPages({ 'kitchen-display': `/kitchen-display?${searchParams}` }));
     }
-  }, [searchParams]);
+  }, [searchParams, isFetchingGroups]);
 
   const handleUpdateParamsToURL = (values: { [key: string]: any }) => {
     dispatch(updateQueryParams({ key: 'kitchen-display', value: values }));
   };
   const handleChangeDateRangePicker = (startDate: Date | null, endDate: Date | null) => {
     setDateRange([startDate, endDate]);
+
     const formattedStartDate = startDate ? startDate.toISOString() : null;
     const formattedEndDate = endDate ? endDate.toISOString() : null;
+
     if (!!endDate && !!startDate && endDate > startDate) {
       const valuesToUpdate = {
         startTime: formattedStartDate,

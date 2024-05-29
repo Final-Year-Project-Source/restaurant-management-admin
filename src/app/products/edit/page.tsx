@@ -133,25 +133,7 @@ const EditProduct = () => {
         description: values?.description.trim(),
         id: id || '',
       };
-
-      // updateProduct({ access_token, data: data })
-      //   .unwrap()
-      //   .then((response) => {
-      //     if (response && response.data) {
-      //       if (fileList[0] && fileList[0].originFileObj) {
-      //         uploadImage({
-      //           image_file: fileList[0].originFileObj as File,
-      //         });
-      //       } else if (isChangedImage) {
-      //         deleteImageProduct({
-      //           id: response.data.id,
-      //         });
-      //         setFileList([]);
-      //       }
-      //     }
-      //     router.push(`/products`);
-      //   })
-      //   .catch((error) => toast.error(error?.data?.message));
+      const image_url = isChangedImage ? '' : product?.image_url;
 
       if (fileList[0] && fileList[0].originFileObj) {
         uploadImage({
@@ -165,7 +147,7 @@ const EditProduct = () => {
               .catch((error) => toast.error(error?.data?.message));
           });
       } else {
-        updateProduct({ access_token, data: { ...data, image_url: '' } })
+        updateProduct({ access_token, data: { ...data, image_url: image_url } })
           .unwrap()
           .then(() => router.push(`/products`))
           .catch((error) => toast.error(error?.data?.message));
@@ -534,13 +516,13 @@ const EditProduct = () => {
 
           <div className="lg:w-1/2 flex flex-col space-y-[10px] max-lg:pt-5">
             <span className="font-medium">Product image</span>
-            <div className="flex flex-col h-[300px] w-[300px]">
+            <div className="flex flex-col h-[300px] w-[300px] rounded-full">
               {isLoading ? (
                 <Skeleton.Image active />
               ) : (
                 <ImgCrop rotationSlider fillColor="transparent">
                   <Upload
-                    listType="picture-card"
+                    listType="picture-circle"
                     fileList={fileList}
                     onChange={onChange}
                     onPreview={onPreview}

@@ -13,7 +13,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
   let Items = [];
   const discount_text = discount
     ? discount.type === 'FIXED_AMOUNT'
-      ? `฿${discount?.value}`
+      ? `VND${discount?.value}`
       : `${discount?.value}%`
     : null;
   if (bill?.orders?.length > 0) {

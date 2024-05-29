@@ -90,7 +90,7 @@ const Layout: FC<Props> = ({ children }) => {
     setManagementName(`${capitalize(firstPath?.split('-')?.join(' '))}`);
   }, [pathname, firstPath]);
 
-  const authenticatedRoutes = ['/login', '/force-change-default-password', '/register'];
+  const authenticatedRoutes = ['/login', '/force-change-default-password', '/register', '/forgot-password'];
 
   // const firstLetter = session?.user.name?.charAt(0).toUpperCase();
   // const itemsAvatar: MenuProps['items'] = [
@@ -405,7 +405,7 @@ const Layout: FC<Props> = ({ children }) => {
           <div
             className={`${
               isMobile ? `mb-[-15px] h-full ${firstPath !== 'kitchen-display' && `bg-white`}` : `p-5 `
-            }  app-body w-full overflow-y-auto`}
+            }  app-body w-full overflow-y-auto overflow-x-hidden`}
           >
             {children}
           </div>

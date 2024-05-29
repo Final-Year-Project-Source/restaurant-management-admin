@@ -70,7 +70,7 @@ const AddTable = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (฿${item.value})`
+              ? `${item.name} (VND${item.value})`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||

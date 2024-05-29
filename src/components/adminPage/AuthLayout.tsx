@@ -8,13 +8,13 @@ const items: TabsProps['items'] = [
     key: 'login',
     label: 'Login',
   },
-  {
-    key: 'register',
-    label: 'Register',
-  },
+  // {
+  //   key: 'register',
+  //   label: 'Register',
+  // },
 ];
 
-const AuthLayout = ({ children }: { children: React.ReactNode }) => {
+const AuthLayout = ({ children, isHiddenTabs = false }: { children: React.ReactNode; isHiddenTabs?: boolean }) => {
   // const session = await getServerSession(options);
   const path = usePathname();
   const router = useRouter();
@@ -28,26 +28,28 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="flex h-full items-center justify-center">
       <div className="rounded-2xl bg-white sm:shadow-2xl flex flex-col justify-center items-center min-w-[500px] max-sm-w-full ">
         <Image priority src={'/assets/icons/mini-logo.svg'} alt="logo" width={150} height={150} />
-        <ConfigProvider
-          theme={{
-            components: {
-              Tabs: {
-                itemSelectedColor: '#FA4A0C',
-                itemHoverColor: 'rgba(19, 28, 22, 0.5)',
-                itemActiveColor: 'rgba(19, 28, 22, 0.5)',
-                inkBarColor: '#FA4A0C',
+        {!isHiddenTabs && (
+          <ConfigProvider
+            theme={{
+              components: {
+                Tabs: {
+                  itemSelectedColor: '#FA4A0C',
+                  itemHoverColor: 'rgba(19, 28, 22, 0.5)',
+                  itemActiveColor: 'rgba(19, 28, 22, 0.5)',
+                  inkBarColor: '#FA4A0C',
+                },
               },
-            },
-          }}
-        >
-          <Tabs
-            className="w-full"
-            defaultActiveKey={path.slice(1) || 'login'}
-            centered
-            items={items}
-            onChange={onChange}
-          />
-        </ConfigProvider>
+            }}
+          >
+            <Tabs
+              className="w-full"
+              defaultActiveKey={path.slice(1) || 'login'}
+              centered
+              items={items}
+              onChange={onChange}
+            />
+          </ConfigProvider>
+        )}
         {children}
       </div>
     </div>

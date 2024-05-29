@@ -13,7 +13,7 @@
     }
     .ant-upload.ant-upload-select {
       transition: none !important;
-      border-radius: 16px !important;
+      border-radius: 999px !important;
       border: 0.5px solid rgba(19, 28, 22, 0.2) !important;
       background-color: white !important;
     }
@@ -29,31 +29,29 @@
 }
 
 .product-customized {
-  .ant-table-cell {
-    // @media (max-width: 768px) {
-    align-content: center;
-    // }
+  &.scroll-bar {
+    .ant-table-cell {
+      align-content: center;
 
-    &:last-child {
-      padding-block: 16px !important;
-      @media (max-width: 768px) {
-        padding-block: 26px !important;
+      &:last-child {
+        padding: 16px 4px 16px 25px !important;
+      }
+      &:nth-child(1) {
+        padding: 6px 4px 6px 25px !important;
+
+        @media (max-width: 768px) {
+          padding: 16px 4px 16px 25px !important;
+        }
       }
     }
-    &:first-child {
-      padding-block: 6px !important;
-      @media (max-width: 768px) {
-        padding-block: 16px !important;
-      }
-    }
-  }
 
-  .image-customized {
-    // box-shadow: -1px 3px 4px 0px rgba(0, 0, 0, 0.25);
-    // border-radius: 50%;
-    &.opacity {
-      img {
-        opacity: 0.5 !important;
+    .image-customized {
+      // box-shadow: -1px 3px 4px 0px rgba(0, 0, 0, 0.25);
+      // border-radius: 50%;
+      &.opacity {
+        img {
+          opacity: 0.5 !important;
+        }
       }
     }
   }
@@ -107,7 +105,7 @@
     }
     .ant-upload.ant-upload-select {
       transition: none !important;
-      border-radius: 16px !important;
+      border-radius: 999px !important;
       border: 0.5px solid rgba(19, 28, 22, 0.2) !important;
       background-color: white !important;
     }
@@ -127,5 +125,26 @@
   width: 388px !important;
   .ant-modal-content {
     border-radius: 16px !important;
+  }
+}
+
+.stock-quantity-box {
+  display: flex;
+  .low-stock-box {
+    margin-left: 10px;
+  }
+  @media (max-width: 880px) {
+    flex-direction: column;
+    .low-stock-box {
+      margin-left: 0px;
+      margin-top: 10px;
+    }
+  }
+  @media (max-width: 767px) {
+    flex-direction: row;
+    .low-stock-box {
+      margin-top: 0px;
+      margin-left: 10px;
+    }
   }
 }

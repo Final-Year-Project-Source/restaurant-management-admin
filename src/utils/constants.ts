@@ -20,7 +20,7 @@ export const PROTEINS = [
   { label: 'Chicken', value: 'chicken' },
   { label: 'Pork', value: 'pork' },
   { label: 'Beef', value: 'beef' },
-  { label: 'SeaFood', value: 'seafood' },
+  { label: 'Seafood', value: 'seafood' },
   { label: 'Other', value: 'other' },
 ];
 
@@ -35,7 +35,7 @@ export const DIETARY_RESTRICTIONS_GROUP = {
 };
 export const PROTEINS_GROUP = {
   groupName: 'Protein',
-  options: [{ label: 'Chicken' }, { label: 'Pork' }, { label: 'Beef' }, { label: 'SeaFood' }, { label: 'Other' }],
+  options: [{ label: 'Chicken' }, { label: 'Pork' }, { label: 'Beef' }, { label: 'Seafood' }, { label: 'Other' }],
 };
 
 export const TYPES = [
@@ -97,7 +97,7 @@ export const convertDiscountToOptions = (discountsList: DiscountType[] = []): { 
   }
 
   return discountsList?.map((item: any) => ({
-    label: item.type === 'FIXED_PERCENT' ? `${item.name} (${item.value}%)` : `${item.name} (฿${item.value})`,
+    label: item.type === 'FIXED_PERCENT' ? `${item.name} (${item.value}%)` : `${item.name} (VND${item.value})`,
     value: item.id,
   }));
 };
@@ -245,3 +245,34 @@ export const PADDING_BOTTOM_TO_SCROLL = 20;
 
 //menu page
 export const PADDING_BOTTOM_MENU = 40;
+
+// export const startDateDefault = (() => {
+//   const thisWeekStartDate = new Date();
+//   const dayOfWeek = thisWeekStartDate.getDay();
+//   const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek; // Adjust for Sunday (0) being the start of the week
+//   thisWeekStartDate.setDate(thisWeekStartDate.getDate() + diffToMonday);
+//   thisWeekStartDate.setHours(0, 0, 0, 0);
+//   return thisWeekStartDate;
+// })();
+
+// export const endDateDefault = (() => {
+//   const thisWeekEndDate = new Date();
+//   const dayOfWeek = thisWeekEndDate.getDay();
+//   const diffToSunday = 7 - (dayOfWeek === 0 ? 7 : dayOfWeek); // Adjust for Sunday (0) being the start of the week
+//   thisWeekEndDate.setDate(thisWeekEndDate.getDate() + diffToSunday);
+//   thisWeekEndDate.setHours(23, 59, 59, 999);
+//   return thisWeekEndDate;
+// })();
+
+export const startDateDefault = (() => {
+  const thisWeekStartDate = new Date();
+  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
+  thisWeekStartDate.setHours(0, 0, 0, 0);
+  return thisWeekStartDate;
+})();
+
+export const endDateDefault = (() => {
+  const thisDate = new Date();
+  thisDate.setHours(23, 59, 59, 59);
+  return thisDate;
+})();

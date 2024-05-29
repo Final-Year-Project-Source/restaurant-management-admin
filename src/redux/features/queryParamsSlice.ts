@@ -1,3 +1,4 @@
+import { endDateDefault, startDateDefault } from '@/utils/constants';
 import { getQueryParams } from '@/utils/localStorage';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -19,8 +20,18 @@ export type QueryParamsState = {
     endTime: string;
     orderStatus: string[];
     paymentStatus: string[];
+    sortByDate: string;
+    visited: boolean;
   };
-  'kitchen-display': { search: string; startTime: string; endTime: string; orders: string[]; groups: string[] };
+
+  'kitchen-display': {
+    search: string;
+    startTime: string;
+    endTime: string;
+    orders: string[];
+    groups: string[];
+    visited: boolean;
+  };
   modifiers: { search: string };
   'sales-summary': {
     page: number;
@@ -42,18 +53,16 @@ export type QueryParamsState = {
     limit: number;
     startTime: string;
     endTime: string;
+    sortByNoSold: string;
+    sortByNetSales: string;
+    sortByEstProfit: string;
     categories: string[];
+    visited: boolean;
   };
   'menu-categories': { search: string; page: number; limit: number };
   groups: { search: string; page: number; limit: number };
   tables: { page: number; limit: number };
   employees: { page: number; limit: number; roleFilter: string[]; visited: boolean };
-  feedbacks: {
-    page: number;
-    limit: number;
-    startTime: string;
-    endTime: string;
-  };
 };
 
 export const DEFAULT_QUERY_PARAMS = {
@@ -66,8 +75,26 @@ export const DEFAULT_QUERY_PARAMS = {
     limit: 10,
     visited: false,
   },
-  bills: { search: '', limit: 10, startTime: '', endTime: '', orderStatus: [], paymentStatus: [], page: 1 },
-  'kitchen-display': { search: '', endTime: '', startTime: '', groups: [], orders: [] },
+
+  bills: {
+    search: '',
+    limit: 10,
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
+    orderStatus: [],
+    paymentStatus: [],
+    page: 1,
+    sortByDate: 'desc',
+    visited: false,
+  },
+  'kitchen-display': {
+    search: '',
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
+    groups: [],
+    orders: [],
+    visited: false,
+  },
   modifiers: { search: '' },
   feedbacks: {
     page: 1,
@@ -78,22 +105,27 @@ export const DEFAULT_QUERY_PARAMS = {
   'sales-summary': {
     page: 1,
     limit: 10,
-    startTime: '',
-    endTime: '',
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
     startHourFilter: 0,
     endHourFilter: 24,
   },
-  'sales-by-item': { search: '', page: 1, limit: 10, startTime: '', endTime: '', categories: [] },
+  'sales-by-item': {
+    search: '',
+    page: 1,
+    limit: 10,
+    startTime: startDateDefault.toISOString(),
+    endTime: endDateDefault.toISOString(),
+    categories: [],
+    visited: false,
+    sortByNoSold: 'desc',
+    sortByNetSales: '',
+    sortByEstProfit: '',
+  },
   'menu-categories': { search: '', page: 1, limit: 10 },
   groups: { search: '', page: 1, limit: 10 },
   tables: { page: 1, limit: 10 },
   employees: { limit: 10, roleFilter: [], page: 1, visited: false },
-  feedbacks: {
-    page: 10,
-    limit: 1,
-    startTime: '',
-    endTime: '',
-  },
 };
 
 const fallbackInitialState: QueryParamsState = DEFAULT_QUERY_PARAMS;

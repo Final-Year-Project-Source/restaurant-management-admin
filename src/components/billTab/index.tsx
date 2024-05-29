@@ -197,7 +197,7 @@ const BillTab: React.FC<Props> = ({
                       onClick={onClickRecordPaymentButton}
                       disabled={!isEDCPaymentButtonActive && !isBeamPaymentButtonActive}
                     >
-                      Record payment ・ {total}
+                      Record payment ・ {formatPrice(total)}
                     </Button>
                   </div>
                 </div>

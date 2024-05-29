@@ -95,7 +95,7 @@ const AddProduct = () => {
         modifier_ids: Array.isArray(values?.modifier_ids) ? values?.modifier_ids : [],
         description: values?.description.trim(),
       };
-      if (fileList[0]?.originFileObj) {
+      if (fileList[0] && fileList[0].originFileObj) {
         uploadImage({
           image_file: fileList[0].originFileObj as File,
         })
@@ -354,12 +354,12 @@ const AddProduct = () => {
 
           <div className="lg:w-1/2 flex flex-col space-y-[10px] max-lg:pt-5">
             <span className="font-medium">Product image</span>
-            <div className="flex flex-col h-[300px] w-[300px]">
+            <div className="flex flex-col h-[300px] w-[300px] rounded-full">
               <div>
                 {
                   <ImgCrop rotationSlider fillColor="transparent">
                     <Upload
-                      listType="picture-card"
+                      listType="picture-circle"
                       fileList={fileList}
                       onChange={onChange}
                       onPreview={onPreview}
