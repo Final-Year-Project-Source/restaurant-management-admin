@@ -157,23 +157,102 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ dateRange, onChange }
 
 export default DateRangePicker;
 
-const getStartOfWeek = (date: Date) => {
-  const day = date.getDay();
-  const diff = day === 0 ? -6 : 1 - day; // Adjust for Sunday (0) being the start of the week
-  const startOfWeek = new Date(date);
-  startOfWeek.setDate(date.getDate() + diff);
-  startOfWeek.setHours(0, 0, 0, 0);
-  return startOfWeek;
-};
+// const getStartOfWeek = (date: Date) => {
+//   const day = date.getDay();
+//   const diff = day === 0 ? -6 : 1 - day; // Adjust for Sunday (0) being the start of the week
+//   const startOfWeek = new Date(date);
+//   startOfWeek.setDate(date.getDate() + diff);
+//   startOfWeek.setHours(0, 0, 0, 0);
+//   return startOfWeek;
+// };
 
-const getEndOfWeek = (date: Date) => {
-  const day = date.getDay();
-  const diff = day === 0 ? 0 : 7 - day; // Adjust for Sunday (0) being the start of the week
-  const endOfWeek = new Date(date);
-  endOfWeek.setDate(date.getDate() + diff);
-  endOfWeek.setHours(23, 59, 59, 999);
-  return endOfWeek;
-};
+// const getEndOfWeek = (date: Date) => {
+//   const day = date.getDay();
+//   const diff = day === 0 ? 0 : 7 - day; // Adjust for Sunday (0) being the start of the week
+//   const endOfWeek = new Date(date);
+//   endOfWeek.setDate(date.getDate() + diff);
+//   endOfWeek.setHours(23, 59, 59, 999);
+//   return endOfWeek;
+// };
+
+// const rangePresets = [
+//   {
+//     label: 'Today',
+//     value: {
+//       startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+//       endDate: new Date(),
+//     },
+//   },
+//   {
+//     label: 'Yesterday',
+//     value: {
+//       startDate: (() => {
+//         const yesterday = new Date();
+//         yesterday.setDate(yesterday.getDate() - 1);
+//         yesterday.setHours(0, 0, 0, 0);
+//         return yesterday;
+//       })(),
+//       endDate: (() => {
+//         const yesterday = new Date();
+//         yesterday.setDate(yesterday.getDate() - 1);
+//         yesterday.setHours(23, 59, 59, 999);
+//         return yesterday;
+//       })(),
+//     },
+//   },
+//   {
+//     label: 'This week',
+//     value: {
+//       startDate: getStartOfWeek(new Date()),
+//       endDate: getEndOfWeek(new Date()),
+//     },
+//   },
+//   {
+//     label: 'Last week',
+//     value: {
+//       startDate: (() => {
+//         const lastWeek = new Date();
+//         lastWeek.setDate(lastWeek.getDate() - 7);
+//         return getStartOfWeek(lastWeek);
+//       })(),
+//       endDate: (() => {
+//         const lastWeek = new Date();
+//         lastWeek.setDate(lastWeek.getDate() - 7);
+//         return getEndOfWeek(lastWeek);
+//       })(),
+//     },
+//   },
+//   {
+//     label: 'This month',
+//     value: {
+//       startDate: (() => {
+//         const thisMonth = new Date();
+//         thisMonth.setDate(1);
+//         thisMonth.setHours(0, 0, 0, 0);
+//         return thisMonth;
+//       })(),
+//       endDate: new Date(),
+//     },
+//   },
+//   {
+//     label: 'Last month',
+//     value: {
+//       startDate: (() => {
+//         const lastMonth = new Date();
+//         lastMonth.setMonth(lastMonth.getMonth() - 1);
+//         lastMonth.setDate(1);
+//         lastMonth.setHours(0, 0, 0, 0);
+//         return lastMonth;
+//       })(),
+//       endDate: (() => {
+//         const lastMonthEnd = new Date();
+//         lastMonthEnd.setDate(0);
+//         lastMonthEnd.setHours(23, 59, 59, 999);
+//         return lastMonthEnd;
+//       })(),
+//     },
+//   },
+// ];
 
 const rangePresets = [
   {
@@ -187,38 +266,45 @@ const rangePresets = [
     label: 'Yesterday',
     value: {
       startDate: (() => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        yesterday.setHours(0, 0, 0, 0);
-        return yesterday;
+        const yesterdayStartDate = new Date();
+        yesterdayStartDate.setDate(yesterdayStartDate.getDate() - 1);
+        yesterdayStartDate.setHours(0, 0, 0, 0);
+        return yesterdayStartDate;
       })(),
       endDate: (() => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        yesterday.setHours(23, 59, 59, 999);
-        return yesterday;
+        const yesterdayEndDate = new Date();
+        yesterdayEndDate.setDate(yesterdayEndDate.getDate() - 1);
+        yesterdayEndDate.setHours(23, 59, 59, 999);
+        return yesterdayEndDate;
       })(),
     },
   },
   {
     label: 'This week',
     value: {
-      startDate: getStartOfWeek(new Date()),
-      endDate: getEndOfWeek(new Date()),
+      startDate: (() => {
+        const thisWeekStartDate = new Date();
+        thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
+        thisWeekStartDate.setHours(0, 0, 0, 0);
+        return thisWeekStartDate;
+      })(),
+      endDate: new Date(),
     },
   },
   {
     label: 'Last week',
     value: {
       startDate: (() => {
-        const lastWeek = new Date();
-        lastWeek.setDate(lastWeek.getDate() - 7);
-        return getStartOfWeek(lastWeek);
+        const lastWeekStartDate = new Date();
+        lastWeekStartDate.setDate(lastWeekStartDate.getDate() - lastWeekStartDate.getDay() - 6);
+        lastWeekStartDate.setHours(0, 0, 0, 0);
+        return lastWeekStartDate;
       })(),
       endDate: (() => {
-        const lastWeek = new Date();
-        lastWeek.setDate(lastWeek.getDate() - 7);
-        return getEndOfWeek(lastWeek);
+        const lastWeekEndDate = new Date();
+        lastWeekEndDate.setDate(lastWeekEndDate.getDate() - lastWeekEndDate.getDay());
+        lastWeekEndDate.setHours(23, 59, 59, 999);
+        return lastWeekEndDate;
       })(),
     },
   },
@@ -226,10 +312,10 @@ const rangePresets = [
     label: 'This month',
     value: {
       startDate: (() => {
-        const thisMonth = new Date();
-        thisMonth.setDate(1);
-        thisMonth.setHours(0, 0, 0, 0);
-        return thisMonth;
+        const thisMonthStartDate = new Date();
+        thisMonthStartDate.setDate(1);
+        thisMonthStartDate.setHours(0, 0, 0, 0);
+        return thisMonthStartDate;
       })(),
       endDate: new Date(),
     },
@@ -238,17 +324,17 @@ const rangePresets = [
     label: 'Last month',
     value: {
       startDate: (() => {
-        const lastMonth = new Date();
-        lastMonth.setMonth(lastMonth.getMonth() - 1);
-        lastMonth.setDate(1);
-        lastMonth.setHours(0, 0, 0, 0);
-        return lastMonth;
+        const lastMonthStartDate = new Date();
+        lastMonthStartDate.setMonth(lastMonthStartDate.getMonth() - 1);
+        lastMonthStartDate.setDate(1);
+        lastMonthStartDate.setHours(0, 0, 0, 0);
+        return lastMonthStartDate;
       })(),
       endDate: (() => {
-        const lastMonthEnd = new Date();
-        lastMonthEnd.setDate(0);
-        lastMonthEnd.setHours(23, 59, 59, 999);
-        return lastMonthEnd;
+        const lastMonthEndDate = new Date();
+        lastMonthEndDate.setDate(0);
+        lastMonthEndDate.setHours(23, 59, 59, 999);
+        return lastMonthEndDate;
       })(),
     },
   },
