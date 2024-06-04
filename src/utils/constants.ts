@@ -60,8 +60,8 @@ export const convertStocksToOptions = (stocks: { [key: string]: number }): { lab
 
   return [
     { label: `In stock`, value: 'in stock' },
-    { label: `Low stock (${stocks?.LOW_STOCK})`, value: 'low stock' },
-    { label: `Out of stock (${stocks?.OUT_OF_STOCK})`, value: 'out of stock' },
+    { label: `Low stock (${stocks?.[LOW_STOCK]})`, value: 'low stock' },
+    { label: `Out of stock (${stocks?.[OUT_OF_STOCK]})`, value: 'out of stock' },
   ];
 };
 
@@ -87,7 +87,7 @@ export const convertCategoriesToOptions = (
 
   return categories.map((category) => ({
     label: category.name,
-    value: type === 'id' ? category.id || '' : lowerCase(category?.name) || '',
+    value: type === 'id' ? category.id || '' : category?.name.replace(/\,/g, '*').toLowerCase() || '',
   }));
 };
 
@@ -97,7 +97,7 @@ export const convertDiscountToOptions = (discountsList: DiscountType[] = []): { 
   }
 
   return discountsList?.map((item: any) => ({
-    label: item.type === 'FIXED_PERCENT' ? `${item.name} (${item.value}%)` : `${item.name} (VND${item.value})`,
+    label: item.type === 'FIXED_PERCENT' ? `${item.name} (${item.value}%)` : `${item.name} (${item.value} vnd)`,
     value: item.id,
   }));
 };
@@ -109,7 +109,7 @@ export const convertGroupsToOptions = (groups: GroupType[] = [], type?: string):
 
   return groups.map((group) => ({
     label: group?.name || '',
-    value: type === 'id' ? group?.id || '' : lowerCase(group?.name) || '',
+    value: type === 'id' ? group?.id || '' : group?.name.toLowerCase() || '',
   }));
 };
 
@@ -216,6 +216,8 @@ export const COMPLETED = 'completed';
 export const CANCELLED = 'cancelled';
 export const LOW_STOCK = 'Low stock' || 'low stock';
 export const OUT_OF_STOCK = 'Out of stock' || 'out of stock';
+
+export const DEFAULT_PASSWORD = 'staff@123456';
 
 //header layout
 export const HEADER_LAYOUT = 57;

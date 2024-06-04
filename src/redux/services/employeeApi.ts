@@ -1,3 +1,4 @@
+import { DEFAULT_PASSWORD } from '@/utils/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const employeeApi = createApi({
@@ -88,16 +89,15 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    resetPassword: builder.mutation<any, { id: string }>({
-      query: ({ id }) => ({
-        url: `user/=${id}`,
+    resetPassword: builder.mutation<any, { access_token: string; id: string }>({
+      query: ({ access_token, id }) => ({
+        url: `user/${id}`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
         },
-        body: {
-          data: { password: `${process.env.STAFF_DEFAULT_PASSWORD}`, is_change_default_password: false },
-        },
+        body: { password: `${DEFAULT_PASSWORD}`, is_change_default_password: false },
       }),
       invalidatesTags: ['User'],
     }),

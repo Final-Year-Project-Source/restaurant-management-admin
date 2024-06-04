@@ -49,7 +49,6 @@ const SalesSummary = () => {
   const [typeChart, setTypeChart] = useState('gross sales');
   const queryParams = useSelector((state: RootState) => state.queryParams['sales-summary']);
   const salesByItemQueryParams = useSelector((state: RootState) => state.queryParams['sales-by-item']);
-  console.log({ startDateDefault, endDateDefault });
 
   const { data: salesSummaryData, isLoading: isLoadingData } = useGetSalesSummaryQuery({
     page: queryParams?.page || 1,
@@ -203,11 +202,16 @@ const SalesSummary = () => {
   }));
 
   const SalesSummaryButton = [
-    { label: 'Gross sales', value: formatPrice(saleData?.grossSales) },
-    { label: 'Refunds', value: formatPrice(saleData?.refunds) },
-    { label: 'Discounts', value: formatPrice(saleData?.totalDiscounts) },
-    { label: 'Net sales', value: formatPrice(saleData?.netSales) },
-    { label: 'Est. profit', value: formatPrice(saleData?.estimatedProfit) },
+    {
+      title: '',
+      options: [
+        { label: 'Gross sales', value: formatPrice(saleData?.grossSales) },
+        { label: 'Refunds', value: formatPrice(saleData?.refunds) },
+        { label: 'Discounts', value: formatPrice(saleData?.totalDiscounts) },
+        { label: 'Net sales', value: formatPrice(saleData?.netSales) },
+        { label: 'Est. profit', value: formatPrice(saleData?.estimatedProfit) },
+      ],
+    },
   ];
   const chartData = generateChartData(salesSummaryData, typeChart);
 

@@ -25,7 +25,7 @@ const OrderSummary: FC<OrderSummaryProps> = ({
 }) => {
   const discount_text = discount
     ? discount?.type === 'FIXED_AMOUNT'
-      ? ` VND ${formatPrice(discount?.value)}`
+      ? ` ${formatPrice(discount?.value)} vnd`
       : `${discount?.value}%`
     : null;
   return (

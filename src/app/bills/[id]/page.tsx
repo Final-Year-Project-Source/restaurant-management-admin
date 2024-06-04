@@ -96,7 +96,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
   const discount_text = discount_info
     ? discount_info.type === 'FIXED_PERCENT'
       ? `${discount_info.name} (${discount_info.value}%)`
-      : `${discount_info.name} (VND${discount_info.value})`
+      : `${discount_info.name} (${discount_info.value} vnd)`
     : 'No discount';
   const [customerValue, setCustomerValue] = useState('');
   const [qrBeamPayment, setQrBeamPayment] = useState('');
@@ -294,7 +294,7 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (VND${item.value})`
+              ? `${item.name} (${item.value} vnd)`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||

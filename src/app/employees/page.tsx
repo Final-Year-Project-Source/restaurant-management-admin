@@ -59,7 +59,7 @@ export default function Employees() {
   //     return Math.ceil(total / limitUrl);
   //   }
   // }, [dataRes, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 && totalPages >= page ? page : 1), [page]);
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
   const roleUrl = searchParams?.get('role_filter')?.split(',') || [].filter((value) => ROLE_EMPLOYEE.includes(value));
 

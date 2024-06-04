@@ -61,9 +61,9 @@ const TaxInvoice = ({
         return {
           key: index,
           name: item.name,
-          total: `VND${total}`,
+          total: `${total} vnđ`,
           quantity: item.quantity,
-          price: `VND${price}`,
+          price: `${price} vnđ`,
         };
       });
   });
@@ -144,12 +144,12 @@ const TaxInvoice = ({
                 <label>Balance owing</label>
               </div>
               <div className="flex flex-col gap-4 justify-center items-end">
-                <span>VND{subTotal}</span>
-                <span>VND{taxInvoiceData.vat_charge}</span>
-                <span>VND{taxInvoiceData.service_charge}</span>
-                {/* <span>-VND{receipt_info?.total_discount}</span> */}
-                <span className="font-semibold">VND{taxInvoiceData.total}</span>
-                <span>VND0.00</span>
+                <span>{subTotal} vnd</span>
+                <span>{taxInvoiceData.vat_charge} vnd</span>
+                <span>{taxInvoiceData.service_charge} vnd</span>
+                {/* <span>-{receipt_info?.total_discount}</span> */}
+                <span className="font-semibold">{taxInvoiceData.total} vnd</span>
+                <span>0.00 vnd</span>
               </div>
             </div>
 
@@ -157,7 +157,7 @@ const TaxInvoice = ({
               <div className="w-1/2 flex flex-col items-center justify-center max-[768px]:text-left">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />
                 <label className="mb-2">Signature of Seller</label>
-                <span>Bella Ononjie Co., Ltd.</span>
+                <span>Bella Ononjie Ltd.</span>
               </div>
               <div className="w-1/2 flex flex-col items-center md:justify-center max-[768px]:text-right">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />
@@ -166,7 +166,7 @@ const TaxInvoice = ({
               </div>
             </div>
           </div>
-          <div className="flex justify-center items-center mt-auto text-[13px]">Page 1 of 1</div>
+          {/* <div className="flex justify-center items-center mt-auto text-[13px]">Page 1 of 1</div> */}
         </div>
       )}
     </main>

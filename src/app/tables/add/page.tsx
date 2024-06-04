@@ -70,7 +70,7 @@ const AddTable = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (VND${item.value})`
+              ? `${item.name} (${item.value}vnd)`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||
@@ -101,7 +101,7 @@ const AddTable = () => {
           icon={<ArrowLeftIcon1 />}
           disabled={isFetchingDiscount || isAddLoading}
           type="button"
-          onClick={() => router.push('/tables')}
+          onClick={() => router.back()}
         >
           Back
         </Button>

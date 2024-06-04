@@ -5,7 +5,7 @@ import TextAreaInput from '@/components/input/TextArea';
 import { OPERATOR } from '@/enums';
 import { updateBasket } from '@/redux/features/basketSlice';
 import { ProductType } from '@/types/products.types';
-import { getDietaryRequests, getDiscountedPrice, getModifiersModifier } from '@/utils/commonUtils';
+import { formatPrice, getDietaryRequests, getDiscountedPrice, getModifiersModifier } from '@/utils/commonUtils';
 import { open_sans } from '@/utils/fontUtils';
 import { Drawer, Skeleton } from 'antd';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
@@ -105,20 +105,20 @@ const Product: React.FC<ProductProps> = ({
 
   const btnText = (
     <div>
-      <span>Add to basket</span> <span className="font-normal">・ {totalAmount}</span>
+      <span>Add to basket</span> <span className="font-normal">・ {formatPrice(totalAmount)}</span>
     </div>
   );
 
   const body = (
     <div className="relative h-full">
-      <div className="h-[228px] max-md:bg-black-500">
+      <div className="h-[228px] header-background">
         {image_url && (
           <Image
-            className="absolute top-[40px] right-1/2 transform translate-x-1/2"
+            className={`absolute top-[120px] right-1/2 transform translate-x-1/2 rounded-full shadow-2xl`}
             src={image_url}
             alt="product"
-            width={260}
-            height={260}
+            width={160}
+            height={160}
             loading="lazy"
             onLoad={() => setLoadingImage(false)}
             onError={() => setLoadingImage(false)}

@@ -165,7 +165,11 @@ export const getColorByProgressingTime = (duration: number) => {
 };
 export const formatURL = (url: string) => {
   const decodedURL = decodeURIComponent(url);
-  const formattedURL = decodedURL.replace(/%2C/g, ',').replace(/\+/g, '%20');
+
+  const formattedURL = decodedURL.replace(/%2C/g, ',').replace(/\+&\+/g, '%20%26%20').replace(/\+/g, '%20');
+
+  console.log({ decodedURL, formattedURL });
+
   return formattedURL;
 };
 
@@ -195,6 +199,9 @@ export const serializeFilters = (filters: {
   sortByNetSales?: string;
   sortByEstProfit?: string;
   sortByDate?: string;
+  discounts?: string[];
+  locations?: string[];
+  preset?: string;
 }): string => {
   const {
     search,
@@ -214,6 +221,9 @@ export const serializeFilters = (filters: {
     sortByNetSales,
     sortByEstProfit,
     sortByDate,
+    discounts,
+    preset,
+    locations,
   } = filters;
   let queryParams = '';
   if (page) {
@@ -223,31 +233,40 @@ export const serializeFilters = (filters: {
     queryParams += 'limit=' + limit + '&';
   }
   if (search) {
-    queryParams += 'search=' + search + '&';
+    queryParams += 'search=' + encodeURIComponent(search) + '&';
   }
   if (categories && categories.length) {
-    queryParams += 'category_filter=' + categories.join(',') + '&';
+    queryParams += 'category_filter=' + categories.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (stocks && stocks.length) {
-    queryParams += 'stock_filter=' + stocks.join(',') + '&';
+    queryParams += 'stock_filter=' + stocks.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (groups && groups.length) {
-    queryParams += 'group_filter=' + groups.join(',') + '&';
+    queryParams += 'group_filter=' + groups.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (orderStatus && orderStatus.length) {
-    queryParams += 'order_status=' + orderStatus.join(',') + '&';
+    queryParams += 'order_status=' + orderStatus.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (paymentStatus && paymentStatus.length) {
-    queryParams += 'payment_status=' + paymentStatus.join(',') + '&';
+    queryParams += 'payment_status=' + paymentStatus.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (roleFilter && roleFilter.length) {
-    queryParams += 'role_filter=' + roleFilter.join(',') + '&';
+    queryParams += 'role_filter=' + roleFilter.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (startHour) {
     queryParams += 'start_hour=' + startHour + '&';
   }
   if (endHour) {
     queryParams += 'end_hour=' + endHour + '&';
+  }
+  if (preset) {
+    queryParams += 'preset_filter=' + preset + '&';
+  }
+  if (locations && locations.length) {
+    queryParams += 'table_location=' + locations.map((group) => encodeURIComponent(group)).join(',') + '&';
+  }
+  if (discounts && discounts.length) {
+    queryParams += 'discount_filter=' + discounts.map((group) => encodeURIComponent(group)).join(',') + '&';
   }
   if (sortByNoSold) {
     queryParams += 'sort_by_no_sold=' + sortByNoSold + '&';
@@ -274,7 +293,6 @@ export const serializeFilters = (filters: {
 
   return queryParams;
 };
-
 export const handleDownloadCSV = (data: any, csvName: string, columNames: any) => {
   const csvData = data || [];
   const columnNames = columNames;
@@ -352,3 +370,20 @@ export const validateAndConvertDate = (dateString: string, defaultDateValue: str
 
   return dateString;
 };
+
+export const convertDataURL = (searchParamsTmp: URLSearchParams, defaultValue: string[], key: string): string[] => {
+  const paramValue = searchParamsTmp.get(key);
+
+  if (!paramValue) {
+    return [];
+  }
+
+  return paramValue
+    .split(',')
+    .map((item: string) => decodeURIComponent(item))
+    .filter((value: string) => defaultValue.includes(value));
+};
+
+export const queryParamValuesToURL = (queryParamValues: string[], connectWord: string) =>
+  queryParamValues.map((item: string) => encodeURIComponent(item).replace(/&&/g, ',')).join(`,${connectWord || ''}=`) ||
+  '';
