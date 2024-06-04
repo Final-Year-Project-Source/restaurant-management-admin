@@ -41,7 +41,7 @@ export default function DiningTable() {
     : 10;
   const totalPages = allDiningTables?.totalPages;
 
-  const pageUrl = useMemo(() => (page > 0 && totalPages >= page ? page : 1), [page]);
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
   useEffect(() => {
     let URL = '/tables?';
@@ -109,7 +109,7 @@ export default function DiningTable() {
             {record.discount_type === 'FIXED_PERCENT'
               ? `${record.discount} (${record.value}%)`
               : record.discount_type === 'FIXED_AMOUNT'
-                ? `${record.discount} (VND${record.value})`
+                ? `${record.discount} (${record.value} vnd)`
                 : '-'}
           </p>
           {((record.discount_has_expiration && new Date(record.discount_expiration_date) < new Date()) ||

@@ -5,6 +5,7 @@ import { open_sans } from '@/utils/fontUtils';
 import { formatPrice } from '@/utils/commonUtils';
 import ProductImage from '@/components/ProductImage';
 import Tag from '@/components/tag/tag';
+import Image from 'next/image';
 
 interface ItemsProps {
   id: string;
@@ -29,7 +30,7 @@ const ProductItem: React.FC<ItemsProps> = ({
 }) => {
   return (
     <div className={`${className || ''} ${(!track_stock && 'opacity-50') || ''} flex w-full`}>
-      <ProductImage className="mr-[24px]" width={86} height={86} src={image_url} alt={name} />
+      {image_url && <Image className="mr-[24px]" width={86} height={86} src={image_url} alt={name} />}
       <div className="flex flex-col w-full">
         <div className="text-[14px] text-black-400 text-start">{name}</div>
         <div

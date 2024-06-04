@@ -6,7 +6,7 @@ const Menu: React.FC<AntdMenuProps> = ({ ...restProps }) => {
       theme={{
         components: {
           Menu: {
-            itemSelectedBg: '#fa4a0c',
+            itemSelectedBg: '#a82825',
             itemSelectedColor: '#fff',
             itemBorderRadius: 16,
             itemMarginBlock: 10,

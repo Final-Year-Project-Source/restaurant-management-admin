@@ -97,7 +97,7 @@ export default function ForgotPasswordForm() {
         A link to reset your password has been sent to your email address. Please check your email.
       </div>
       <div className="text-[14px] text-black-500 w-full">
-        Didnt receive the email?
+        Didn't receive the email?
         {resendTimeout > 0 ? (
           <span className="text-gray-500"> Resend in {resendTimeout} seconds</span>
         ) : (

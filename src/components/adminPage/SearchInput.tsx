@@ -1,5 +1,5 @@
 'use client';
-import { CloseOutlinedIcon, CloseOutlinedIcon1, SearchIcon1 } from '@/components/Icons';
+import { CloseOutlinedIcon1, SearchIcon1 } from '@/components/Icons';
 import { ConfigProvider, Input } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import './input.scss';

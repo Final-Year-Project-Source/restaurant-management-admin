@@ -148,6 +148,10 @@
       & > .search-container {
         margin: 5px;
         min-width: 100px;
+
+        .ant-input-clear-icon {
+          padding-right: 25px !important;
+        }
       }
     }
 

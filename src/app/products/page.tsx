@@ -16,7 +16,13 @@ import { RootState } from '@/redux/store';
 import { CategoryType } from '@/types/categories.types';
 import { GroupType } from '@/types/groups.types';
 import { ProductType } from '@/types/products.types';
-import { getSelectedItems, serializeFilters } from '@/utils/commonUtils';
+import {
+  convertDataURL,
+  formatPrice,
+  getSelectedItems,
+  queryParamValuesToURL,
+  serializeFilters,
+} from '@/utils/commonUtils';
 import {
   convertCategoriesToOptions,
   convertGroupsToOptions,
@@ -35,6 +41,7 @@ import './product.scss';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import ProductImage from '@/components/ProductImage';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 
 const Product = () => {
   const searchParams = useSearchParams();
@@ -64,24 +71,25 @@ const Product = () => {
     is_be: true,
     page: queryParams?.page || 1,
     limit: queryParams?.limit || 10,
-    search: queryParams?.search || '',
-    category_filter: queryParams?.categories?.join(',') || '',
-    group_filter: queryParams?.groups?.join(',') || '',
-    stock_filter: queryParams?.stocks?.join(',') || '',
+    search: encodeURIComponent(queryParams?.search || ''),
+    category_filter: queryParamValuesToURL(queryParams?.categories, 'category_filter') || '',
+    group_filter: queryParamValuesToURL(queryParams?.groups, 'group_filter') || '',
+    stock_filter: queryParamValuesToURL(queryParams?.stocks, 'stock_filter') || '',
   });
   const Products = filteredProductsData?.data || [];
 
-  let categoriesUrl = searchParams?.get('category_filter')?.split(',') || [];
-  let groupsUrl = searchParams?.get('group_filter')?.split(',') || [];
-  let stocksUrl = searchParams?.get('stock_filter')?.split(',') || [];
-  let searchUrl = searchParams.get('search') || '';
+  let categoriesUrl = convertDataURL(searchParams, DEFAULT_CATEGORIES_VALUE, 'category_filter');
+  let groupsUrl = convertDataURL(searchParams, DEFAULT_GROUPS_VALUE, 'group_filter');
+  let stocksUrl = convertDataURL(searchParams, DEFAULT_STOCKS_VALUE, 'stock_filter');
+  let searchUrl = decodeURIComponent(searchParams.get('search') || '');
   const page = parseInt(searchParams.get('page') || '1');
   let limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams.get('limit') || '10'))
     ? parseInt(searchParams.get('limit') || '') || 10
     : 10;
+  console.log({ CATEGORIES, categoriesUrl });
 
   const totalPages = filteredProductsData?.totalPages;
-  const pageUrl = useMemo(() => (page > 0 && totalPages >= page ? page : 1), [page]);
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
   const handleUpdateParamsToURL = (values: { [key: string]: any }) => {
     dispatch(updateQueryParams({ key: 'products', value: values }));
@@ -126,30 +134,15 @@ const Product = () => {
       setIsOpenSearchInput(!!queryParams?.search);
 
       if (DEFAULT_CATEGORIES_VALUE?.length) {
-        categoriesUrl =
-          (searchParams?.get('category_filter')?.split(',') || [])?.length > 0
-            ? (searchParams?.get('category_filter')?.split(',') || []).filter((value) =>
-                DEFAULT_CATEGORIES_VALUE.includes(value),
-              )
-            : [];
+        categoriesUrl = categoriesUrl?.length > 0 ? categoriesUrl : [];
       }
 
       if (DEFAULT_GROUPS_VALUE?.length) {
-        groupsUrl =
-          (searchParams?.get('group_filter')?.split(',') || [])?.length > 0
-            ? (searchParams?.get('group_filter')?.split(',') || []).filter((value) =>
-                DEFAULT_GROUPS_VALUE.includes(value),
-              )
-            : [];
+        groupsUrl = groupsUrl?.length > 0 ? groupsUrl : [];
       }
 
       if (DEFAULT_STOCKS_VALUE?.length) {
-        stocksUrl =
-          (searchParams?.get('stock_filter')?.split(',') || [])?.length > 0
-            ? (searchParams?.get('stock_filter')?.split(',') || []).filter((value) =>
-                DEFAULT_STOCKS_VALUE.includes(value),
-              )
-            : [];
+        stocksUrl = stocksUrl?.length > 0 ? stocksUrl : [];
       }
 
       dispatch(
@@ -193,7 +186,10 @@ const Product = () => {
       id: record?.id,
       data: { is_available: !record?.is_available },
       access_token: session?.user.access_token || '',
-    });
+    })
+      .unwrap()
+      .then()
+      .catch((error) => toast.error(error?.data?.message));
   };
 
   const columns: ColumnsType<ProductType> = [
@@ -250,7 +246,7 @@ const Product = () => {
         const isAvailable = record?.is_available;
         return (
           <span className={`${isAvailable ? '' : '!text-black-250'} ${isLowStock ? 'text-red-200' : ''}`}>
-            {record?.price}
+            {formatPrice(record?.price)}
           </span>
         );
       },
@@ -306,7 +302,7 @@ const Product = () => {
 
   const RenderFilterComponent = (
     <div className="dropdown-list w-full flex item-center justify-between">
-      <div className="dropdown-item min-w-[209px]">
+      <div className="dropdown-item min-w-[250px]">
         <Dropdown
           id="category_id"
           mode="multiple"
@@ -319,7 +315,9 @@ const Product = () => {
             CATEGORIES,
             'All menu categories',
           )}
-          onChange={(value) => handleUpdateParamsToURL({ categories: value, page: 1, limit: 10 })}
+          onChange={(value) => {
+            handleUpdateParamsToURL({ categories: value, page: 1, limit: 10 });
+          }}
         />
       </div>
       <div className="dropdown-item min-w-[199px]">

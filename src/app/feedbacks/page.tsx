@@ -117,28 +117,15 @@ const FeedbackPage = () => {
 
   const SalesSummaryButton = [
     {
-      title: 'Positive',
+      title: 'Feedbacks',
       options: [
-        { label: 'Good quality service', value: 100 },
-        { label: 'Delicious food', value: 500 },
-        { label: 'Môi trường và không gian', value: 1000 },
-        { label: 'Good price', value: 2 },
-        { label: 'Convenient Payment Methods', value: 5 },
-      ],
-    },
-
-    {
-      title: 'Negative',
-      options: [
-        { label: 'Chất lượng dịch vụ tốt', value: 100 },
-        { label: 'Chất lượng đồ ăn ngon', value: 500 },
-        { label: 'Môi trường và không gian', value: 1000 },
-        { label: 'Giá cả', value: 2 },
-        { label: 'Lợi nhuận', value: 5 },
+        { label: 'Positive', value: 100 },
+        { label: 'Neutral', value: 1000 },
+        { label: 'Negative', value: 500 },
       ],
     },
     {
-      title: 'Review',
+      title: 'Stars',
       options: [
         { label: 5, value: 100 },
         { label: 4, value: 500 },
