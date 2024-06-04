@@ -37,7 +37,7 @@ export const summaryApi = createApi({
         limit?: number;
         start_time?: string;
         end_time?: string;
-        category_filter?: string[];
+        category_filter?: string;
         search?: string;
         sort_by_net_sales?: string;
         sort_by_est_profit?: string;

@@ -90,7 +90,13 @@ const Layout: FC<Props> = ({ children }) => {
     setManagementName(`${capitalize(firstPath?.split('-')?.join(' '))}`);
   }, [pathname, firstPath]);
 
-  const authenticatedRoutes = ['/login', '/force-change-default-password', '/register', '/forgot-password'];
+  const authenticatedRoutes = [
+    '/login',
+    '/force-change-default-password',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+  ];
 
   // const firstLetter = session?.user.name?.charAt(0).toUpperCase();
   // const itemsAvatar: MenuProps['items'] = [
@@ -364,20 +370,20 @@ const Layout: FC<Props> = ({ children }) => {
               height={29}
               onClick={() => router.push('/')}
             />
-            {session?.user && session?.user.role === 'Administrator' && (
-              <>
-                <div className="text-[14px] font-bold text-black ml-5 hidden md:block">
-                  {session?.user.name?.toUpperCase()}
-                </div>
-                <Avatar
-                  className="cursor-pointer bg-grey-100 text-black-500 mr-4"
-                  size={38}
-                  onClick={() => router.push('/account')}
-                >
-                  {session?.user.name[0].toUpperCase()}
-                </Avatar>
-              </>
-            )}
+            {/* {session?.user && session?.user.role === 'Administrator' && ( */}
+            <>
+              <div className="text-[14px] font-bold text-black ml-5 hidden md:block">
+                {session?.user.name?.toUpperCase()}
+              </div>
+              <Avatar
+                className="cursor-pointer bg-grey-100 text-black-500 mr-4"
+                size={38}
+                onClick={() => router.push('/account')}
+              >
+                {session?.user.name[0].toUpperCase()}
+              </Avatar>
+            </>
+            {/* )} */}
           </div>
         </Header>
         {/* )} */}

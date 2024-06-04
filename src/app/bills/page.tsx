@@ -61,11 +61,10 @@ const Bills = () => {
   const { data: session } = useSession();
   const access_token = session?.user?.access_token || '';
   const { data: allDiningTables, isLoading: isLoadingTable } = useGetDiningTablesQuery({ access_token });
-  const { data: allDiscounts, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
+  const { data: discountsList, isLoading: isLoadingDiscount } = useGetDiscountsQuery();
   const [addBill, { isLoading: isCreateBillLoading }] = useAddBillMutation();
   const [isBillCreating, setIsBillCreating] = useState(false);
   const diningTableList = allDiningTables?.data;
-  const discountsList = allDiscounts?.data;
 
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const [isOpenSearchInput, setIsOpenSearchInput] = useState(false);
@@ -301,7 +300,7 @@ const Bills = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (VND${item.value})`
+              ? `${item.name} (${item.value} vnd)`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||
@@ -357,7 +356,7 @@ const Bills = () => {
       })
         .unwrap()
         .then((res) => {
-          router.push(`bills/${res?.data?._id}?tab=bill`);
+          router.push(`bills/${res?.data?.id}?tab=bill`);
         })
         .catch((error) => {
           toast.error(error.data.message);
@@ -452,7 +451,7 @@ const Bills = () => {
           label="Table name"
           options={diningTableList?.map((item: any) => ({
             label: `${item.name} (${item.location})`,
-            value: item._id,
+            value: item.id,
           }))}
           value={values.table_id}
           onChange={(value) => handleChange({ target: { id: 'table_id', value } })}
@@ -481,7 +480,7 @@ const Bills = () => {
           // options={convertDiscountToOptions(discountsList)}
           options={discountsList?.map((item: any) => ({
             label: renderDiscount(item),
-            value: item._id,
+            value: item.id,
             searchLabel: item.name,
           }))}
           value={values.discount_id}

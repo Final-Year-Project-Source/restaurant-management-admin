@@ -18,9 +18,11 @@ export const Pagination: React.FC<PaginationData> = ({ currentPage, totalPages, 
   const { isMobile, width } = useWindowDimensions();
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
+
   params.delete('page');
   params.delete('limit');
   const modifiedParams = formatURL(params.toString());
+
   const currentPageHandled = currentPage < 1 ? 1 : currentPage > totalPages ? totalPages : currentPage;
   const handleClick = (page: number) => {
     if (page === 1 && rowsPerPage === 10) {

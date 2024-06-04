@@ -13,16 +13,19 @@ import { useGetSalesByItemQuery } from '@/redux/services/summary';
 import { RootState } from '@/redux/store';
 import { CategoryType } from '@/types/categories.types';
 import {
+  convertDataURL,
   formatPrice,
   getFormatDate,
   getSelectedItems,
   handleDownloadCSV,
+  queryParamValuesToURL,
   serializeFilters,
   validateAndConvertDate,
 } from '@/utils/commonUtils';
 import { convertCategoriesToOptions, endDateDefault, PAGINATIONLIMIT, startDateDefault } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table/interface';
 import { debounce } from 'lodash';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -47,8 +50,8 @@ const SaleByItems = () => {
     {
       page: queryParams?.page || 1,
       limit: queryParams?.limit || 10,
-      search: queryParams?.search || '',
-      category_filter: queryParams?.categories || [],
+      search: encodeURIComponent(queryParams?.search || ''),
+      category_filter: queryParamValuesToURL(queryParams?.categories, 'category_filter') || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
       sort_by_no_sold: queryParams?.sortByNoSold || '',
@@ -63,7 +66,7 @@ const SaleByItems = () => {
     est_profit: formatPrice(item?.est_profit),
   }));
 
-  let searchParam = searchParams?.get('search') || '';
+  let searchParam = decodeURIComponent(searchParams?.get('search') || '');
   let startTimeParam = searchParams?.get('start_time') || '';
   let endTimeParam = searchParams?.get('end_time') || '';
   let page = parseInt(searchParams?.get('page') || '1');
@@ -79,8 +82,9 @@ const SaleByItems = () => {
       return Math.ceil(total / limitUrl);
     }
     return 1;
-  }, [salesByItemData, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
+  }, [salesByItemData?.totalRow, limitUrl]);
+
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
   const endDateToString = endDateDefault.toISOString();
   const startDateToString = startDateDefault.toISOString();
@@ -107,7 +111,7 @@ const SaleByItems = () => {
     return [startTime, endTime];
   }, [startTimeParam, endTimeParam]);
 
-  let categoriesUrl = searchParams?.get('category_filter')?.split(',') || [];
+  let categoriesUrl = convertDataURL(searchParams, DEFAULT_CATEGORIES_VALUE, 'category_filter');
 
   useEffect(() => {
     if (isFetchingCategories) return;
@@ -188,12 +192,7 @@ const SaleByItems = () => {
       setIsOpenSearchInput(!!queryParams?.search);
       setDateRange([new Date(startTimeUrl || ''), new Date(endTimeUrl || '')]);
       if (DEFAULT_CATEGORIES_VALUE?.length) {
-        categoriesUrl =
-          (searchParams?.get('category_filter')?.split(',') || [])?.length > 0
-            ? (searchParams?.get('category_filter')?.split(',') || []).filter((value) =>
-                DEFAULT_CATEGORIES_VALUE.includes(value),
-              )
-            : [];
+        categoriesUrl = categoriesUrl?.length > 0 ? categoriesUrl : [];
       }
       dispatch(
         updateQueryParams({
@@ -233,13 +232,7 @@ const SaleByItems = () => {
       width: 70,
       render: (_, record) => {
         return (
-          <ProductImage
-            className={`image-customized`}
-            width={48}
-            height={43}
-            src={record?.image_url}
-            alt={record?.name}
-          />
+          <Image className={`image-customized`} width={48} height={43} src={record?.image_url} alt={record?.name} />
         );
       },
     },
@@ -338,7 +331,7 @@ const SaleByItems = () => {
       <div className={`date-range-filter z-20 w-[327px] min-[1280px]:mr-[20px]`}>
         <DateRangePicker dateRange={dateRange} onChange={handleChangeDateRangePicker} />
       </div>
-      <div className="dropdown-item min-w-[209px]">
+      <div className="dropdown-item min-w-[249px]">
         <Dropdown
           id="category_id"
           mode="multiple"

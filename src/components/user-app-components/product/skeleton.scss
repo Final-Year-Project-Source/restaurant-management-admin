@@ -26,3 +26,9 @@
     width: 100% !important;
   }
 }
+
+.header-background {
+  background-image: url('/assets/images/food-bg.jpeg');
+  // background-repeat: no-repeat;
+  background-size: cover;
+}

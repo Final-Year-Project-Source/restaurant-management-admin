@@ -33,10 +33,10 @@ const AuthLayout = ({ children, isHiddenTabs = false }: { children: React.ReactN
             theme={{
               components: {
                 Tabs: {
-                  itemSelectedColor: '#FA4A0C',
+                  itemSelectedColor: '#a82825',
                   itemHoverColor: 'rgba(19, 28, 22, 0.5)',
                   itemActiveColor: 'rgba(19, 28, 22, 0.5)',
-                  inkBarColor: '#FA4A0C',
+                  inkBarColor: '#a82825',
                 },
               },
             }}

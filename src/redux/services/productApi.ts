@@ -115,24 +115,6 @@ export const productApi = createApi({
         },
       }),
       invalidatesTags: ['Product'],
-
-      async onQueryStarted(data, { queryFulfilled }) {
-        try {
-          const updatedProductStatus = await queryFulfilled;
-
-          if (!updatedProductStatus.data.message) {
-            toast.error(updatedProductStatus.data.message);
-          }
-        } catch (error) {
-          if (error instanceof Response) {
-            const responseData = await error.json();
-            toast.error(responseData?.data.message);
-          } else {
-            console.error(error);
-            toast.error('An error occurred');
-          }
-        }
-      },
     }),
     uploadImage: builder.mutation<any, { image_file: any }>({
       query: ({ image_file }) => {

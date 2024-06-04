@@ -66,9 +66,9 @@ const TaxInvoice = ({
         return {
           key: index,
           name: item.name,
-          total: `VND${formatPrice(total)}`,
+          total: `${formatPrice(total)} vnd`,
           quantity: item.quantity,
-          price: `VND${formatPrice(price)}`,
+          price: `${formatPrice(price)} vnd`,
         };
       });
   });
@@ -148,12 +148,12 @@ const TaxInvoice = ({
                 <label>Balance owing</label>
               </div>
               <div className="flex flex-col gap-4 justify-center items-end">
-                <span>VND{formatPrice(subTotal)}</span>
-                <span>VND{formatPrice(taxInvoiceData.vat_charge)}</span>
-                <span>VND{formatPrice(taxInvoiceData.service_charge)}</span>
-                {/* <span>-VND{receipt_info?.total_discount}</span> */}
-                <span className="font-semibold">VND{formatPrice(taxInvoiceData.total)}</span>
-                <span>VND0.00</span>
+                <span>{formatPrice(subTotal)} vnd</span>
+                <span>{formatPrice(taxInvoiceData.vat_charge)} vnd</span>
+                <span>{formatPrice(taxInvoiceData.service_charge)} vnd</span>
+                {/* <span>-{receipt_info?.total_discount}</span> */}
+                <span className="font-semibold">{formatPrice(taxInvoiceData.total)} vnd</span>
+                <span>0.00 vnd</span>
               </div>
             </div>
 
@@ -161,7 +161,7 @@ const TaxInvoice = ({
               <div className="w-1/2 flex flex-col items-center justify-center max-[768px]:text-left">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />
                 <label className="mb-2">Signature of Seller</label>
-                <span>Yummi Umami Co., Ltd.</span>
+                <span>Bella Ononjie Ltd.</span>
               </div>
               <div className="w-1/2 flex flex-col items-center md:justify-center max-[768px]:text-right">
                 <div className="w-3/4 border border-black-500 mb-[15px]" />

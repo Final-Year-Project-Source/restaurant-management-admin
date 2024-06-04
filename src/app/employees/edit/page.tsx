@@ -78,12 +78,13 @@ const EditEmployee = () => {
   //       toast.error(`Reset 2FA failed: ${rejectedValueOrSerializedError.data.message}`);
   //     });
   // };
+
   const handleOkResetPassword = async () => {
-    resetPassword({ id })
+    resetPassword({ id, access_token })
       .unwrap()
-      .then(() => {})
+      .then((res) => toast.success(res?.data?.messages))
       .catch((rejectedValueOrSerializedError) => {
-        toast.error(`Reset 2FA failed: ${rejectedValueOrSerializedError.data.message}`);
+        toast.error(` ${rejectedValueOrSerializedError.data.message}`);
       });
   };
   const formik = useFormik({
@@ -254,13 +255,7 @@ const EditEmployee = () => {
                 type="button"
                 onClick={handleOkResetPassword}
                 variant="primary"
-                disabled={
-                  isFetching ||
-                  isDeleteLoading ||
-                  isUpdating ||
-                  isResettingPassword ||
-                  !user?.is_change_default_password
-                }
+                disabled={isFetching || isDeleteLoading || isUpdating || isResettingPassword}
               >
                 Reset password
               </Button>

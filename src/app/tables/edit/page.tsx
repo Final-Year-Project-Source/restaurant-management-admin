@@ -115,7 +115,7 @@ const EditTable = () => {
           {item.type === 'FIXED_PERCENT'
             ? `${item.name} (${item.value}%)`
             : item.type === 'FIXED_AMOUNT'
-              ? `${item.name} (VND${item.value})`
+              ? `${item.name} (${item.value} vnd)`
               : '-'}
         </p>
         {((item.has_expiration && new Date(item.expiration_date) < new Date()) ||
@@ -164,7 +164,7 @@ const EditTable = () => {
             icon={<ArrowLeftIcon1 />}
             disabled={isLoading || isUpdateLoading || isFetchingDiscount || isDeleteLoading}
             type="button"
-            onClick={() => router.push('/tables')}
+            onClick={() => router.back()}
           >
             Back
           </Button>
