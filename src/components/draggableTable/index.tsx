@@ -5,7 +5,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { Skeleton, Table, TableProps } from 'antd';
 import React from 'react';
 import { MenuOutlinedIcon } from '../Icons';
-import NoResult from '../NoResult';
+import NoResult from '../noResult';
 import './draggableTable.scss';
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {

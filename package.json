@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3100",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
     "prepare": "husky install"
@@ -28,7 +28,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@reduxjs/toolkit": "^2.0.1",
     "@vercel/blob": "^0.22.3",
-    "antd": "^5.12.8",
+    "antd": "^5.18.0",
     "antd-img-crop": "^4.21.0",
     "axios": "^1.6.5",
     "base32-encode": "^2.0.0",

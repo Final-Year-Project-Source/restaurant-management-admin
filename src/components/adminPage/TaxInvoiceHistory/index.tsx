@@ -1,5 +1,5 @@
 'use client';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { formatPrice } from '@/utils/commonUtils';
 import { ConfigProvider } from 'antd';

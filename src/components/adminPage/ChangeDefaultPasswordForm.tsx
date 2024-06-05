@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import '@/styles/globals.css';
 import Button from '@/components/button/Button';
 import { useRouter } from 'next/navigation';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import { useChangeDefaultPasswordMutation } from '@/redux/services/loginApi';
 import InputPasswordText from '../input/InputPassword';
 export default function ChangeDefaultPasswordForm({ verifyToken }: { verifyToken: string }) {

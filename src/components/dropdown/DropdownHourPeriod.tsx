@@ -4,7 +4,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import CustomOption from './CustomOption';
 import './dropdown.scss';
 import { DownOutlinedIcon } from '../Icons';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import { isEqual } from 'lodash';
 import { TimePicker } from 'antd';
 import dayjs from 'dayjs';

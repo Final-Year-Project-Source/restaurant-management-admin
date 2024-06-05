@@ -2,7 +2,7 @@
 import Button from '@/components/adminPage/Button';
 import { ArrowLeftIcon1 } from '@/components/Icons';
 import Basket from '@/components/user-app-components/basket';
-import Menu from '@/components/user-app-components/Menu';
+import Menu from '@/components/user-app-components/menu';
 
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 

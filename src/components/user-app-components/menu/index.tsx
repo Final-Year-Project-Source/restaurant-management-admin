@@ -1,7 +1,7 @@
 'use client';
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup';
 import CustomizedDrawer from '@/components/drawer';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateDietaryRestrictions, updateProtein } from '@/redux/features/menuFilterSlice';
 import { useGetSingleBillQuery } from '@/redux/services/billApi';
@@ -26,8 +26,8 @@ import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useSt
 import { useDispatch, useSelector } from 'react-redux';
 import MenuLayout from '../layouts/MenuLayout';
 import OtherLayout from '../layouts/OtherLayout';
-import Product from '../Product';
-import ProductItem from '../ProductItem';
+import Product from '../product';
+import ProductItem from '../productItem';
 import './menu.scss';
 
 interface MenuProps {

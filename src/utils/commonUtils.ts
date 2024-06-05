@@ -167,9 +167,6 @@ export const formatURL = (url: string) => {
   const decodedURL = decodeURIComponent(url);
 
   const formattedURL = decodedURL.replace(/%2C/g, ',').replace(/\+&\+/g, '%20%26%20').replace(/\+/g, '%20');
-
-  console.log({ decodedURL, formattedURL });
-
   return formattedURL;
 };
 

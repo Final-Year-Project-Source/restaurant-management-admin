@@ -31,7 +31,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { toast } from 'react-toastify';
 import ReceiptDownLoadedImage from './ReceiptDownloaded';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { validateTaxID, validateIsNotEmpty } from '@/utils/commonUtils';
 import Tag from '@/components/tag/tag';
 import { RootState } from '@/redux/store';

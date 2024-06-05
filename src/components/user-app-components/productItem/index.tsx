@@ -3,7 +3,7 @@ import React from 'react';
 import CountButton from '@/components/button/CountButton';
 import { open_sans } from '@/utils/fontUtils';
 import { formatPrice } from '@/utils/commonUtils';
-import ProductImage from '@/components/ProductImage';
+import ProductImage from '@/components/productImage';
 import Tag from '@/components/tag/tag';
 import Image from 'next/image';
 

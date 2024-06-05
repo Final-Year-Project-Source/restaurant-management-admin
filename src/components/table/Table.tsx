@@ -21,8 +21,8 @@ import { ColumnType, TableRowSelection } from 'antd/es/table/interface';
 import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Dropdown from '../dropdown/Dropdown';
-import NoResult from '../NoResult';
-import { Pagination } from '../Pagination';
+import NoResult from '../noResult';
+import { Pagination } from '../pagination';
 import { SkeletonRows } from './SkeletonRows';
 import SkeletonTable, { SkeletonTableColumnsType } from './skeletonTable';
 

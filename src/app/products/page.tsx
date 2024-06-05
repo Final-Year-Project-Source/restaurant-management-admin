@@ -39,7 +39,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './product.scss';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
-import ProductImage from '@/components/ProductImage';
+import ProductImage from '@/components/productImage';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 
@@ -86,7 +86,6 @@ const Product = () => {
   let limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams.get('limit') || '10'))
     ? parseInt(searchParams.get('limit') || '') || 10
     : 10;
-  console.log({ CATEGORIES, categoriesUrl });
 
   const totalPages = filteredProductsData?.totalPages;
   const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);

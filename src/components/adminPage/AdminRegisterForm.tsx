@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { isValidEmail } from '@/utils/commonUtils';
 import { setOtpURL } from '@/utils/localStorage';
 import InputText from '../input/Input';

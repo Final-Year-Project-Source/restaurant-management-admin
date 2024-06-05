@@ -2,7 +2,7 @@ import { Drawer, DrawerProps } from 'antd';
 import React, { FC } from 'react';
 import { Button } from '../button';
 import { CloseOutlinedIcon1 } from '../Icons';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import './drawer.scss';
 interface PropsDrawer extends DrawerProps {
   open: boolean;

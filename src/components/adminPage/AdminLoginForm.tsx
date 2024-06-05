@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useLoginMutation } from '@/redux/services/loginApi';
 import { isValidEmail } from '@/utils/commonUtils';
 import { setOtpURL } from '@/utils/localStorage';

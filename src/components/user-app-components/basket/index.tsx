@@ -1,5 +1,5 @@
 'use client';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { resetBasket } from '@/redux/features/basketSlice';
 import { useGetSingleBillQuery, useUpdateBillMutation } from '@/redux/services/billApi';
@@ -11,8 +11,8 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } f
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import OtherLayout from '../layouts/OtherLayout';
-import OrderItem from '../OrderItem';
-import OrderSummary from '../OrderSummary';
+import OrderItem from '../orderItem';
+import OrderSummary from '../orderSummary';
 import './basket.scss';
 import { useSession } from 'next-auth/react';
 import { CANCELLED } from '@/utils/constants';

@@ -21,7 +21,7 @@ import {
   ReportsIcon,
   SettingIcon,
 } from '../Icons';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import './layout.scss';
 
 const { Header, Sider } = CustomLayout;

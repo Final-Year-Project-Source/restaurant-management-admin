@@ -7,7 +7,7 @@ import { useReactToPrint } from 'react-to-print';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { SkeletonRows } from '../table/SkeletonRows';
 import Stars from '../stars';
-import ProductImage from '../ProductImage';
+import ProductImage from '../productImage';
 import CustomizedModal from '../modal';
 import TaxInvoice from './TaxInvoiceHistory';
 

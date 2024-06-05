@@ -4,7 +4,7 @@ import { updateBasket } from '@/redux/features/basketSlice';
 import { open_sans } from '@/utils/fontUtils';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import ProductImage from '@/components/ProductImage';
+import ProductImage from '@/components/productImage';
 import { CountButton } from '@/components/button';
 import CustomizedModal from '@/components/modal';
 import Tag from '@/components/tag/tag';

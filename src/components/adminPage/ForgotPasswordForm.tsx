@@ -5,7 +5,7 @@ import Button from '@/components/button/Button';
 import { isValidEmail } from '@/utils/commonUtils';
 import { useSendMailResetPasswordMutation } from '@/redux/services/loginApi';
 import { useRouter } from 'next/navigation';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import InputText from './Input';
 export default function ForgotPasswordForm() {
   const [load, setLoad] = useState<boolean>(false);
@@ -97,7 +97,7 @@ export default function ForgotPasswordForm() {
         A link to reset your password has been sent to your email address. Please check your email.
       </div>
       <div className="text-[14px] text-black-500 w-full">
-        Didn't receive the email?
+        Didn&apos;t receive the email?
         {resendTimeout > 0 ? (
           <span className="text-gray-500"> Resend in {resendTimeout} seconds</span>
         ) : (

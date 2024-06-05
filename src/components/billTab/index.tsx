@@ -5,8 +5,8 @@ import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { Empty, Skeleton } from 'antd';
 import SettlementButton from '../SettlementButton';
 import { formatPrice } from '@/utils/commonUtils';
-import OrderItem from '../user-app-components/OrderItem';
-import OrderSummary from '../user-app-components/OrderSummary';
+import OrderItem from '../user-app-components/orderItem';
+import OrderSummary from '../user-app-components/orderSummary';
 
 interface Props {
   paymentStatus?: 'Cancelled' | 'Unpaid' | 'Paid' | 'Refunded';

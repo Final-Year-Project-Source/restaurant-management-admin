@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import '@/styles/globals.css';
 import Button from '@/components/button/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useResetForgotPasswordMutation } from '@/redux/services/loginApi';
 import { toast } from 'react-toastify';
 import InputPasswordText from '@/components/input/InputPassword';

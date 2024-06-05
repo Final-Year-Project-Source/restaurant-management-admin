@@ -1,7 +1,7 @@
 import { Checkbox, ConfigProvider, Radio, RadioChangeEvent } from 'antd';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import React, { FC, useEffect, useState } from 'react';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import './dropdown.scss';
 
 interface CustomOptionProps {

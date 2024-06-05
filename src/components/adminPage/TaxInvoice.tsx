@@ -1,5 +1,5 @@
 'use client';
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/loadingIndicator';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { ConfigProvider } from 'antd';
 import Table, { ColumnsType } from 'antd/es/table';

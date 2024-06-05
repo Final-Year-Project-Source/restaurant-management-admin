@@ -86,7 +86,6 @@ export const productApi = createApi({
             const responseData = await error.json();
             toast.error(responseData?.data.message);
           } else {
-            console.error(error);
             // toast.error('An error occurred');
           }
         }

@@ -1,6 +1,6 @@
 import { Modal } from 'antd';
 import { FC } from 'react';
-import LoadingIndicator from '../LoadingIndicator';
+import LoadingIndicator from '../loadingIndicator';
 import './customizedModal.scss';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { Button } from '../button';
