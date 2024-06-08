@@ -1,19 +1,20 @@
 'use client';
+import { CountButton } from '@/components/button';
+import CustomizedDrawer from '@/components/drawer';
+import CustomizedModal from '@/components/modal';
+import ProductImage from '@/components/productImage';
+import Tag from '@/components/tag/tag';
 import { DISCOUNT_TYPE, OPERATOR } from '@/enums';
+import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateBasket } from '@/redux/features/basketSlice';
+import { useChangeItemQuantityMutation } from '@/redux/services/billApi';
+import { formatPrice } from '@/utils/commonUtils';
 import { open_sans } from '@/utils/fontUtils';
+import { Skeleton } from 'antd';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import ProductImage from '@/components/productImage';
-import { CountButton } from '@/components/button';
-import CustomizedModal from '@/components/modal';
-import Tag from '@/components/tag/tag';
-import { useChangeItemQuantityMutation } from '@/redux/services/billApi';
 import { toast } from 'react-toastify';
-import { Skeleton } from 'antd';
-import CustomizedDrawer from '@/components/drawer';
-import { useWindowDimensions } from '@/hooks/useWindowDimensions';
-import { useSession } from 'next-auth/react';
 
 interface ItemsProps {
   name: string;
@@ -203,10 +204,10 @@ const OrderItem: React.FC<ItemsProps> = ({
                         {(discount?.type === DISCOUNT_TYPE.FIXED_PERCENT && (
                           <div className={`flex space-x-[3px]`}>
                             <div> + </div>
-                            <div className="line-through">{modifier.price}</div>
-                            <div className={`${classModifier}`}>{modifier.price}</div>
+                            <div className="line-through">{formatPrice(modifier.price)}</div>
+                            <div className={`${classModifier}`}>{formatPrice(modifier.price)}</div>
                           </div>
-                        )) || <div className={`text-black-400 ${classModifier}`}>+ {modifier.price}</div>}
+                        )) || <div className={`text-black-400 ${classModifier}`}>+ {formatPrice(modifier.price)}</div>}
                       </div>
                     )}
                   </div>
@@ -250,10 +251,12 @@ const OrderItem: React.FC<ItemsProps> = ({
               )}
               {(discount?.type === DISCOUNT_TYPE.FIXED_PERCENT && (
                 <div className="flex space-x-[3px]">
-                  <div className={`text-[14px] text-black-400 line-through`}>{price * newQuantity}</div>
-                  <div className="text-[14px] text-black-500">{priceAfterDiscount || price * newQuantity}</div>
+                  <div className={`text-[14px] text-black-400 line-through`}>{formatPrice(price * newQuantity)}</div>
+                  <div className="text-[14px] text-black-500">
+                    {priceAfterDiscount || formatPrice(price * newQuantity)}
+                  </div>
                 </div>
-              )) || <div className="text-[14px] text-black-400">{price * newQuantity}</div>}
+              )) || <div className="text-[14px] text-black-400">{formatPrice(price * newQuantity)}</div>}
             </div>
 
             <CustomizedModal

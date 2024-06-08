@@ -1,32 +1,21 @@
 'use client';
 import CardsReport from '@/components/cardsReport';
 import DateRangePicker from '@/components/dateRangePicker';
+import Stars from '@/components/stars';
 import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
 import { updateQueryParams } from '@/redux/features/queryParamsSlice';
+import { useGetFeedbacksQuery } from '@/redux/services/feedbackApi';
 import { useGetSalesSummaryQuery } from '@/redux/services/summary';
 import { RootState } from '@/redux/store';
 import { getFormatDateTime, serializeFilters } from '@/utils/commonUtils';
-import { PAGINATIONLIMIT } from '@/utils/constants';
+import { endDateDefault, LABEL_PREDICT_SENTIMENT, PAGINATIONLIMIT, startDateDefault } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './feedbacks.scss';
-
-const startDateDefault = (() => {
-  const thisWeekStartDate = new Date();
-  thisWeekStartDate.setDate(thisWeekStartDate.getDate() - thisWeekStartDate.getDay() + 1);
-  thisWeekStartDate.setHours(0, 0, 0, 0);
-  return thisWeekStartDate;
-})();
-
-const endDateDefault = (() => {
-  const thisDate = new Date();
-  thisDate.setHours(23, 59, 59, 59);
-  return thisDate;
-})();
 
 interface SaleSummaryType {
   key: React.Key;
@@ -47,11 +36,12 @@ const FeedbackPage = () => {
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const queryParams = useSelector((state: RootState) => state.queryParams['feedbacks']);
 
-  const { data: salesSummaryData, isLoading: isLoadingData } = useGetSalesSummaryQuery({
+  const { data: feedbackData, isLoading: isLoadingData } = useGetFeedbacksQuery({
     page: queryParams?.page || 1,
     limit: queryParams?.limit || 10,
     start_time: queryParams?.startTime || '',
     end_time: queryParams?.endTime || '',
+    labelSentiment: queryParams?.labelSentiment || LABEL_PREDICT_SENTIMENT.POSITIVE,
   });
 
   const startTimeParam = searchParams.get('start_time');
@@ -62,14 +52,14 @@ const FeedbackPage = () => {
   const limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams?.get('limit') || '10'))
     ? parseInt(searchParams?.get('limit') || '') || 10
     : 10;
-  const totalPage = useMemo(() => {
-    const total = salesSummaryData?.totalRow;
-    if (!isNaN(total)) {
-      return Math.ceil(total / limitUrl);
-    }
-  }, [salesSummaryData, limitUrl]);
-  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
+  console.log(feedbackData?.data);
+
+  const tableData = feedbackData?.data.map((item: any) => ({
+    ...item,
+    bill_name: item?.bill?.customer_name,
+  }));
   useEffect(() => {
     let URL = '/feedbacks?';
     if (!queryParams?.endTime && !queryParams?.startTime) {
@@ -112,34 +102,27 @@ const FeedbackPage = () => {
     }
   }, [searchParams]);
 
-  const saleData = salesSummaryData?.saleData;
-  const tableData = salesSummaryData?.data;
-
   const SalesSummaryButton = [
     {
       title: 'Feedbacks',
-      options: [
-        { label: 'Positive', value: 100 },
-        { label: 'Neutral', value: 1000 },
-        { label: 'Negative', value: 500 },
-      ],
+      options: [{ label: 'Positive' }, { label: 'Neutral' }, { label: 'Negative' }],
     },
-    {
-      title: 'Stars',
-      options: [
-        { label: 5, value: 100 },
-        { label: 4, value: 500 },
-        { label: 3, value: 1000 },
-        { label: 2, value: 2 },
-        { label: 1, value: 5 },
-      ],
-    },
+    // {
+    //   title: 'Stars',
+    //   options: [
+    //     { label: 5, value: 100 },
+    //     { label: 4, value: 500 },
+    //     { label: 3, value: 1000 },
+    //     { label: 2, value: 2 },
+    //     { label: 1, value: 5 },
+    //   ],
+    // },
   ];
 
-  const columns: ColumnsType<SaleSummaryType> = [
+  const columns: ColumnsType<any> = [
     {
       title: 'Date',
-      dataIndex: 'created_at',
+      dataIndex: 'createdAt',
       render: (time) => <p>{getFormatDateTime(time)}</p>,
     },
     {
@@ -157,6 +140,12 @@ const FeedbackPage = () => {
     {
       title: 'Review',
       dataIndex: 'stars',
+      render: (_, record) => (
+        <div className="overflow-hidden">
+          <Stars value={record.stars} size={'small'} disabled />
+        </div>
+      ),
+      width: 150,
     },
     {
       title: 'Comment',
@@ -196,8 +185,9 @@ const FeedbackPage = () => {
       <CardsReport
         className="feedback-buttons"
         data={SalesSummaryButton}
-        handleChange={(label: string) => {}}
+        handleChange={(label: string) => handleUpdateParamsToURL({ labelSentiment: label.toUpperCase() })}
         isFeedback
+        value={queryParams?.labelSentiment}
       />
 
       <div className="h-full">
@@ -210,7 +200,7 @@ const FeedbackPage = () => {
           cursorPointerOnRow={false}
           page={pageUrl || 1}
           rowPerPage={limitUrl || 10}
-          totalPage={totalPage}
+          totalPage={feedbackData?.totalPages}
           routerLink="/feedbacks"
           keyPage="feedbacks"
         />

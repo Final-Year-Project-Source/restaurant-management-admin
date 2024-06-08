@@ -19,6 +19,7 @@ import { loginApi } from './services/loginApi';
 import { kdsApi } from './services/kds';
 import { groupApi } from './services/groupApi';
 import { summaryApi } from './services/summary';
+import { feedbackApi } from './services/feedbackApi';
 
 export const makeStore = () => {
   return configureStore({
@@ -42,6 +43,7 @@ export const makeStore = () => {
       [kdsApi.reducerPath]: kdsApi.reducer,
       [groupApi.reducerPath]: groupApi.reducer,
       [summaryApi.reducerPath]: summaryApi.reducer,
+      [feedbackApi.reducerPath]: feedbackApi.reducer,
     },
     devTools: process.env.NODE_ENV !== 'production',
     middleware: (getDefaultMiddleware) =>
@@ -57,6 +59,7 @@ export const makeStore = () => {
         kdsApi.middleware,
         groupApi.middleware,
         summaryApi.middleware,
+        feedbackApi.middleware,
       ]),
   });
 };

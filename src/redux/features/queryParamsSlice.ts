@@ -1,4 +1,4 @@
-import { endDateDefault, startDateDefault } from '@/utils/constants';
+import { endDateDefault, LABEL_PREDICT_SENTIMENT, startDateDefault } from '@/utils/constants';
 import { getQueryParams } from '@/utils/localStorage';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -46,6 +46,7 @@ export type QueryParamsState = {
     limit: number;
     startTime: string;
     endTime: string;
+    labelSentiment: string;
   };
   'sales-by-item': {
     search: string;
@@ -101,6 +102,7 @@ export const DEFAULT_QUERY_PARAMS = {
     limit: 10,
     startTime: startDateDefault.toISOString(),
     endTime: endDateDefault.toISOString(),
+    labelSentiment: LABEL_PREDICT_SENTIMENT.POSITIVE,
   },
   'sales-summary': {
     page: 1,
