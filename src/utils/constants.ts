@@ -248,6 +248,12 @@ export const PADDING_BOTTOM_TO_SCROLL = 20;
 //menu page
 export const PADDING_BOTTOM_MENU = 40;
 
+export const LABEL_PREDICT_SENTIMENT = {
+  POSITIVE: 'POSITIVE',
+  NEGATIVE: 'NEGATIVE',
+  NEUTRAL: 'NEUTRAL',
+};
+
 // export const startDateDefault = (() => {
 //   const thisWeekStartDate = new Date();
 //   const dayOfWeek = thisWeekStartDate.getDay();

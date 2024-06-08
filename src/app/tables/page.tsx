@@ -8,7 +8,7 @@ import { useGetDiscountsQuery } from '@/redux/services/discountApi';
 import { useGetDiningTablesWithPaginationQuery } from '@/redux/services/tableApi';
 import { RootState } from '@/redux/store';
 import { DiningTableType } from '@/types/tables.types';
-import { serializeFilters } from '@/utils/commonUtils';
+import { formatPrice, serializeFilters } from '@/utils/commonUtils';
 import { PAGINATIONLIMIT } from '@/utils/constants';
 import { ColumnsType } from 'antd/es/table';
 import { useSession } from 'next-auth/react';
@@ -107,9 +107,9 @@ export default function DiningTable() {
         >
           <p className="m-[3px] max-w-[180px] leading-[18px] truncate ...">
             {record.discount_type === 'FIXED_PERCENT'
-              ? `${record.discount} (${record.value}%)`
+              ? `${record.discount} (${formatPrice(record.value)}%)`
               : record.discount_type === 'FIXED_AMOUNT'
-                ? `${record.discount} (${record.value} vnd)`
+                ? `${record.discount} (${formatPrice(record.value)} vnd)`
                 : '-'}
           </p>
           {((record.discount_has_expiration && new Date(record.discount_expiration_date) < new Date()) ||

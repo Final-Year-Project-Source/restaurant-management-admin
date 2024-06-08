@@ -45,13 +45,13 @@ const TaxInvoice = ({
     {
       title: 'Cost',
       dataIndex: 'price',
-      width: 100,
+      width: 125,
       align: 'right',
     },
     {
       title: 'Total',
       dataIndex: 'total',
-      width: 100,
+      width: 125,
       align: 'right',
     },
   ];
@@ -97,10 +97,10 @@ const TaxInvoice = ({
               <div className="w-1/2 flex flex-col">
                 <span>{`Bella Onojie Ltd.`}</span>
                 <span>{`174 Nguyen Luong Bang `}</span>
-                <span>{`Lien Chieu 7`}</span>
+                <span>{`Lien Chieu`}</span>
                 <span>{`Da Nang`}</span>
                 <span>{`Viet Nam`}</span>
-                <span>Trụ sở: {`Trụ sở chính`}</span>
+                <span>Branch: {`Head Office`}</span>
                 <span>Tax ID: {`0105563107361`}</span>
               </div>
               <div className="w-1/2 flex flex-col">

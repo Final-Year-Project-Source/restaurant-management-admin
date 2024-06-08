@@ -84,6 +84,7 @@ const Bills = () => {
       order_statuses: queryParams?.orderStatus?.join(',') || '',
       start_time: queryParams?.startTime || '',
       end_time: queryParams?.endTime || '',
+      sort_by_date: queryParams?.sortByDate || 'desc',
     },
     { refetchOnMountOrArgChange: true },
   );
@@ -106,15 +107,8 @@ const Bills = () => {
   let limitUrl = PAGINATIONLIMIT.includes(parseInt(searchParams?.get('limit') || '10'))
     ? parseInt(searchParams?.get('limit') || '') || 10
     : 10;
-  const totalPage = useMemo(() => {
-    const total = allBills?.totalRow;
-    if (!isNaN(total)) {
-      return Math.ceil(total / limitUrl);
-    }
-    return 1;
-  }, [allBills, limitUrl]);
 
-  const pageUrl = useMemo(() => (page > 0 && page <= totalPage ? page : 1), [page]);
+  const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
 
   const [startTimeUrl, endTimeUrl] = useMemo(() => {
     const validateStartTime = validateAndConvertDate(startTimeParam, startDateToString);
@@ -513,7 +507,7 @@ const Bills = () => {
         onSearch={handleSearch}
         page={pageUrl || 1}
         rowPerPage={limitUrl || 10}
-        totalPage={totalPage}
+        totalPage={allBills?.totalPages}
         routerLink="/bills"
         defaultSearchValue={searchParam || ''}
         keyPage="bills"

@@ -26,7 +26,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
   return (
     <div className={`${className || ''} px-6 pt-[60px]`} id="receipt">
       <div className="flex items-center flex-col">
-        <Image priority src="/assets/icons/logo.svg" alt="logo" width={100} height={100} />
+        <Image priority src="/assets/icons/logo.svg" alt="logo" width={150} height={150} />
         <span
           className={`text-center leading-normal max-w-[260px] text-black-500 text-[10px] mt-[20.78px] mb-[30px] font-normal ${open_sans.className}`}
         >

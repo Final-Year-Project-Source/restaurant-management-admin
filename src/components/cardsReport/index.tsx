@@ -1,6 +1,7 @@
+import { LABEL_PREDICT_SENTIMENT } from '@/utils/constants';
 import { ConfigProvider, Rate } from 'antd';
-import { isNumber } from 'lodash';
-import React, { useState } from 'react';
+import { capitalize, isNumber } from 'lodash';
+import React, { useEffect, useState } from 'react';
 // import './cardsReport.scss';
 
 interface SalesItem {
@@ -14,11 +15,19 @@ interface CardProps {
   className?: string;
   isFeedback?: boolean;
   isStar?: boolean;
+  value?: string;
 }
 
-const CardsReport: React.FC<CardProps> = ({ data, handleChange, className, isFeedback = false, isStar = false }) => {
+const CardsReport: React.FC<CardProps> = ({
+  data,
+  handleChange,
+  className,
+  isFeedback = false,
+  value = LABEL_PREDICT_SENTIMENT.POSITIVE,
+  isStar = false,
+}) => {
   const [activeIndex, setActiveIndex] = useState<string | null>(data?.[0]?.options?.[0].label);
-
+  useEffect(() => setActiveIndex(capitalize(value)), [data]);
   const handleChangeValue = (label: string) => {
     setActiveIndex(label === activeIndex ? null : label);
     handleChange && handleChange(label);
@@ -56,9 +65,11 @@ const CardsReport: React.FC<CardProps> = ({ data, handleChange, className, isFee
                     {item.label}
                   </label>
                 )}
-                <span className={isFeedback ? 'text-[13px]' : 'text-[16px]'}>
-                  {isFeedback ? `(${item.value})` : item.value}
-                </span>
+                {item.value && (
+                  <span className={isFeedback ? 'text-[13px]' : 'text-[16px]'}>
+                    {isFeedback ? `(${item.value})` : item.value}
+                  </span>
+                )}
               </button>
             ))}
           </div>

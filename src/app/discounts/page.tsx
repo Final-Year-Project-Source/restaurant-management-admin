@@ -4,7 +4,7 @@ import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { useGetDiscountsQuery } from '@/redux/services/discountApi';
 import { DiscountType } from '@/types/discounts.types';
-import { getFormatDateTime } from '@/utils/commonUtils';
+import { formatPrice, getFormatDateTime } from '@/utils/commonUtils';
 import { ColumnsType } from 'antd/es/table';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -50,7 +50,7 @@ export default function Discount() {
           <span className={`${isExpired || !isAvailable ? 'text-black-250' : ''} discount-cell`}>{record.value}%</span>
         ) : (
           <span className={`${isExpired || !isAvailable ? 'text-black-250' : ''} discount-cell`}>
-            {record.value} THB
+            {formatPrice(record.value)} vnd
           </span>
         );
       },
