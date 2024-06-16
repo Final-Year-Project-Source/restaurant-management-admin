@@ -113,10 +113,11 @@ export const employeeApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-    verifyRefreshToken: builder.mutation<any, void>({
-      query: () => ({
-        url: `auth/verify-token`,
+    verifyRefreshToken: builder.mutation<any, { refreshToken: string }>({
+      query: ({ refreshToken }) => ({
+        url: `auth/refresh-tokens`,
         method: 'POST',
+        data: refreshToken,
         headers: {
           'Content-Type': 'application/json',
         },

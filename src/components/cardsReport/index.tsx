@@ -65,11 +65,11 @@ const CardsReport: React.FC<CardProps> = ({
                     {item.label}
                   </label>
                 )}
-                {item.value && (
-                  <span className={isFeedback ? 'text-[13px]' : 'text-[16px]'}>
-                    {isFeedback ? `(${item.value})` : item.value}
-                  </span>
-                )}
+                {/* {item.value && ( */}
+                <span className={isFeedback ? 'text-[13px]' : 'text-[16px]'}>
+                  {isFeedback ? `(${item.value})` : item.value}
+                </span>
+                {/* )} */}
               </button>
             ))}
           </div>

@@ -134,21 +134,21 @@ const Layout: FC<Props> = ({ children }) => {
 
   // const access_token = session?.user?.access_token || '';
 
-  // useEffect(() => {
-  //   if (session) {
-  //     const interval = setInterval(() => {
-  //       if (navigator.onLine) {
-  //         verifyRefreshToken()
-  //           .unwrap()
-  //           .then()
-  //           .catch((error) => {
-  //             toast.error(error?.data?.message, { autoClose: false });
-  //             signOut();
-  //           });
-  //       }
-  //     }, 15000);
-  //   }
-  // }, [access_token]);
+  useEffect(() => {
+    if (session) {
+      const interval = setInterval(() => {
+        if (navigator.onLine) {
+          verifyRefreshToken({ refreshToken: refresh_token })
+            .unwrap()
+            .then()
+            .catch((error) => {
+              toast.error(error?.data?.message, { autoClose: false });
+              signOut();
+            });
+        }
+      }, 15000);
+    }
+  }, [refresh_token]);
 
   // useEffect(() => {
   //   const handleOnline = () => {

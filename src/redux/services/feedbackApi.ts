@@ -16,6 +16,10 @@ export const feedbackApi = createApi({
         `feedback?page=${arg.page}&limit=${arg.limit}&labelSentiment=${arg.labelSentiment}&endDate=${arg.end_time}&startDate=${arg.start_time}`,
       providesTags: ['Feedback'],
     }),
+    getLabelCount: builder.query<any, { start_time?: string; end_time?: string }>({
+      query: (arg) => `overview?startDate=${arg.start_time}&endDate=${arg.end_time}`,
+      providesTags: ['Feedback'],
+    }),
     getSingleFeedback: builder.query<any, { id: string }>({
       query: ({ id }) => `feedback?id=${id}`,
       providesTags: ['Feedback'],
@@ -42,5 +46,10 @@ export const feedbackApi = createApi({
     }),
   }),
 });
-export const { useGetFeedbacksQuery, useGetSingleFeedbackQuery, useCreateFeedbackMutation, useUpdateFeedbackMutation } =
-  feedbackApi;
+export const {
+  useGetFeedbacksQuery,
+  useGetSingleFeedbackQuery,
+  useCreateFeedbackMutation,
+  useUpdateFeedbackMutation,
+  useGetLabelCountQuery,
+} = feedbackApi;

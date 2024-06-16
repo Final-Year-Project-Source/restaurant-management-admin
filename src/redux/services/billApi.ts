@@ -23,7 +23,7 @@ export const billApi = createApi({
       }
     >({
       query: (arg) => ({
-        url: `bill?page=${arg.page}&limit=${arg.limit}&search=${arg.search}&payment_statuses=${arg.payment_statuses}&order_statuses=${arg.order_statuses}&sortBy=${arg.sort_by_date}&end_time=${arg.end_time}&start_time=${arg.start_time}`,
+        url: `bill?page=${arg.page}&limit=${arg.limit}&search=${arg.search}&payment_statuses=${arg.payment_statuses}&order_statuses=${arg.order_statuses}&sortBy=created_at:${arg.sort_by_date}&end_time=${arg.end_time}&start_time=${arg.start_time}`,
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
