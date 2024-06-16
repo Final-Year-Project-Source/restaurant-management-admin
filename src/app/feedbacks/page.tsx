@@ -6,8 +6,7 @@ import Table from '@/components/table/Table';
 import { useWindowDimensions } from '@/hooks/useWindowDimensions';
 import { updateURLPages } from '@/redux/features/pageSlice';
 import { updateQueryParams } from '@/redux/features/queryParamsSlice';
-import { useGetFeedbacksQuery } from '@/redux/services/feedbackApi';
-import { useGetSalesSummaryQuery } from '@/redux/services/summary';
+import { useGetFeedbacksQuery, useGetLabelCountQuery } from '@/redux/services/feedbackApi';
 import { RootState } from '@/redux/store';
 import { getFormatDateTime, serializeFilters } from '@/utils/commonUtils';
 import { endDateDefault, LABEL_PREDICT_SENTIMENT, PAGINATIONLIMIT, startDateDefault } from '@/utils/constants';
@@ -44,6 +43,11 @@ const FeedbackPage = () => {
     labelSentiment: queryParams?.labelSentiment || LABEL_PREDICT_SENTIMENT.POSITIVE,
   });
 
+  const { data: labelCounts } = useGetLabelCountQuery({
+    start_time: queryParams?.startTime || '',
+    end_time: queryParams?.endTime || '',
+  });
+
   const startTimeParam = searchParams.get('start_time');
   const endTimeParam = searchParams.get('end_time');
 
@@ -54,7 +58,6 @@ const FeedbackPage = () => {
     : 10;
 
   const pageUrl = useMemo(() => (page > 0 ? page : 1), [page]);
-  console.log(feedbackData?.data);
 
   const tableData = feedbackData?.data.map((item: any) => ({
     ...item,
@@ -105,7 +108,11 @@ const FeedbackPage = () => {
   const SalesSummaryButton = [
     {
       title: 'Feedbacks',
-      options: [{ label: 'Positive' }, { label: 'Neutral' }, { label: 'Negative' }],
+      options: [
+        { label: 'Positive', value: labelCounts?.positive },
+        { label: 'Neutral', value: labelCounts?.neutral },
+        { label: 'Negative', value: labelCounts?.negative },
+      ],
     },
     // {
     //   title: 'Stars',
