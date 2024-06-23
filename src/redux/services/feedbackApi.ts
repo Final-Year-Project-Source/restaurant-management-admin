@@ -10,10 +10,17 @@ export const feedbackApi = createApi({
   endpoints: (builder) => ({
     getFeedbacks: builder.query<
       any,
-      { page: number; limit: number; end_time?: string; start_time?: string; labelSentiment?: string }
+      {
+        page: number;
+        limit: number;
+        end_time?: string;
+        start_time?: string;
+        labelSentiment?: string;
+        sort_by_date?: string;
+      }
     >({
       query: (arg) =>
-        `feedback?page=${arg.page}&limit=${arg.limit}&labelSentiment=${arg.labelSentiment}&endDate=${arg.end_time}&startDate=${arg.start_time}`,
+        `feedback?page=${arg.page}&limit=${arg.limit}&labelSentiment=${arg.labelSentiment}&sortBy=createdAt:${arg.sort_by_date}&endDate=${arg.end_time}&startDate=${arg.start_time}`,
       providesTags: ['Feedback'],
     }),
     getLabelCount: builder.query<any, { start_time?: string; end_time?: string }>({
