@@ -1,4 +1,5 @@
 'use client';
+import { SortArrows } from '@/components/adminPage/SortIcons';
 import CardsReport from '@/components/cardsReport';
 import DateRangePicker from '@/components/dateRangePicker';
 import Stars from '@/components/stars';
@@ -29,19 +30,22 @@ interface SaleSummaryType {
 const FeedbackPage = () => {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const { isMobile, width } = useWindowDimensions();
   const router = useRouter();
 
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([startDateDefault, endDateDefault]);
   const queryParams = useSelector((state: RootState) => state.queryParams['feedbacks']);
 
-  const { data: feedbackData, isLoading: isLoadingData } = useGetFeedbacksQuery({
-    page: queryParams?.page || 1,
-    limit: queryParams?.limit || 10,
-    start_time: queryParams?.startTime || '',
-    end_time: queryParams?.endTime || '',
-    labelSentiment: queryParams?.labelSentiment || LABEL_PREDICT_SENTIMENT.POSITIVE,
-  });
+  const { data: feedbackData, isLoading: isLoadingData } = useGetFeedbacksQuery(
+    {
+      page: queryParams?.page || 1,
+      limit: queryParams?.limit || 10,
+      start_time: queryParams?.startTime || '',
+      end_time: queryParams?.endTime || '',
+      labelSentiment: queryParams?.labelSentiment || LABEL_PREDICT_SENTIMENT.POSITIVE,
+      sort_by_date: queryParams?.sortByDate || 'desc',
+    },
+    { refetchOnMountOrArgChange: true },
+  );
 
   const { data: labelCounts } = useGetLabelCountQuery({
     start_time: queryParams?.startTime || '',
@@ -50,6 +54,7 @@ const FeedbackPage = () => {
 
   const startTimeParam = searchParams.get('start_time');
   const endTimeParam = searchParams.get('end_time');
+  let sortByDate = searchParams?.get('sort_by_date');
 
   const page = parseInt(searchParams?.get('page') || '1');
 
@@ -82,7 +87,7 @@ const FeedbackPage = () => {
     }
 
     router.push(URL);
-  }, [queryParams?.page, queryParams?.endTime, queryParams?.startTime, queryParams?.limit]);
+  }, [queryParams?.page, queryParams?.endTime, queryParams?.startTime, queryParams?.limit, queryParams?.sortByDate]);
 
   useEffect(() => {
     if (searchParams) {
@@ -97,6 +102,7 @@ const FeedbackPage = () => {
             startTime: startTimeParam,
             page: pageUrl,
             limit: limitUrl,
+            sortByDate: sortByDate || 'desc',
           },
         }),
       );
@@ -110,7 +116,7 @@ const FeedbackPage = () => {
       title: 'Feedbacks',
       options: [
         { label: 'Positive', value: labelCounts?.positive },
-        { label: 'Neutral', value: labelCounts?.neutral },
+        // { label: 'Neutral', value: labelCounts?.neutral },
         { label: 'Negative', value: labelCounts?.negative },
       ],
     },
@@ -130,7 +136,16 @@ const FeedbackPage = () => {
     {
       title: 'Date',
       dataIndex: 'createdAt',
-      render: (time) => <p>{getFormatDateTime(time)}</p>,
+      width: 150,
+      defaultSortOrder: queryParams?.sortByDate === 'asc' ? 'ascend' : 'descend',
+      sortDirections: ['ascend'],
+      sorter: (a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return dateA - dateB;
+      },
+      sortIcon: ({ sortOrder }) => <>{SortArrows(sortOrder || '')}</>,
+      render: (createdAt) => <p>{getFormatDateTime(createdAt)}</p>,
     },
     {
       title: 'Bill name',
@@ -163,7 +178,13 @@ const FeedbackPage = () => {
   const handleUpdateParamsToURL = (values: { [key: string]: any }) => {
     dispatch(updateQueryParams({ key: 'feedbacks', value: values }));
   };
-
+  const OnChangeSorter = (pagination: any, filters: any, sorter: any) => {
+    if (sorter.field === 'createdAt') {
+      handleUpdateParamsToURL({
+        sortByDate: sorter.order === 'ascend' ? 'asc' : 'desc',
+      });
+    }
+  };
   const handleChangeDateRangePicker = (startDate: Date | null, endDate: Date | null) => {
     setDateRange([startDate, endDate]);
     const formattedStartDate = startDate ? startDate.toISOString() : null;
@@ -200,6 +221,7 @@ const FeedbackPage = () => {
       <div className="h-full">
         <Table
           className="h-fit"
+          onChangeTable={OnChangeSorter}
           noScroll={true}
           columns={columns}
           dataSource={tableData}

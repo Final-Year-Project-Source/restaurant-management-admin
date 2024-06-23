@@ -47,6 +47,7 @@ export type QueryParamsState = {
     startTime: string;
     endTime: string;
     labelSentiment: string;
+    sortByDate: string;
   };
   'sales-by-item': {
     search: string;
@@ -102,6 +103,7 @@ export const DEFAULT_QUERY_PARAMS = {
     limit: 10,
     startTime: startDateDefault.toISOString(),
     endTime: endDateDefault.toISOString(),
+    sortByDate: 'desc',
     labelSentiment: LABEL_PREDICT_SENTIMENT.POSITIVE,
   },
   'sales-summary': {
