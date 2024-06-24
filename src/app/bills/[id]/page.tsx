@@ -142,8 +142,9 @@ const DetailBill = ({ params }: { params: { id: string } }) => {
       while (dataUrl.length < minDataLength && i < maxAttempts) {
         try {
           dataUrl = await toPng(receiptPage, {
-            backgroundColor: '#f1eee8',
+            backgroundColor: '#fff',
             includeQueryParams: true,
+            cacheBust: true,
           });
         } catch (error) {
           setDownloadingReceipt(false);
