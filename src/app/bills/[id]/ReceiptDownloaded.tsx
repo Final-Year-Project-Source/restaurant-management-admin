@@ -1,5 +1,6 @@
 'use client';
 import OrderItem from '@/components/user-app-components/orderItem';
+import { formatPrice } from '@/utils/commonUtils';
 import { open_sans } from '@/utils/fontUtils';
 import moment from 'moment';
 import Image from 'next/image';
@@ -13,7 +14,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
   let Items = [];
   const discount_text = discount
     ? discount.type === 'FIXED_AMOUNT'
-      ? `${discount?.value} vnd`
+      ? `${formatPrice(discount?.value)} vnd`
       : `${discount?.value}%`
     : null;
   if (bill?.orders?.length > 0) {
@@ -24,7 +25,7 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
     }
   }
   return (
-    <div className={`${className || ''} px-6 pt-[60px]`} id="receipt">
+    <div className={`${className || ''} px-6 pt-[160px]`} id="receipt">
       <div className="flex items-center flex-col">
         <Image priority src="/assets/icons/logo.svg" alt="logo" width={150} height={150} />
         <span
@@ -70,20 +71,20 @@ const ReceiptDownLoadedImage = ({ className, bill }: { className?: string; bill:
           )}
           <div className="flex items-center justify-between">
             <div> Subtotal </div>
-            <div> {subTotal} </div>
+            <div> {formatPrice(subTotal)} </div>
           </div>
           <div className="flex items-center justify-between">
             <div> 10% Service Charge </div>
-            <div> {serviceCharge10} </div>
+            <div> {formatPrice(serviceCharge10)} </div>
           </div>
           <div className="flex items-center justify-between">
             <div> 7% VAT </div>
-            <div> {vat7} </div>
+            <div> {formatPrice(vat7)} </div>
           </div>
         </div>
         <div className="text-[14px] flex items-center mt-[7px] justify-between ">
           <div> Total </div>
-          <div> {bill?.total} </div>
+          <div> {formatPrice(bill?.total)} </div>
         </div>
       </div>
     </div>
