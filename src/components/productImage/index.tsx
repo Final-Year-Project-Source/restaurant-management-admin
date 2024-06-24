@@ -25,7 +25,6 @@ const ProductImage: FC<Props> = ({ src, alt, width, height, className }) => {
         <Skeleton.Avatar shape="square" className="absolute top-0 left-0" size={width} style={dimensionImage} active />
       )}
       <Image
-        crossOrigin="anonymous"
         priority
         onLoad={() => setLoading(false)}
         onError={() => {
