@@ -115,9 +115,9 @@ const FeedbackPage = () => {
     {
       title: 'Feedbacks',
       options: [
-        { label: 'Positive', value: labelCounts?.positive },
+        { label: 'Positive', value: labelCounts?.positive || 0 },
         // { label: 'Neutral', value: labelCounts?.neutral },
-        { label: 'Negative', value: labelCounts?.negative },
+        { label: 'Negative', value: labelCounts?.negative || 0 },
       ],
     },
     // {
