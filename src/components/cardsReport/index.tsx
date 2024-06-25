@@ -27,11 +27,14 @@ const CardsReport: React.FC<CardProps> = ({
   isStar = false,
 }) => {
   const [activeIndex, setActiveIndex] = useState<string | null>(data?.[0]?.options?.[0].label);
-  useEffect(() => setActiveIndex(capitalize(value)), [data]);
+  // useEffect(() => setActiveIndex(capitalize(value)), [data]);
   const handleChangeValue = (label: string) => {
+    console.log({ label });
+
     setActiveIndex(label === activeIndex ? null : label);
     handleChange && handleChange(label);
   };
+  console.log({ activeIndex, data });
 
   return (
     <div className={``}>

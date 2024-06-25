@@ -44,6 +44,9 @@
   border-width: 0;
   width: 0;
 
+  .ant-input-clear-icon {
+    padding-right: 25px !important;
+  }
   svg {
     opacity: 0;
   }
